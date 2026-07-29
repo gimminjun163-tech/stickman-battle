@@ -135,8 +135,31 @@ h1 span{color:var(--hi)}
       <button data-nuke="1000">1,000 이하</button>
       <button data-nuke="2500">2,500 이하</button>
     </div>
+    <div class="row" style="margin-top:16px">
+      <label for="shpRange">일반 병사 체력</label>
+      <input type="range" id="shpRange" min="30" max="600" step="5" value="135">
+      <b id="shpVal">135</b>
+    </div>
+    <div class="presets">
+      <button data-shp="60">유리몸 60</button>
+      <button data-shp="135">기본 135</button>
+      <button data-shp="280">튼튼 280</button>
+      <button data-shp="600">철벽 600</button>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <label for="szRange">일반 병사 크기</label>
+      <input type="range" id="szRange" min="0.4" max="2.5" step="0.05" value="1">
+      <b id="szVal">1.00배</b>
+    </div>
+    <div class="presets">
+      <button data-sz="0.5">꼬마 0.5배</button>
+      <button data-sz="1">기본 1배</button>
+      <button data-sz="1.6">거인 1.6배</button>
+      <button data-sz="2.5">초거대 2.5배</button>
+    </div>
     <div class="hint">베이스 체력은 낮추면 한 번 뚫리는 순간 끝나고, 올리면 공성전이 길어진다. 공 간격을 줄이면 병력이 빠르게 불어나 난전이 되고, 늘리면 한 명 한 명이 귀해진다.<br>
-    최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.</div>
+    최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.<br>
+    병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.</div>
   </div>
 
   <button class="go" id="startBtn" disabled>양쪽 팀을 고르세요</button>
@@ -186,7 +209,7 @@ function wp(id, name, type, dmg, range, cd, shape, o) {
   o = o || {};
   WEAPONS[id] = { id, name, type, dmg, range, cd, shape,
     col: o.col || '#dfe6ee', ps: o.ps || 460, arc: !!o.arc, aoe: o.aoe || 0, kn: o.kn || 1,
-    cry: o.cry || null, sp: o.sp || null, immune: o.immune || null };
+    cry: o.cry || null, sp: o.sp || null, immune: o.immune || null, dash: o.dash || 0 };
 }
 
 /* --- 근접 --- */
@@ -317,18 +340,36 @@ wp('souppot',   '종합 수프',        'r',1,  700,7,  'ball',{col:'#c88a4a',ps
 wp('foodgun',   '요리총',          'r',1,  430,.28,'bullet',{col:'#ffb454',ps:820,sp:'cookrand'});
 wp('marchcook', '요리진격',        'r',1,  360,.9, 'ball',{col:'#ff8a4a',ps:520,sp:'cookrand'});
 
+/* --- 미슐랭 쿸 --- */
+wp('panSmash',  '후라이팬 내려치기','m', 95, 54,1,  'club', {col:'#45454f',kn:2.2,cry:'요리 시작!'});
+wp('tableware', '식기 난사',      'r',  1,400,.3, 'shard',{col:'#dfe6ee',ps:820,sp:'tableware'});
+wp('mheal',     '동료 회복',      'r',  1,540,2.6,'ball', {col:'#ff9ad0',ps:520,sp:'heal',cry:'한 접시 더!'});
+wp('panThrow',  '후라이팬 던지기', 'r',155,430,1.5,'shard',{col:'#45454f',ps:600,arc:1,kn:2.6,cry:'받아라!'});
+wp('salad',     '샐러드 먹이기',   'r',125,370,1.3,'ball', {col:'#8ad86a',ps:480,arc:1,aoe:95,cry:'채소도 드세요'});
+// 난사되는 식기 네 종류
+wp('plate',     '접시',   'r',72,400,1,'shard',{col:'#eef2f6',ps:760});
+wp('spoon',     '숟가락', 'r',56,400,1,'shard',{col:'#c8d2dc',ps:800});
+wp('fork',      '포크',   'r',78,400,1,'shard',{col:'#c8d2dc',ps:820});
+wp('chopstick', '젓가락', 'r',62,400,1,'shard',{col:'#c8a878',ps:880});
+// 상점
+wp('boilfloor', '바닥 끓이기',    'r',  1,520,8,  'ball',{col:'#ff8a4a',ps:430,arc:1,sp:'boil',cry:'바닥째 끓인다!'});
+wp('panDash',   '뜨거운 후라이팬','m',135, 56,.8, 'club',{col:'#ff8a4a',kn:2.8,dash:2.2,cry:'뜨겁다 비켜!'});
+wp('ratatouille','라따뚜이',      'r',  1,470,3,  'ball',{col:'#e0764a',ps:500,sp:'rats',cry:'라따뚜이!'});
+wp('mstar',     '미슐랭 스타',    'r',185,520,2.2,'shard',{col:'#ffd24a',ps:700,aoe:70,sp:'triple',cry:'미슐랭 쓰리스타'});
+
+const TABLEWARE = ['plate', 'spoon', 'fork', 'chopstick'];
 const COOK_ATK = ['poopdish', 'hot1000', 'ice0k'];
 const isShroom = u => u.style === 'mushroom';
 
 const BIO_ATK = [
-  ['가짜 VX 발사!',                'vx'],
-  ['가짜 사린가스 살포!',           'sarin'],
-  ['가짜 염소가스 살포!',           'chlorine'],
-  ['가짜 보툴리눔 100%!',          'botulinum'],
-  ['가짜 폴로늄 투척!',            'polonium'],
-  ['가짜 왕수로 녹인다!',           'aquaregia'],
-  ['가짜 플루토늄 투척!',           'plutonium'],
-  ['가짜 수은·라돈·라듐 도포!',      'bioooze']
+  ['VX 발사!',                'vx'],
+  ['사린가스 살포!',           'sarin'],
+  ['락스와 염산을 섞어 염소가스 살포!',           'chlorine'],
+  ['보툴리눔 100%!',          'botulinum'],
+  ['폴로늄 투척!',            'polonium'],
+  ['왕수로 녹인다!',           'aquaregia'],
+  ['플루토늄 투척!',           'plutonium'],
+  ['수은·라돈·라듐 도포!',      'bioooze']
 ];
 
 const FORMULA_ATK = [
@@ -350,7 +391,9 @@ const NO_NERF = ['nuke', 'emc2', 'littleboy', 'fatman', 'tsar', 'formula', 'nofr
                  'bioman', 'vx', 'sarin', 'chlorine', 'botulinum', 'polonium', 'aquaregia',
                  'plutonium', 'bioooze',
                  'poopdish', 'poopsmell', 'hot1000', 'ice0k', 'yumdish',
-                 'ultichef', 'souppot', 'foodgun', 'marchcook'];
+                 'ultichef', 'souppot', 'foodgun', 'marchcook',
+                 'tableware', 'mheal', 'panThrow', 'salad', 'plate', 'spoon', 'fork', 'chopstick',
+                 'boilfloor', 'ratatouille', 'mstar'];
 for (const id in WEAPONS) {
   const w = WEAPONS[id];
   if (w.type !== 'r' || NO_NERF.includes(id)) continue;
@@ -432,11 +475,15 @@ T('심해 괴물','#2a5a8a','blob',['tentacle','harpoon','inkshot','bite','claw'
 
 T('사이언스버섯포자','#6ad8d0','mushroom',['emc2','formula','needle','nofric','cern'],
   [['FAT MAN',3,'fatman',2.6,1,1.5],['LITTLE BOY',2,'littleboy',2.2,1,1.3],
-   ['TSAR BOMBA',5,'tsar',3.4,1,1.8],['생화학맨',4,'bioman',3.2,1,1.6]]);
+   ['TSAR BOMBA',5,'tsar',3.4,1,1.8],['생화학맨',5,'bioman',3.2,1,1.6]]);
 
 T('악마의 쿡','#d84a4a','chef',['poopdish','poopsmell','hot1000','ice0k','yumdish'],
   [['얼티밋 요리사',3,'ultichef',3,1,1.5],['종합 수프 요리사',7,'souppot',3.5,1,1.6],
    ['요리총',3,'foodgun',2,.28,1.2],['요리진격',4,'marchcook',2.6,.7,1.35]]);
+
+T('미슐랭 쿸','#e0b040','chef',['panSmash','tableware','mheal','panThrow','salad'],
+  [['바닥 끓이기',4,'boilfloor',2.6,1,1.4],['후라이팬돌진',4,'panDash',3,1,1.4],
+   ['라따뚜이',5,'ratatouille',3,1,1.5],['미슐랭쓰리스타',7,'mstar',3.4,1,1.7]]);
 
 // 포자 특성: 쏜 공격의 포자가 땅에 닿으면 그 자리에서 버섯 병사가 자란다
 TEAMS.find(t => t.name === '버섯 포자').spore = true;
@@ -463,7 +510,7 @@ const G = {
   col: ['#3b82f6', '#ef4444'],
   balls: [], sold: [], corp: [], proj: [], part: [], pops: [], nums: [], spr: [],
   shopCount: [[], []],         // [진영][팀][칸]
-  rage: 1, cordyN: [0, 0], shock: [], flash: 0, holes: [], rush: [0, 0], ooze: [0, 0], sciSide: [false, false], deliv: [],
+  rage: 1, cordyN: [0, 0], shock: [], flash: 0, holes: [], rush: [0, 0], ooze: [0, 0], sciSide: [false, false], deliv: [], zones: [],
   cam: { x: 700, s: 1 }
 };
 const GRAV_B = 560, GRAV_W = 900;
@@ -471,7 +518,8 @@ const MAX_BALL = 26, MAX_BALL_SIDE = 120, MAX_SOLD = 130, MAX_CORP = 55;
 let SPAWN_EVERY = 7;   // 셋업에서 조절
 let NUKE_HP = 0;       // 이 체력 이하로 떨어지면 베이스가 적 병사를 전멸시킨다 (0 = 끔)
 const WORLD_W = 2800, GROUND = 520;
-const SOLDIER_HP = 135;   // 병사 기본 체력
+let SOLDIER_HP = 135;     // 병사 기본 체력 (셋업에서 조절)
+let SIZE_MUL = 1;         // 병사 크기 배율 (셋업에서 조절)
 const MAX_SPROUT = 1000;  // 팀당 동시에 자라는 버섯 수
 const SPROUT_HP = 1, SPROUT_DMG = 1;      // 버섯병사도 본대와 동급
 const CORDY_CHANCE = .00002; // 포자가 적 몸에 닿았을 때 동충하초가 될 확률 (0.002%)
@@ -623,6 +671,7 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX) {
   if (n >= MAX_SOLD) return;
   const T = G.roster[team][ti], b = BASE[team];
   if (T.buff) { hpMul *= T.buff.hp; dmgMul *= T.buff.dmg; }
+  size *= SIZE_MUL;
   const made = {
     team, ti, td: T, w, label, style: T.style, col: G.tcol[team][ti],
     x: atX !== undefined ? atX : b.x + (team === 0 ? 66 : -66) + rnd(-18, 18),
@@ -649,22 +698,29 @@ function burstCordyceps(team, ti, x, y) {
 }
 
 // 종합 수프 — 화면에 널린 재료(버섯 포함)를 냄비에 쓸어 담아 끓여 붓는다
+const POT_CAP = 30;        // 냄비에 한 번에 들어가는 재료 수 상한
+
 function soupPour(s) {
   let ing = 0;
-  // 널려 있는 버섯을 전부 쓸어 담는다
-  for (let i = G.spr.length - 1; i >= 0; i--)
-    if (Math.abs(G.spr[i].x - s.x) < 1200) { G.spr.splice(i, 1); if (++ing > 600) break; }
 
-  // 지금 살아 있는 적은 전부 냄비행 — 큰 놈일수록 재료가 많이 나온다
+  // 가까운 적부터 냄비행 — 큰 놈일수록 재료가 많이 나온다. 냄비가 차면 거기까지.
   const pot = [];
   for (const o of G.sold) if (o.team !== s.team && o.hp > 0) pot.push(o);
+  pot.sort((a, b) => Math.abs(a.x - s.x) - Math.abs(b.x - s.x));
   for (const o of pot) {
+    if (ing >= POT_CAP) break;
     ing += 1 + Math.round(o.size * 2);
     for (let k = 0; k < 6; k++)
       G.part.push({ x: o.x, y: o.y - 26 * o.size, vx: (s.x - o.x) * .8 + rnd(-40, 40),
                     vy: rnd(-260, -60), life: .6, col: k % 2 ? '#c88a4a' : '#e8b070', sz: rnd(2, 4) });
     damage(o, o.hp + 1, Math.sign(s.x - o.x || 1) * 280, -320);   // 냄비로 빨려 들어간다
   }
+
+  // 자리가 남으면 널려 있는 버섯으로 채운다
+  for (let i = G.spr.length - 1; i >= 0 && ing < POT_CAP; i--)
+    if (Math.abs(G.spr[i].x - s.x) < 1200) { G.spr.splice(i, 1); ing++; }
+
+  ing = Math.min(ing, POT_CAP);
 
   // 끓여서 적 베이스에 붓는다
   const eb = BASE[1 - s.team];
@@ -681,7 +737,16 @@ function soupPour(s) {
   for (let k = 0; k < 60; k++)
     G.part.push({ x: s.x, y: GROUND - 60, vx: rnd(-460, 460), vy: rnd(-420, -30),
                   life: .9, col: k % 3 ? '#c88a4a' : '#e8b070', sz: rnd(2, 5) });
-  say(s, '재료 ' + ing + '개 투입!', '#e8b070');
+  say(s, '재료 ' + ing + ' / ' + POT_CAP + ' 투입!', '#e8b070');
+}
+
+// 라따뚜이 — 3초마다 쥐 7 마리
+function summonRats(s) {
+  for (let k = 0; k < 7; k++)
+    spawnSoldier(s.team, s.ti, WEAPONS.bite, .75, .5, .55, '쥐', s.x + rnd(-64, 64));
+  for (let k = 0; k < 10; k++)
+    G.part.push({ x: s.x, y: GROUND, vx: rnd(-140, 140), vy: rnd(-120, -20),
+                  life: 25, col: '#e0764a', sz: rnd(2, 3.5) });
 }
 
 // 얼티밋 요리사 — 부하 요리사를 뽑아낸다
@@ -825,7 +890,7 @@ function stepBattle(dt) {
     const dir = tx > s.x ? 1 : -1;
     s.face = dir;
     s.moving = false;
-    const rush = (G.rush[s.team] > 0 ? 3 : 1) * (s.w.id === 'marchcook' ? 2.1 : 1);
+    const rush = (G.rush[s.team] > 0 ? 3 : 1) * (s.w.dash || (s.w.id === 'marchcook' ? 2.1 : 1));
     if (dist > want) { s.vx += dir * s.spd * 8 * rush * dt; s.ph += dt * 10 * rush; s.moving = true; }
     else if (dist < KITE_DIST && s.w.type === 'r' && !isBase) { s.vx -= dir * s.spd * 2 * dt; s.ph += dt * 8; s.moving = true; }
     s.vx = clamp(s.vx, -s.spd * 2 * rush, s.spd * 2 * rush);
@@ -884,6 +949,16 @@ function stepBattle(dt) {
           summonCooks(s); say(s, s.w.cry, '#ffd76a');
         } else if (s.w.sp === 'soup') {
           soupPour(s); fw = null;
+        } else if (s.w.sp === 'tableware') {          // 접시·숟가락·포크·젓가락
+          fw = WEAPONS[TABLEWARE[Math.floor(Math.random() * TABLEWARE.length)]];
+        } else if (s.w.sp === 'rats') {
+          summonRats(s); say(s, s.w.cry, '#e0764a'); fw = null;
+        } else if (s.w.sp === 'triple') {             // 미슐랭 스타 세 개
+          say(s, s.w.cry, '#ffd24a');
+          for (let k = -1; k <= 1; k++)
+            fire(s.x + dir * 12 * s.size, s.y - 34 * s.size, s.w, tx, ty + k * 66,
+                 s.team, s.ti, s.dmg * G.rage);
+          fw = null;
         } else if (s.w.sp === 'cookrand') {           // 세 요리를 섞어 난사한다
           fw = WEAPONS[COOK_ATK[Math.floor(Math.random() * COOK_ATK.length)]];
         } else if (s.w.sp === 'bio') {                 // 여덟 가지 중 하나를 외치고 뿌린다
@@ -988,6 +1063,12 @@ function stepBattle(dt) {
       const sp = pt && pt.spore ? p.team : -1;
       if (p.w.sp === 'ooze' && Math.abs(p.x - eb.x) < eb.w / 2 + 210)
         G.ooze[1 - p.team] = Math.min(14, G.ooze[1 - p.team] + 9);   // 베이스에 발라진다
+      if (p.w.sp === 'boil') {                 // 바닥이 5초 동안 끓는다
+        G.zones.push({ x: p.x, r: 190, team: p.team, life: 5, dps: 105 });
+        for (let k = 0; k < 24; k++)
+          G.part.push({ x: p.x + rnd(-170, 170), y: GROUND - 6, vx: rnd(-60, 60), vy: rnd(-220, -60),
+                        life: .7, col: k % 2 ? '#ff8a4a' : '#ffd08a', sz: rnd(2, 4.5) });
+      }
       if (p.w.sp === 'hole') {                 // 미니 블랙홀 — 1초 동안 주변을 빨아들인다
         const dur = 1 + Math.min(9, techOf(p.team) * .1);   // 1초마다 0.1초씩 길어진다
         G.holes.push({ x: p.x, y: Math.min(p.y, GROUND - 30), team: p.team,
@@ -1137,6 +1218,19 @@ function stepBattle(dt) {
                       life: .5, col: '#ff9ad0', sz: 2 });
       G.deliv.splice(i, 1);
     }
+  }
+
+  // 끓는 바닥
+  for (let i = G.zones.length - 1; i >= 0; i--) {
+    const z = G.zones[i]; z.life -= dt;
+    for (const so of G.sold) {
+      if (so.team === z.team || so.hp <= 0) continue;
+      if (Math.abs(so.x - z.x) < z.r) damage(so, z.dps * dt, 0, 0);
+    }
+    if (Math.random() < dt * 34)
+      G.part.push({ x: z.x + rnd(-z.r, z.r), y: GROUND - 4, vx: rnd(-24, 24), vy: rnd(-130, -40),
+                    life: .7, col: Math.random() < .5 ? '#ff8a4a' : '#ffd08a', sz: rnd(2, 4) });
+    if (z.life <= 0) G.zones.splice(i, 1);
   }
 
   // 무마찰 지속시간
@@ -1573,6 +1667,19 @@ function drawField() {
     for (let t = 0; t < 2; t++) { fx.fillStyle = G.col[t]; fx.fill(capP[t]); }
     fx.globalAlpha = 1;
   }
+  for (const z of G.zones) {
+    if (!onScreen(z.x)) continue;
+    const k = clamp(z.life / 5, 0, 1);
+    fx.globalAlpha = .22 + .28 * k; fx.fillStyle = '#ff8a4a';
+    fx.fillRect(z.x - z.r, GROUND - 7, z.r * 2, 14);
+    fx.globalAlpha = .55 * k; fx.fillStyle = '#ffd08a';
+    for (let i = 0; i < 11; i++) {
+      const bx = z.x - z.r + (i + .5) * (z.r * 2 / 11);
+      const by = GROUND - 7 - Math.abs(Math.sin(G.t * 4.5 + i * 1.3)) * 14;
+      fx.beginPath(); fx.arc(bx, by, 3.6, 0, 6.3); fx.fill();
+    }
+    fx.globalAlpha = 1;
+  }
   for (const c of G.corp) if (onScreen(c.j[2].x)) drawCorpse(fx, c);
   LOD = G.sold.length > 70 || s < .8;
   for (const so of G.sold) if (onScreen(so.x)) drawSoldier(fx, so);
@@ -1913,7 +2020,15 @@ function syncNuke() {
   nukeVal.textContent = v === 0 ? '꺼짐' : Number(v).toLocaleString() + ' 이하';
 }
 nukeRange.oninput = syncNuke; syncNuke();
+const shpRange = document.getElementById('shpRange'), shpVal = document.getElementById('shpVal');
+function syncShp() { shpVal.textContent = shpRange.value; }
+shpRange.oninput = syncShp; syncShp();
+const szRange = document.getElementById('szRange'), szVal = document.getElementById('szVal');
+function syncSz() { szVal.textContent = (+szRange.value).toFixed(2) + '배'; }
+szRange.oninput = syncSz; syncSz();
 document.querySelectorAll('.presets button').forEach(b => b.onclick = () => {
+  if (b.dataset.shp) { shpRange.value = b.dataset.shp; syncShp(); }
+  if (b.dataset.sz) { szRange.value = b.dataset.sz; syncSz(); }
   if (b.dataset.hp) { hpRange.value = b.dataset.hp; syncHp(); }
   if (b.dataset.iv) { ivRange.value = b.dataset.iv; syncIv(); }
   if (b.dataset.nuke !== undefined) { nukeRange.value = b.dataset.nuke; syncNuke(); }
@@ -1949,8 +2064,10 @@ function startGame() {
   G.shopCount = [0, 1].map(t => G.roster[t].map(() => [0, 0, 0, 0, 0])); G.cordyN = [0, 0];
   G.shock.length = 0; G.flash = 0; G.holes.length = 0; G.rush = [0, 0]; G.ooze = [0, 0];
   G.sciSide = [0, 1].map(t => G.roster[t].some(td => td.special));
-  G.deliv.length = 0;
+  G.deliv.length = 0; G.zones.length = 0;
   SPAWN_EVERY = clamp(parseFloat(ivRange.value) || 7, 1, 20);
+  SOLDIER_HP = clamp(parseInt(shpRange.value, 10) || 135, 30, 600);
+  SIZE_MUL = clamp(parseFloat(szRange.value) || 1, .4, 2.5);
   G.t = 0; G.spawnT = SPAWN_EVERY; G.over = false; G.winner = -1; G.rage = 1;
   G.speed = 1; G.cam.x = WORLD_W / 2; G.cam.s = .8;
   const startHp = clamp(parseInt(hpRange.value, 10) || 2000, 300, 10000);
