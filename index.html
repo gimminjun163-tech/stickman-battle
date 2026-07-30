@@ -382,11 +382,11 @@ const FORMULA_ATK = [
 /* 원거리 무기가 너무 세서 근접 병사가 붙어보지도 못하고 녹는 문제를 완화한다.
    사거리는 그대로 두고 위력만 깎아서, 접근하는 동안 버틸 수 있게 만든다.
    핵폭탄은 사이언스 버섯 전용 한 방이라 예외로 둔다. */
-let RANGED_NERF = .55;  // 원거리 위력 배율
+let RANGED_NERF = .6;  // 원거리 위력 배율
 let KITE_DIST = 55;   // 원거리 병사가 뒷걸음질 치기 시작하는 거리 (예전엔 사거리의 32%)
-let RANGED_MIN = 45;  // 이 거리 안으로 적이 붙으면 원거리 무기를 못 쏜다
-let RANGED_KNOCK = 25;   // 원거리 피격 넉백. 크면 근접이 계속 밀려나 접근을 못 한다
-let RANGED_REACH = .78;  // 사거리 배율 — 한꺼번에 조준선을 대는 적 수를 줄인다
+let RANGED_MIN = 0;  // 이 거리 안으로 적이 붙으면 원거리 무기를 못 쏜다
+let RANGED_KNOCK = 0;   // 원거리 피격 넉백. 크면 근접이 계속 밀려나 접근을 못 한다
+let RANGED_REACH = .8;  // 사거리 배율 — 한꺼번에 조준선을 대는 적 수를 줄인다
 const NO_NERF = ['nuke', 'emc2', 'littleboy', 'fatman', 'tsar', 'formula', 'nofric', 'cern',
                  'bioman', 'vx', 'sarin', 'chlorine', 'botulinum', 'polonium', 'aquaregia',
                  'plutonium', 'bioooze',
