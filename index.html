@@ -78,6 +78,10 @@ h1 span{color:var(--hi)}
 .opts .row{display:flex;align-items:center;gap:13px;font-size:13px}
 .opts .row label{white-space:nowrap;font-weight:600}
 .opts input[type=range]{flex:1;accent-color:var(--hi);height:4px}
+.opts input[type=number]{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);
+  color:var(--ink);border-radius:7px;padding:6px 9px;font-size:13px;font-weight:700;font-family:inherit}
+.opts input[type=number]:disabled{color:#5c6a7c;background:#141a22}
+.mini.on{background:var(--hi);color:#1a1206;border-color:var(--hi)}
 .opts b{color:var(--hi);min-width:74px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
 .opts .hint{font-size:11.5px;color:var(--dim);margin-top:9px;line-height:1.65}
 .presets{display:flex;gap:6px;margin-top:10px}
@@ -170,26 +174,26 @@ h1 span{color:var(--hi)}
       <button data-sz="2.5">초거대 2.5배</button>
     </div>
     <div class="row" style="margin-top:16px">
-      <label for="ballRange">최대 공 개수</label>
-      <input type="range" id="ballRange" min="5" max="400" step="5" value="120">
-      <b id="ballVal">120개</b>
+      <label for="ballNum">최대 공 개수</label>
+      <input type="number" id="ballNum" min="1" step="10" value="120">
+      <button class="mini" id="ballInf">무한</button>
     </div>
     <div class="presets">
       <button data-ball="30">30개</button>
       <button data-ball="120">기본 120개</button>
-      <button data-ball="250">250개</button>
-      <button data-ball="400">400개</button>
+      <button data-ball="500">500개</button>
+      <button data-ball="5000">5,000개</button>
     </div>
     <div class="row" style="margin-top:16px">
-      <label for="soldRange">최대 병사 개수</label>
-      <input type="range" id="soldRange" min="10" max="600" step="10" value="130">
-      <b id="soldVal">130명</b>
+      <label for="soldNum">최대 병사 개수</label>
+      <input type="number" id="soldNum" min="1" step="10" value="130">
+      <button class="mini" id="soldInf">무한</button>
     </div>
     <div class="presets">
       <button data-sold="40">40명</button>
       <button data-sold="130">기본 130명</button>
-      <button data-sold="300">300명</button>
-      <button data-sold="600">600명</button>
+      <button data-sold="800">800명</button>
+      <button data-sold="5000">5,000명</button>
     </div>
     <div class="hint">베이스 체력은 낮추면 한 번 뚫리는 순간 끝나고, 올리면 공성전이 길어진다. 공 간격을 줄이면 병력이 빠르게 불어나 난전이 되고, 늘리면 한 명 한 명이 귀해진다.<br>
     최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.<br>
@@ -197,7 +201,8 @@ h1 span{color:var(--hi)}
     같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.<br>
     전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.<br>
     도전 모드: 무기도 상점도 없고 베이스가 부서지지 않는 표적이다. 반격도 안 한다. 상대편 화력이 얼마나 나오는지 누적 피해와 초당 피해로 보여준다. 순수한 측정을 위해 격전 배율은 꺼진다.<br>
-    공과 병사 상한은 각각 진영 하나 기준이다. 크게 올리면 화면이 꽉 차서 볼거리는 늘어나지만 프레임이 떨어질 수 있다. 공은 서로 부딪히지 않으니 많으면 겹쳐 보인다.</div>
+    공과 병사 상한은 각각 진영 하나 기준이고 숫자로 직접 넣을 수 있다. 칸을 비우거나 <b>무한</b>을 누르면 제한이 사라진다. 공은 서로 부딪히지 않으니 많으면 겹쳐 보인다.<br>
+    무한으로 두고 공 간격까지 1초로 줄이면 병사가 계속 불어나서 프레임이 크게 떨어진다. 상한은 천장이라서, 기본 설정에서는 올려도 실제 수는 알아서 균형을 잡는다.</div>
   </div>
 
   <button class="go" id="startBtn" disabled>양쪽 팀을 고르세요</button>
@@ -2169,15 +2174,24 @@ shpRange.oninput = syncShp; syncShp();
 const szRange = document.getElementById('szRange'), szVal = document.getElementById('szVal');
 function syncSz() { szVal.textContent = (+szRange.value).toFixed(2) + '배'; }
 szRange.oninput = syncSz; syncSz();
-const ballRange = document.getElementById('ballRange'), ballVal = document.getElementById('ballVal');
-function syncBall() { ballVal.textContent = ballRange.value + '개'; }
-ballRange.oninput = syncBall; syncBall();
-const soldRange = document.getElementById('soldRange'), soldVal = document.getElementById('soldVal');
-function syncSold() { soldVal.textContent = soldRange.value + '명'; }
-soldRange.oninput = syncSold; syncSold();
+const ballNum = document.getElementById('ballNum'), ballInf = document.getElementById('ballInf');
+const soldNum = document.getElementById('soldNum'), soldInf = document.getElementById('soldInf');
+const INF = { ball: false, sold: false };
+function syncInf() {
+  ballInf.classList.toggle('on', INF.ball); ballNum.disabled = INF.ball;
+  soldInf.classList.toggle('on', INF.sold); soldNum.disabled = INF.sold;
+  if (INF.ball) ballNum.value = ''; else if (!ballNum.value) ballNum.value = 120;
+  if (INF.sold) soldNum.value = ''; else if (!soldNum.value) soldNum.value = 130;
+}
+ballInf.onclick = () => { INF.ball = !INF.ball; syncInf(); };
+soldInf.onclick = () => { INF.sold = !INF.sold; syncInf(); };
+syncInf();
+// 숫자를 직접 지우고 비워두면 그것도 무한으로 본다
+const capOf = (el, inf, dflt) => inf || el.value.trim() === ''
+  ? Infinity : Math.max(1, Math.floor(+el.value) || dflt);
 document.querySelectorAll('.presets button').forEach(b => b.onclick = () => {
-  if (b.dataset.ball) { ballRange.value = b.dataset.ball; syncBall(); }
-  if (b.dataset.sold) { soldRange.value = b.dataset.sold; syncSold(); }
+  if (b.dataset.ball) { INF.ball = false; ballNum.value = b.dataset.ball; syncInf(); }
+  if (b.dataset.sold) { INF.sold = false; soldNum.value = b.dataset.sold; syncInf(); }
   if (b.dataset.shp) { shpRange.value = b.dataset.shp; syncShp(); }
   if (b.dataset.sz) { szRange.value = b.dataset.sz; syncSz(); }
   if (b.dataset.hp) { hpRange.value = b.dataset.hp; syncHp(); }
@@ -2228,9 +2242,9 @@ function startGame() {
   G.deliv.length = 0; G.zones.length = 0;
   SPAWN_EVERY = clamp(parseFloat(ivRange.value) || 7, 1, 20);
   SOLDIER_HP = clamp(parseInt(shpRange.value, 10) || 135, 30, 600);
-  MAX_BALL_SIDE = clamp(parseInt(ballRange.value, 10) || 120, 5, 400);
+  MAX_BALL_SIDE = capOf(ballNum, INF.ball, 120);
   MAX_BALL = MAX_BALL_SIDE;                  // 팀이 하나뿐이면 상한을 다 쓸 수 있게
-  MAX_SOLD = clamp(parseInt(soldRange.value, 10) || 130, 10, 600);
+  MAX_SOLD = capOf(soldNum, INF.sold, 130);
   SIZE_MUL = clamp(parseFloat(szRange.value) || 1, .4, 2.5);
   G.t = 0; G.spawnT = SPAWN_EVERY; G.over = false; G.winner = -1; G.rage = 1;
   G.speed = 1; G.cam.x = WORLD_W / 2; G.cam.s = .8;
