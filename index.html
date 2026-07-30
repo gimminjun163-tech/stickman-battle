@@ -173,7 +173,8 @@ h1 span{color:var(--hi)}
     최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.<br>
     병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.<br>
     같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.<br>
-    전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.</div>
+    전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.<br>
+    도전 모드: 무기도 상점도 없고 베이스가 부서지지 않는 표적이다. 반격도 안 한다. 상대편 화력이 얼마나 나오는지 누적 피해와 초당 피해로 보여준다. 순수한 측정을 위해 격전 배율은 꺼진다.</div>
   </div>
 
   <button class="go" id="startBtn" disabled>양쪽 팀을 고르세요</button>
@@ -501,6 +502,10 @@ T('미슐랭 쿸','#e0b040','chef',['panSmash','tableware','mheal','panThrow','s
   [['바닥 끓이기',4,'boilfloor',2.6,1,1.4],['후라이팬돌진',4,'panDash',3,1,1.4],
    ['라따뚜이',5,'ratatouille',3,1,1.5],['미슐랭쓰리스타',7,'mstar',3.4,1,1.7]]);
 
+T('도전 모드','#6c7684','stick',[],[]);
+// 무기도 상점도 없고 베이스가 부서지지 않는다. 얼마나 때릴 수 있는지 재보는 표적.
+TEAMS.find(t => t.name === '도전 모드').invincible = true;
+
 // 포자 특성: 쏜 공격의 포자가 땅에 닿으면 그 자리에서 버섯 병사가 자란다
 TEAMS.find(t => t.name === '버섯 포자').spore = true;
 // 버섯 포자는 뽑는 병사 전부가 조금 더 단단하고 세다
@@ -523,6 +528,8 @@ const G = {
   speed: 1, prevSpeed: 1, t: 0, spawnT: 0, over: false, winner: -1,
   roster: [[], []],            // 진영별로 고른 팀 목록
   pow: [[], []],               // 항목별 전투력(공격력 배율)
+  invin: [false, false],       // 도전 모드가 있는 진영 (베이스가 안 부서진다)
+  dealt: [0, 0],               // 그 베이스가 받은 누적 피해
   tcol: [[], []],              // 진영 안에서 팀마다 조금씩 다른 색
   col: ['#3b82f6', '#ef4444'],
   balls: [], sold: [], corp: [], proj: [], part: [], pops: [], nums: [], spr: [],
@@ -551,7 +558,7 @@ const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
    ============================================================ */
 const REG = {
   main:   { x: 8, y: 18,  w: 324, h: 214, slots: 3, floor: 40, label: 'BALL DROP' },
-  weapon: { x: 8, y: 262, w: 324, h: 186, slots: 5, floor: 46, label: 'WEAPON' },
+  weapon: { x: 8, y: 262, w: 324, h: 186, slots: 5, floor: 46, label: 'WEAPON' },   // slots는 시작할 때 다시 정한다
   shop:   { x: 8, y: 478, w: 324, h: 182, slots: 4, floor: 62, label: 'SHOP' }
 };
 const PEGS = [], WALLS = [];
@@ -661,10 +668,12 @@ function resolveSlot(team, ti, reg, idx, x, y) {
   const T = G.roster[team][ti], col = G.tcol[team][ti];
   if (reg === 'weapon') {
     const w = WEAPONS[T.basics[idx]];
+    if (!w) { popText(x, y, '없음', '#5c6a7c'); return; }
     spawnSoldier(team, ti, w, 1, 1, 1, w.name);
     popText(x, y, w.name, col);
   } else {
     const u = T.shop[idx];
+    if (!u) { popText(x, y, '없음', '#5c6a7c'); return; }
     G.shopCount[team][ti][idx]++;
     if (G.shopCount[team][ti][idx] >= u.cost) {
       G.shopCount[team][ti][idx] = 0;
@@ -1035,7 +1044,7 @@ function stepBattle(dt) {
 
   for (let t = 0; t < 2; t++) {
     const b = BASE[t]; b.cool -= dt;
-    if (b.hp <= 0 || b.cool > 0) continue;
+    if (G.invin[t] || b.hp <= 0 || b.cool > 0) continue;   // 도전 모드 표적은 쏘지 않는다
     let best = null, bd = 640;
     const bkm = Math.floor(b.x / BK), br = Math.ceil(640 / BK);
     for (let k = bkm - br; k <= bkm + br; k++) {
@@ -1291,13 +1300,22 @@ function stepBattle(dt) {
   }
   if (G.flash > 0) G.flash = Math.max(0, G.flash - dt * 1.7);
 
+  // 도전 모드 표적 — 받은 피해를 재고 체력은 다시 채운다. 절대 부서지지 않는다.
+  for (let t = 0; t < 2; t++) {
+    if (!G.invin[t]) continue;
+    const b = BASE[t];
+    if (b.hp < b.max) { G.dealt[t] += b.max - b.hp; b.hp = b.max; }
+    b.nuked = true;                        // 최후의 발악도 안 터진다
+    G.ooze[t] = 0;
+  }
+
   if (!G.over) {
     for (let t = 0; t < 2; t++) {
       const b = BASE[t];
-      if (NUKE_HP > 0 && !b.nuked && b.hp <= NUKE_HP && b.hp > 0) baseNuke(t);
+      if (!G.invin[t] && NUKE_HP > 0 && !b.nuked && b.hp <= NUKE_HP && b.hp > 0) baseNuke(t);
     }
-    if (BASE[0].hp <= 0) { G.over = true; G.winner = 1; }
-    else if (BASE[1].hp <= 0) { G.over = true; G.winner = 0; }
+    if (!G.invin[0] && BASE[0].hp <= 0) { G.over = true; G.winner = 1; }
+    else if (!G.invin[1] && BASE[1].hp <= 0) { G.over = true; G.winner = 0; }
   }
 }
 
@@ -1642,7 +1660,13 @@ function drawField() {
     const bw = 132, r = Math.max(0, b.hp / b.max);
     fx.fillStyle = 'rgba(0,0,0,.6)'; fx.fillRect(b.x - bw / 2, GROUND - b.h - 52, bw, 9);
     fx.fillStyle = col; fx.fillRect(b.x - bw / 2, GROUND - b.h - 52, bw * r, 9);
-    if (NUKE_HP > 0 && !b.nuked) {          // 최후의 발악이 터지는 지점
+    if (G.invin[t]) {                       // 표적 — 누적 피해를 머리 위에 띄운다
+      fx.fillStyle = '#c8d2de'; fx.font = '800 20px system-ui'; fx.textAlign = 'center';
+      fx.fillText('받은 피해 ' + Math.round(G.dealt[t]).toLocaleString(), b.x, GROUND - b.h - 68);
+      fx.fillStyle = '#8b96a5'; fx.font = '700 15px system-ui';
+      fx.fillText('초당 ' + (G.t > 1 ? Math.round(G.dealt[t] / G.t) : 0), b.x, GROUND - b.h - 90);
+    }
+    if (!G.invin[t] && NUKE_HP > 0 && !b.nuked) {          // 최후의 발악이 터지는 지점
       fx.fillStyle = '#fff2a8';
       fx.fillRect(b.x - bw / 2 + bw * (NUKE_HP / b.max) - 1, GROUND - b.h - 56, 2, 17);
     }
@@ -1920,12 +1944,16 @@ function drawPlinko() {
   for (let i = 0; i < 3; i++) px.fillText(SLOTNAME[i], M.x + mw * (i + .5), mLine + 26);
 
   // WEAPON 칸 — 고른 팀 수만큼 줄이 늘어난다
-  const Wg = REG.weapon, ww = Wg.w / 5, wLine = Wg.y + Wg.h - Wg.floor;
+  const Wg = REG.weapon, ww = Wg.w / Wg.slots, wLine = Wg.y + Wg.h - Wg.floor;
   const RH = ROW_H, PG = rosterPage();
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < Wg.slots; i++) {
     const cx = Wg.x + ww * (i + .5);
     PG.list.forEach(([t, k], r) => {
       const w = WEAPONS[G.roster[t][k].basics[i]];
+      if (!w) {
+        px.fillStyle = '#3d4a5c'; px.font = '700 9px system-ui'; px.textAlign = 'center';
+        px.fillText('—', cx, wLine + 13 + r * RH); return;
+      }
       slotEntry(cx, wLine + 10 + r * RH, w, cut(w.name, 5), G.tcol[t][k], RH > 12 ? .28 : .24);
     });
   }
@@ -1935,11 +1963,15 @@ function drawPlinko() {
   }
 
   // SHOP 칸 — 팀마다 한 줄씩, 남은 개수까지 한 줄에
-  const Sg = REG.shop, sw = Sg.w / 4, sLine = Sg.y + Sg.h - Sg.floor;
-  for (let i = 0; i < 4; i++) {
+  const Sg = REG.shop, sw = Sg.w / Sg.slots, sLine = Sg.y + Sg.h - Sg.floor;
+  for (let i = 0; i < Sg.slots; i++) {
     const cx = Sg.x + sw * (i + .5);
     PG.list.forEach(([t, k], r) => {
       const u = G.roster[t][k].shop[i];
+      if (!u) {
+        px.fillStyle = '#3d4a5c'; px.font = '700 9px system-ui'; px.textAlign = 'center';
+        px.fillText('—', cx, sLine + 13 + r * RH); return;
+      }
       slotEntry(cx, sLine + 10 + r * RH, WEAPONS[u.w],
                 cut(u.name, 5) + ' ' + (u.cost - G.shopCount[t][k][i]), G.tcol[t][k], RH > 12 ? .28 : .24);
     });
@@ -1991,7 +2023,7 @@ function buildGrid(side) {
   TEAMS.forEach((t, i) => {
     const d = document.createElement('div');
     d.className = 'tcard';
-    d.innerHTML = '<b>' + t.name + '</b><i>' + t.shop[3].name + '</i>';
+    d.innerHTML = '<b>' + t.name + '</b><i>' + (t.shop[3] ? t.shop[3].name : '표적') + '</i>';
     d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
       if (e.shiftKey) dropOne(si, i); else sel[si].push({ i, pow: 1 });
       refresh(side);
@@ -2146,6 +2178,10 @@ function startGame() {
   G.pow = [sel[0].map(e => e.pow), sel[1].map(e => e.pow)];
   G.col = [colA.value, colB.value];
   G.tcol = [0, 1].map(t => G.roster[t].map((_, i) => tintCol(G.col[t], i, G.roster[t].length)));
+  // 칸 수는 고른 팀들 중 가장 많은 쪽에 맞춘다. 도전 모드처럼 0개인 팀이 있어도 줄어들지 않는다.
+  const all = [...G.roster[0], ...G.roster[1]];
+  REG.weapon.slots = Math.max(1, ...all.map(t => t.basics.length));
+  REG.shop.slots   = Math.max(1, ...all.map(t => t.shop.length));
   const rows = Math.min(ROWS_PAGE, G.roster[0].length + G.roster[1].length);
   ROW_H = rows <= 4 ? 19 : rows <= 6 ? 14 : 12;
   REG.weapon.floor = Math.min(120, 8 + rows * ROW_H);
@@ -2154,6 +2190,8 @@ function startGame() {
   G.shopCount = [0, 1].map(t => G.roster[t].map(() => [0, 0, 0, 0, 0])); G.cordyN = [0, 0];
   G.shock.length = 0; G.flash = 0; G.holes.length = 0; G.rush = [0, 0]; G.ooze = [0, 0];
   G.sciSide = [0, 1].map(t => G.roster[t].some(td => td.special));
+  G.invin = [0, 1].map(t => G.roster[t].some(td => td.invincible));
+  G.dealt = [0, 0];
   G.deliv.length = 0; G.zones.length = 0;
   SPAWN_EVERY = clamp(parseFloat(ivRange.value) || 7, 1, 20);
   SOLDIER_HP = clamp(parseInt(shpRange.value, 10) || 135, 30, 600);
@@ -2194,7 +2232,8 @@ document.querySelectorAll('.spd button').forEach(b => b.onclick = () => {
 
 function step(dt) {
   G.t += dt; G.spawnT += dt;
-  G.rage = Math.min(3.2, 1 + Math.max(0, G.t - 120) / 170);
+  G.rage = (G.invin[0] || G.invin[1]) ? 1   // 순수한 화력 측정을 위해 격전 배율은 끈다
+            : Math.min(3.2, 1 + Math.max(0, G.t - 120) / 170);
   if (G.spawnT >= SPAWN_EVERY) {
     G.spawnT -= SPAWN_EVERY;
     for (let t = 0; t < 2; t++)                       // 고른 팀마다 하나씩 — 나눠 갖는 게 아니라 각자 생성
@@ -2219,10 +2258,14 @@ function frame(now) {
     let a = 0, b = 0;
     for (const s of G.sold) s.team === 0 ? a++ : b++;
     const rg = G.rage > 1.03 ? ' · 격전 x' + G.rage.toFixed(1) : '';
-    document.getElementById('stA').textContent = '병사 ' + a + ' · 베이스 ' + Math.max(0, Math.round(BASE[0].hp)) + rg;
-    document.getElementById('stB').textContent = '병사 ' + b + ' · 베이스 ' + Math.max(0, Math.round(BASE[1].hp)) + rg;
-    document.getElementById('hpA').style.width = Math.max(0, BASE[0].hp / BASE[0].max * 100) + '%';
-    document.getElementById('hpB').style.width = Math.max(0, BASE[1].hp / BASE[1].max * 100) + '%';
+    const line = (t, cntN) => G.invin[t]
+      ? '표적 · 받은 피해 ' + Math.round(G.dealt[t]).toLocaleString() +
+        ' · 초당 ' + (G.t > 1 ? Math.round(G.dealt[t] / G.t) : 0)
+      : '병사 ' + cntN + ' · 베이스 ' + Math.max(0, Math.round(BASE[t].hp)) + rg;
+    document.getElementById('stA').textContent = line(0, a);
+    document.getElementById('stB').textContent = line(1, b);
+    document.getElementById('hpA').style.width = (G.invin[0] ? 100 : Math.max(0, BASE[0].hp / BASE[0].max * 100)) + '%';
+    document.getElementById('hpB').style.width = (G.invin[1] ? 100 : Math.max(0, BASE[1].hp / BASE[1].max * 100)) + '%';
     if (G.over) {
       const o = document.getElementById('over');
       if (o.style.display !== 'flex') {
