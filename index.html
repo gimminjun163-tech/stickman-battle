@@ -25,7 +25,9 @@ h1 span{color:var(--hi)}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
 .vs{align-self:center;text-align:center;font-size:22px;font-weight:800;color:var(--dim);padding-top:70px}
 .teamgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px;max-height:340px;overflow:auto;padding-right:4px}
-.tcard{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 7px;cursor:pointer;font-size:12px;line-height:1.35;transition:.12s;text-align:left}
+.tcard{position:relative;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 7px;cursor:pointer;font-size:12px;line-height:1.35;transition:.12s;text-align:left;user-select:none}
+.tcard .cnt{position:absolute;top:4px;right:4px;background:var(--hi);color:#1a1206;border-radius:6px;
+  padding:1px 5px;font-size:10px;font-weight:800;font-style:normal;line-height:1.4}
 .tcard:hover{border-color:#4a5a6e;transform:translateY(-1px)}
 .tcard.on{border-color:var(--hi);background:#2a2618}
 .tcard b{display:block;font-size:12.5px;font-weight:700;margin-bottom:2px}
@@ -159,7 +161,8 @@ h1 span{color:var(--hi)}
     </div>
     <div class="hint">베이스 체력은 낮추면 한 번 뚫리는 순간 끝나고, 올리면 공성전이 길어진다. 공 간격을 줄이면 병력이 빠르게 불어나 난전이 되고, 늘리면 한 명 한 명이 귀해진다.<br>
     최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.<br>
-    병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.</div>
+    병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.<br>
+    같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.</div>
   </div>
 
   <button class="go" id="startBtn" disabled>양쪽 팀을 고르세요</button>
@@ -1962,7 +1965,12 @@ function cut(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
 /* ============================================================
    9. 셋업 UI
    ============================================================ */
-const sel = [[], []];              // 진영별로 고른 팀 인덱스 목록 (인원 제한 없음)
+// 같은 팀을 몇 번이든 겹쳐 고를 수 있다. 배열에 인덱스가 그만큼 여러 번 들어간다.
+const sel = [[], []];
+function dropOne(si, i) {
+  const at = sel[si].lastIndexOf(i);
+  if (at >= 0) sel[si].splice(at, 1);
+}
 function buildGrid(side) {
   const si = side === 'A' ? 0 : 1;
   const el = document.getElementById('grid' + side);
@@ -1971,10 +1979,12 @@ function buildGrid(side) {
     const d = document.createElement('div');
     d.className = 'tcard';
     d.innerHTML = '<b>' + t.name + '</b><i>' + t.shop[3].name + '</i>';
-    d.onclick = () => {
-      const at = sel[si].indexOf(i);
-      if (at >= 0) sel[si].splice(at, 1); else sel[si].push(i);
+    d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
+      if (e.shiftKey) dropOne(si, i); else sel[si].push(i);
       refresh(side);
+    };
+    d.oncontextmenu = e => {                 // 우클릭 = 하나 빼기
+      e.preventDefault(); dropOne(si, i); refresh(side);
     };
     el.appendChild(d);
   });
@@ -1983,16 +1993,32 @@ function buildGrid(side) {
 function refresh(side) {
   const si = side === 'A' ? 0 : 1;
   const el = document.getElementById('grid' + side);
-  [...el.children].forEach((c, i) => c.classList.toggle('on', sel[si].includes(i)));
-  const list = sel[si].map(i => TEAMS[i]);
+  const cnt = new Map();
+  for (const i of sel[si]) cnt.set(i, (cnt.get(i) || 0) + 1);
+
+  [...el.children].forEach((c, i) => {
+    const n = cnt.get(i) || 0;
+    c.classList.toggle('on', n > 0);
+    let badge = c.querySelector('.cnt');
+    if (n > 0) {
+      if (!badge) { badge = document.createElement('em'); badge.className = 'cnt'; c.appendChild(badge); }
+      badge.textContent = '×' + n;
+    } else if (badge) badge.remove();
+  });
+
   const det = document.getElementById('det' + side);
-  if (!list.length) det.innerHTML = '팀을 눌러 고르세요. 몇 팀이든 함께 낼 수 있고, 고른 팀은 각자 따로 병력을 만든다.';
+  if (!sel[si].length)
+    det.innerHTML = '카드를 눌러 추가하세요. 같은 팀을 몇 번이든 겹쳐 고를 수 있고, 겹친 만큼 각자 따로 병력을 만든다.<br>Shift+클릭이나 우클릭으로 하나씩 뺄 수 있다.';
   else {
-    const show = list.slice(0, 5).map(t =>
-      '<b>' + t.name + '</b> — ' + t.basics.map(b => WEAPONS[b].name).join(', ') +
-      ' / 상점 ' + t.shop.map(u => u.name + '(★' + u.cost + ')').join(', ')).join('<br>');
-    det.innerHTML = show + (list.length > 5 ? '<br>… 외 ' + (list.length - 5) + '팀' : '') +
-      '<br><span style="color:var(--hi)">연합군 ' + list.length + '팀</span>';
+    const rows = [...cnt.entries()];
+    const show = rows.slice(0, 5).map(([i, n]) => {
+      const t = TEAMS[i];
+      return '<b>' + t.name + (n > 1 ? ' ×' + n : '') + '</b> — ' +
+        t.basics.map(b => WEAPONS[b].name).join(', ') +
+        ' / 상점 ' + t.shop.map(u => u.name + '(★' + u.cost + ')').join(', ');
+    }).join('<br>');
+    det.innerHTML = show + (rows.length > 5 ? '<br>… 외 ' + (rows.length - 5) + '종류' : '') +
+      '<br><span style="color:var(--hi)">연합군 ' + sel[si].length + '팀 (' + rows.length + '종류)</span>';
   }
   const btn = document.getElementById('startBtn');
   btn.disabled = !sel[0].length || !sel[1].length;
@@ -2042,9 +2068,12 @@ document.querySelectorAll('.presets button').forEach(b => b.onclick = () => {
    10. 시작 / 루프
    ============================================================ */
 function sideName(t, max) {
-  const n = G.roster[t], m = max || 2;
-  if (n.length <= m) return n.map(x => x.name).join(' + ');
-  return n.slice(0, m).map(x => x.name).join(' + ') + ' 외 ' + (n.length - m) + '팀';
+  const cnt = new Map();
+  for (const td of G.roster[t]) cnt.set(td.name, (cnt.get(td.name) || 0) + 1);
+  const parts = [...cnt.entries()].map(([nm, c]) => c > 1 ? nm + ' ×' + c : nm);
+  const m = max || 2;
+  if (parts.length <= m) return parts.join(' + ');
+  return parts.slice(0, m).join(' + ') + ' 외 ' + (parts.length - m) + '종류';
 }
 
 // 같은 진영 안에서 팀끼리 구분되게 색을 조금씩 눌러준다
