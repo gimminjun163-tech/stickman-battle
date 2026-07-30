@@ -37,6 +37,16 @@ h1 span{color:var(--hi)}
 .mini{background:var(--panel2);border:1px solid var(--line);color:var(--dim);border-radius:7px;padding:5px 10px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit}
 .mini:hover{border-color:#4a5a6e;color:var(--ink)}
 .detail{margin-top:11px;font-size:11.5px;color:var(--dim);line-height:1.6;border-top:1px solid var(--line);padding-top:9px;min-height:74px}
+.plist{max-height:196px;overflow:auto;padding-right:3px}
+.prow{display:flex;align-items:center;gap:7px;padding:3px 0}
+.pdot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
+.pname{flex:0 0 92px;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow input[type=range]{flex:1;min-width:50px;accent-color:var(--hi);height:3px}
+.prow b{flex:0 0 40px;text-align:right;color:var(--hi);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.pbulk{display:flex;gap:5px;margin-top:7px}
+.pbulk button{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--dim);border-radius:7px;
+  padding:4px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.pbulk button:hover{border-color:#4a5a6e;color:var(--ink)}
 .detail b{color:var(--ink);font-weight:600}
 .go{display:block;width:100%;max-width:340px;margin:22px auto 0;padding:14px;border:0;border-radius:12px;background:var(--hi);color:#1a1206;font-size:16px;font-weight:800;cursor:pointer}
 .go:disabled{background:#39414d;color:#6c7684;cursor:not-allowed}
@@ -162,7 +172,8 @@ h1 span{color:var(--hi)}
     <div class="hint">베이스 체력은 낮추면 한 번 뚫리는 순간 끝나고, 올리면 공성전이 길어진다. 공 간격을 줄이면 병력이 빠르게 불어나 난전이 되고, 늘리면 한 명 한 명이 귀해진다.<br>
     최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.<br>
     병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.<br>
-    같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.</div>
+    같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.<br>
+    전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.</div>
   </div>
 
   <button class="go" id="startBtn" disabled>양쪽 팀을 고르세요</button>
@@ -511,6 +522,7 @@ const FORMULAS = ['E = mc²', 'F = ma', 'PV = nRT', 'E = hν', 'λ = h/p', 'ΔS 
 const G = {
   speed: 1, prevSpeed: 1, t: 0, spawnT: 0, over: false, winner: -1,
   roster: [[], []],            // 진영별로 고른 팀 목록
+  pow: [[], []],               // 항목별 전투력(공격력 배율)
   tcol: [[], []],              // 진영 안에서 팀마다 조금씩 다른 색
   col: ['#3b82f6', '#ef4444'],
   balls: [], sold: [], corp: [], proj: [], part: [], pops: [], nums: [], spr: [],
@@ -676,6 +688,7 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX) {
   if (n >= MAX_SOLD) return;
   const T = G.roster[team][ti], b = BASE[team];
   if (T.buff) { hpMul *= T.buff.hp; dmgMul *= T.buff.dmg; }
+  dmgMul *= (G.pow[team] && G.pow[team][ti]) || 1;   // 팀별 전투력
   size *= SIZE_MUL;
   const made = {
     team, ti, td: T, w, label, style: T.style, col: G.tcol[team][ti],
@@ -1965,11 +1978,11 @@ function cut(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
 /* ============================================================
    9. 셋업 UI
    ============================================================ */
-// 같은 팀을 몇 번이든 겹쳐 고를 수 있다. 배열에 인덱스가 그만큼 여러 번 들어간다.
+// 같은 팀을 몇 번이든 겹쳐 고를 수 있다. 항목마다 전투력(공격력 배율)을 따로 갖는다.
 const sel = [[], []];
 function dropOne(si, i) {
-  const at = sel[si].lastIndexOf(i);
-  if (at >= 0) sel[si].splice(at, 1);
+  for (let k = sel[si].length - 1; k >= 0; k--)
+    if (sel[si][k].i === i) { sel[si].splice(k, 1); return; }
 }
 function buildGrid(side) {
   const si = side === 'A' ? 0 : 1;
@@ -1980,7 +1993,7 @@ function buildGrid(side) {
     d.className = 'tcard';
     d.innerHTML = '<b>' + t.name + '</b><i>' + t.shop[3].name + '</i>';
     d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
-      if (e.shiftKey) dropOne(si, i); else sel[si].push(i);
+      if (e.shiftKey) dropOne(si, i); else sel[si].push({ i, pow: 1 });
       refresh(side);
     };
     d.oncontextmenu = e => {                 // 우클릭 = 하나 빼기
@@ -1994,7 +2007,7 @@ function refresh(side) {
   const si = side === 'A' ? 0 : 1;
   const el = document.getElementById('grid' + side);
   const cnt = new Map();
-  for (const i of sel[si]) cnt.set(i, (cnt.get(i) || 0) + 1);
+  for (const e of sel[si]) cnt.set(e.i, (cnt.get(e.i) || 0) + 1);
 
   [...el.children].forEach((c, i) => {
     const n = cnt.get(i) || 0;
@@ -2007,19 +2020,60 @@ function refresh(side) {
   });
 
   const det = document.getElementById('det' + side);
-  if (!sel[si].length)
-    det.innerHTML = '카드를 눌러 추가하세요. 같은 팀을 몇 번이든 겹쳐 고를 수 있고, 겹친 만큼 각자 따로 병력을 만든다.<br>Shift+클릭이나 우클릭으로 하나씩 뺄 수 있다.';
-  else {
-    const rows = [...cnt.entries()];
-    const show = rows.slice(0, 5).map(([i, n]) => {
-      const t = TEAMS[i];
-      return '<b>' + t.name + (n > 1 ? ' ×' + n : '') + '</b> — ' +
-        t.basics.map(b => WEAPONS[b].name).join(', ') +
-        ' / 상점 ' + t.shop.map(u => u.name + '(★' + u.cost + ')').join(', ');
-    }).join('<br>');
-    det.innerHTML = show + (rows.length > 5 ? '<br>… 외 ' + (rows.length - 5) + '종류' : '') +
-      '<br><span style="color:var(--hi)">연합군 ' + sel[si].length + '팀 (' + rows.length + '종류)</span>';
+  det.innerHTML = '';
+  if (!sel[si].length) {
+    det.innerHTML = '카드를 눌러 추가하세요. 같은 팀을 몇 번이든 겹쳐 고를 수 있고, 겹친 만큼 각자 따로 병력을 만든다.<br>' +
+      'Shift+클릭이나 우클릭으로 하나씩 뺀다. 고르면 팀마다 전투력 조절 막대가 여기 생긴다.';
+    return;
   }
+
+  const base = (side === 'A' ? colA : colB).value;
+  const n = sel[si].length;
+  const seen = new Map();
+  const list = document.createElement('div');
+  list.className = 'plist';
+
+  sel[si].forEach((e, k) => {
+    const t = TEAMS[e.i];
+    const dup = (seen.get(e.i) || 0) + 1; seen.set(e.i, dup);
+    const row = document.createElement('div');
+    row.className = 'prow';
+    row.title = t.name + ' — ' + t.basics.map(b => WEAPONS[b].name).join(', ') +
+                ' / 상점 ' + t.shop.map(u => u.name + '(★' + u.cost + ')').join(', ');
+
+    const dot = document.createElement('span');
+    dot.className = 'pdot'; dot.style.background = tintCol(base, k, n);
+
+    const nm = document.createElement('span');
+    nm.className = 'pname';
+    nm.textContent = t.name + (cnt.get(e.i) > 1 ? ' ' + dup : '');
+
+    const sl = document.createElement('input');
+    sl.type = 'range'; sl.min = '0.2'; sl.max = '5'; sl.step = '0.1'; sl.value = e.pow;
+
+    const val = document.createElement('b');
+    val.textContent = (+e.pow).toFixed(1) + '×';
+    sl.oninput = () => { e.pow = +sl.value; val.textContent = e.pow.toFixed(1) + '×'; };
+
+    row.append(dot, nm, sl, val);
+    list.appendChild(row);
+  });
+  det.appendChild(list);
+
+  const bulk = document.createElement('div');
+  bulk.className = 'pbulk';
+  for (const v of [0.5, 1, 2, 3]) {
+    const bt = document.createElement('button');
+    bt.textContent = '모두 ' + v + '×';
+    bt.onclick = () => { sel[si].forEach(e => e.pow = v); refresh(side); };
+    bulk.appendChild(bt);
+  }
+  det.appendChild(bulk);
+
+  const sum = document.createElement('div');
+  sum.style.cssText = 'color:var(--hi);margin-top:7px';
+  sum.textContent = '연합군 ' + n + '팀 (' + cnt.size + '종류)';
+  det.appendChild(sum);
   const btn = document.getElementById('startBtn');
   btn.disabled = !sel[0].length || !sel[1].length;
   btn.textContent = btn.disabled ? '양쪽 진영에서 팀을 고르세요' : '전투 시작 (' + sel[0].length + '팀 vs ' + sel[1].length + '팀)';
@@ -2027,7 +2081,7 @@ function refresh(side) {
 buildGrid('A'); buildGrid('B');
 document.querySelectorAll('.mini').forEach(b => b.onclick = () => {
   const side = b.dataset.all || b.dataset.none;
-  sel[side === 'A' ? 0 : 1] = b.dataset.all ? TEAMS.map((_, i) => i) : [];
+  sel[side === 'A' ? 0 : 1] = b.dataset.all ? TEAMS.map((_, i) => ({ i, pow: 1 })) : [];
   refresh(side);
 });
 
@@ -2036,7 +2090,9 @@ function syncDots() {
   document.getElementById('dotA').style.background = colA.value;
   document.getElementById('dotB').style.background = colB.value;
 }
-colA.oninput = colB.oninput = syncDots; syncDots();
+colA.oninput = () => { syncDots(); refresh('A'); };
+colB.oninput = () => { syncDots(); refresh('B'); };
+syncDots();
 
 const hpRange = document.getElementById('hpRange'), hpVal = document.getElementById('hpVal');
 function syncHp() { hpVal.textContent = Number(hpRange.value).toLocaleString(); }
@@ -2086,7 +2142,8 @@ function tintCol(hex, i, n) {
 }
 
 function startGame() {
-  G.roster = [sel[0].map(i => TEAMS[i]), sel[1].map(i => TEAMS[i])];
+  G.roster = [sel[0].map(e => TEAMS[e.i]), sel[1].map(e => TEAMS[e.i])];
+  G.pow = [sel[0].map(e => e.pow), sel[1].map(e => e.pow)];
   G.col = [colA.value, colB.value];
   G.tcol = [0, 1].map(t => G.roster[t].map((_, i) => tintCol(G.col[t], i, G.roster[t].length)));
   const rows = Math.min(ROWS_PAGE, G.roster[0].length + G.roster[1].length);
