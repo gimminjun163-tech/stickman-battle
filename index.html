@@ -578,7 +578,7 @@ let SIZE_MUL = 1;         // 병사 크기 배율 (셋업에서 조절)
 const MAX_SPROUT = 1000;  // 팀당 동시에 자라는 버섯 수
 const SPROUT_HP = 1, SPROUT_DMG = 1;      // 버섯병사도 본대와 동급
 const CORDY_CHANCE = .00002; // 포자가 적 몸에 닿았을 때 동충하초가 될 확률 (0.002%)
-const SPORE_CHANCE = .2; // 땅에 떨어진 포자가 버섯으로 자랄 확률 (20%)
+const SPORE_CHANCE = .1; // 땅에 떨어진 포자가 버섯으로 자랄 확률 (10%)
 const rnd = (a, b) => a + Math.random() * (b - a);
 // 사이언스버섯포자가 있는 진영은 시간이 갈수록 기술이 쌓인다
 const techOf = t => G.sciSide[t] ? G.t : 0;
