@@ -45,6 +45,8 @@ h1 span{color:var(--hi)}
 .wsel:hover{border-color:#4a5a6e}
 .wsel.lock{border-color:var(--hi);color:var(--hi)}
 .wtag{flex:0 0 46px;font-size:10px;color:var(--dim)}
+.prow2 input[type=range]{flex:1;min-width:50px;accent-color:var(--hi);height:3px}
+.prow2 b{flex:0 0 40px;text-align:right;color:var(--hi);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
 .pdot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
 .pname{flex:0 0 92px;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prow input[type=range]{flex:1;min-width:50px;accent-color:var(--hi);height:3px}
@@ -210,6 +212,7 @@ h1 span{color:var(--hi)}
     병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.<br>
     같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.<br>
     WEAPON 무기: 팀마다 <b>전부</b>(칸마다 다른 무기)와 <b>무기 하나만</b> 중에 고른다. 하나로 고정하면 공이 어느 칸에 떨어져도 그 무기만 나오고, 보드에도 그 무기가 모든 칸에 표시된다. 베이스 포탑도 고정한 무기를 따라간다.<br>
+    돌진 속도: 팀마다 적에게 다가가는 빠르기를 0.2~3배로 정한다. 가속과 최고 속도가 같이 바뀌고 걷는 동작도 따라간다. 느리게 두면 원거리 팀은 거리를 유지하고, 빠르게 두면 근접 팀이 포화를 뚫고 붙는다. 무마찰 돌격 같은 기술 배율은 여기에 곱해진다.<br>
     전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.<br>
     도전 모드: 무기도 상점도 없고 베이스가 부서지지 않는 표적이다. 반격도 안 한다. 상대편 화력이 얼마나 나오는지 누적 피해와 초당 피해로 보여준다. 순수한 측정을 위해 격전 배율은 꺼진다.<br>
     SHOP 보드: 끄면 BALL DROP이 SPLIT / WEAPON 두 칸만 남고 상점 보드가 사라진다. 공으로는 상점 병사를 뽑을 수 없고, WEAPON 보드가 빈 자리를 다 쓰도록 아래까지 넓어진다. 동충하초처럼 보드를 거치지 않는 능력은 그대로 상점급 병사를 꺼낸다.<br>
@@ -577,6 +580,7 @@ const G = {
   shopCount: [[], []],         // [진영][팀][칸]
   rage: 1, cordyN: [0, 0], shock: [], flash: 0, holes: [], rush: [0, 0], ooze: [0, 0], sciSide: [false, false], deliv: [], zones: [],
   wlock: [[], []],             // [진영][팀] = -1이면 전부, 아니면 그 무기 하나만
+  rspd: [[], []],              // [진영][팀] 돌진 속도 배율
   cam: { x: 700, s: 1 }
 };
 const GRAV_B = 560, GRAV_W = 900;
@@ -776,6 +780,7 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX) {
   const T = G.roster[team][ti], b = BASE[team];
   if (T.buff) { hpMul *= T.buff.hp; dmgMul *= T.buff.dmg; }
   dmgMul *= (G.pow[team] && G.pow[team][ti]) || 1;   // 팀별 전투력
+  const sm = (G.rspd[team] && G.rspd[team][ti]) || 1; // 팀별 돌진 속도
   size *= SIZE_MUL;
   const made = {
     team, ti, td: T, w, label, style: T.style, col: G.tcol[team][ti],
@@ -784,7 +789,8 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX) {
     size, hp: SOLDIER_HP * hpMul, max: SOLDIER_HP * hpMul, dmg: dmgMul,
     cool: rnd(0, w.cd), think: rnd(0, .3), tgt: null,
     ph: Math.random() * 6.28, swing: 0, hurt: 0, cordy: -1, cordyTi: 0,
-    spd: (58 + rnd(-6, 6)) / (0.72 + 0.28 * size)
+    sm,                                                  // 팀별 돌진 속도 배율
+    spd: (58 + rnd(-6, 6)) / (0.72 + 0.28 * size) * sm
   };
   G.sold.push(made);
   return made;
@@ -1000,8 +1006,9 @@ function stepBattle(dt) {
     s.face = dir;
     s.moving = false;
     const rush = (G.rush[s.team] > 0 ? 3 : 1) * (s.w.dash || (s.w.id === 'marchcook' ? 2.1 : 1));
-    if (dist > want) { s.vx += dir * s.spd * 8 * rush * dt; s.ph += dt * 10 * rush; s.moving = true; }
-    else if (dist < KITE_DIST && s.w.type === 'r' && !isBase) { s.vx -= dir * s.spd * 2 * dt; s.ph += dt * 8; s.moving = true; }
+    const sm = s.sm || 1;
+    if (dist > want) { s.vx += dir * s.spd * 8 * rush * dt; s.ph += dt * 10 * rush * sm; s.moving = true; }
+    else if (dist < KITE_DIST && s.w.type === 'r' && !isBase) { s.vx -= dir * s.spd * 2 * dt; s.ph += dt * 8 * sm; s.moving = true; }
     s.vx = clamp(s.vx, -s.spd * 2 * rush, s.spd * 2 * rush);
     s.vx *= s.ground ? (rush > 1 ? .97 : .86) : .99;   // 무마찰이면 미끄러진다
 
@@ -1455,7 +1462,11 @@ function wshape(ctx, w, S) {
   }
 }
 
-let LOD = false;   // true면 장식 생략 (대군 / 축소 상태)
+let LOD = false;            // true면 장식 생략 (아주 큰 전투에서만)
+// 예전엔 70명이 넘거나 화면이 조금만 축소돼도 켜져서, 싸우는 도중에 복장이 벗겨져 보였다.
+// 기본 설정의 최대 병력(진영당 130명 = 260명)으로는 절대 켜지지 않는 값으로 올렸고,
+// 경계에서 깜빡이지 않도록 켜지는 값과 꺼지는 값을 따로 둔다.
+const LOD_ON = 420, LOD_OFF = 320;
 function drawSoldier(ctx, s) {
   const S = s.size, f = s.face, x = s.x, y = s.y;
   const body = s.hurt > 0 ? '#ffffff' : s.col;
@@ -1805,9 +1816,12 @@ function drawField() {
     fx.globalAlpha = 1;
   }
   for (const c of G.corp) if (onScreen(c.j[2].x)) drawCorpse(fx, c);
-  LOD = G.sold.length > 70 || s < .8;
+  // 장식을 끌지는 '화면에 실제로 그려지는 수'로만 정한다. 축소는 기준에 넣지 않는다 —
+  // 전투 중엔 카메라가 계속 넓어졌다 좁아져서, 그때마다 복장이 벗겨져 보였다.
+  let shown = 0;
+  for (const so of G.sold) if (onScreen(so.x)) shown++;
+  LOD = LOD ? shown > LOD_OFF : shown > LOD_ON;
   for (const so of G.sold) if (onScreen(so.x)) drawSoldier(fx, so);
-  LOD = false;
 
   for (const h of G.holes) {
     const k = clamp(h.life / Math.min(1, h.max || 1), 0, 1);
@@ -2125,7 +2139,7 @@ function buildGrid(side) {
     d.className = 'tcard';
     d.innerHTML = '<b>' + t.name + '</b><i>' + (t.shop[3] ? t.shop[3].name : '표적') + '</i>';
     d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
-      if (e.shiftKey) dropOne(si, i); else sel[si].push({ i, pow: 1, wp: -1 });
+      if (e.shiftKey) dropOne(si, i); else sel[si].push({ i, pow: 1, wp: -1, spd: 1 });
       refresh(side);
     };
     d.oncontextmenu = e => {                 // 우클릭 = 하나 빼기
@@ -2155,7 +2169,7 @@ function refresh(side) {
   det.innerHTML = '';
   if (!sel[si].length) {
     det.innerHTML = '카드를 눌러 추가하세요. 같은 팀을 몇 번이든 겹쳐 고를 수 있고, 겹친 만큼 각자 따로 병력을 만든다.<br>' +
-      'Shift+클릭이나 우클릭으로 하나씩 뺀다. 고르면 팀마다 전투력 막대와 WEAPON 무기 선택이 여기 생긴다.';
+      'Shift+클릭이나 우클릭으로 하나씩 뺀다. 고르면 팀마다 전투력·WEAPON 무기·돌진 속도가 여기 생긴다.';
     return;
   }
 
@@ -2218,6 +2232,21 @@ function refresh(side) {
     }
     row2.append(tag, ws);
     list.appendChild(row2);
+
+    // 돌진 속도 — 적에게 다가가는 빠르기
+    const row3 = document.createElement('div');
+    row3.className = 'prow2';
+    const tag3 = document.createElement('span');
+    tag3.className = 'wtag'; tag3.textContent = '돌진';
+    const sp = document.createElement('input');
+    sp.type = 'range'; sp.min = '0.2'; sp.max = '3'; sp.step = '0.1';
+    if (e.spd === undefined) e.spd = 1;
+    sp.value = e.spd;
+    const spv = document.createElement('b');
+    spv.textContent = (+e.spd).toFixed(1) + '×';
+    sp.oninput = () => { e.spd = +sp.value; spv.textContent = e.spd.toFixed(1) + '×'; };
+    row3.append(tag3, sp, spv);
+    list.appendChild(row3);
   });
   det.appendChild(list);
 
@@ -2251,6 +2280,16 @@ function refresh(side) {
   wbulk.append(allBt, oneBt, rndBt);
   det.appendChild(wbulk);
 
+  const sbulk = document.createElement('div');
+  sbulk.className = 'pbulk';
+  for (const v of [0.5, 1, 1.8, 3]) {
+    const bt = document.createElement('button');
+    bt.textContent = '돌진 ' + v + '×';
+    bt.onclick = () => { sel[si].forEach(e => e.spd = v); refresh(side); };
+    sbulk.appendChild(bt);
+  }
+  det.appendChild(sbulk);
+
   const sum = document.createElement('div');
   sum.style.cssText = 'color:var(--hi);margin-top:7px';
   sum.textContent = '연합군 ' + n + '팀 (' + cnt.size + '종류)';
@@ -2262,7 +2301,7 @@ function refresh(side) {
 buildGrid('A'); buildGrid('B');
 document.querySelectorAll('.mini').forEach(b => b.onclick = () => {
   const side = b.dataset.all || b.dataset.none;
-  sel[side === 'A' ? 0 : 1] = b.dataset.all ? TEAMS.map((_, i) => ({ i, pow: 1, wp: -1 })) : [];
+  sel[side === 'A' ? 0 : 1] = b.dataset.all ? TEAMS.map((_, i) => ({ i, pow: 1, wp: -1, spd: 1 })) : [];
   refresh(side);
 });
 
@@ -2349,6 +2388,7 @@ function startGame() {
   G.roster = [sel[0].map(e => TEAMS[e.i]), sel[1].map(e => TEAMS[e.i])];
   G.pow = [sel[0].map(e => e.pow), sel[1].map(e => e.pow)];
   G.wlock = [sel[0].map(e => wlockOf(e)), sel[1].map(e => wlockOf(e))];
+  G.rspd  = [sel[0].map(e => +e.spd || 1), sel[1].map(e => +e.spd || 1)];
   G.col = [colA.value, colB.value];
   G.tcol = [0, 1].map(t => G.roster[t].map((_, i) => tintCol(G.col[t], i, G.roster[t].length)));
   // 칸 수는 고른 팀들 중 가장 많은 쪽에 맞춘다. 도전 모드처럼 0개인 팀이 있어도 줄어들지 않는다.
