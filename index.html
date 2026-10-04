@@ -39,6 +39,12 @@ h1 span{color:var(--hi)}
 .detail{margin-top:11px;font-size:11.5px;color:var(--dim);line-height:1.6;border-top:1px solid var(--line);padding-top:9px;min-height:74px}
 .plist{max-height:196px;overflow:auto;padding-right:3px}
 .prow{display:flex;align-items:center;gap:7px;padding:3px 0}
+.prow2{display:flex;align-items:center;gap:7px;padding:0 0 5px 16px}
+.wsel{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+      border-radius:6px;padding:3px 5px;font-size:10.5px;font-family:inherit;cursor:pointer}
+.wsel:hover{border-color:#4a5a6e}
+.wsel.lock{border-color:var(--hi);color:var(--hi)}
+.wtag{flex:0 0 46px;font-size:10px;color:var(--dim)}
 .pdot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
 .pname{flex:0 0 92px;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prow input[type=range]{flex:1;min-width:50px;accent-color:var(--hi);height:3px}
@@ -203,6 +209,7 @@ h1 span{color:var(--hi)}
     최후의 발악: 베이스 체력이 정한 값 이하로 떨어지는 순간 딱 한 번, 그 베이스가 전장에 있는 적 병사를 전부 쓸어버린다. 베이스 체력보다 큰 값은 자동으로 맞춰진다.<br>
     병사 체력과 크기는 모든 팀에 똑같이 곱해진다. 상점 병사도 자기 배율만큼 같이 커지고 단단해진다. 크게 만들면 그만큼 느려진다.<br>
     같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.<br>
+    WEAPON 무기: 팀마다 <b>전부</b>(칸마다 다른 무기)와 <b>무기 하나만</b> 중에 고른다. 하나로 고정하면 공이 어느 칸에 떨어져도 그 무기만 나오고, 보드에도 그 무기가 모든 칸에 표시된다. 베이스 포탑도 고정한 무기를 따라간다.<br>
     전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.<br>
     도전 모드: 무기도 상점도 없고 베이스가 부서지지 않는 표적이다. 반격도 안 한다. 상대편 화력이 얼마나 나오는지 누적 피해와 초당 피해로 보여준다. 순수한 측정을 위해 격전 배율은 꺼진다.<br>
     SHOP 보드: 끄면 BALL DROP이 SPLIT / WEAPON 두 칸만 남고 상점 보드가 사라진다. 공으로는 상점 병사를 뽑을 수 없고, WEAPON 보드가 빈 자리를 다 쓰도록 아래까지 넓어진다. 동충하초처럼 보드를 거치지 않는 능력은 그대로 상점급 병사를 꺼낸다.<br>
@@ -569,6 +576,7 @@ const G = {
   balls: [], sold: [], corp: [], proj: [], part: [], pops: [], nums: [], spr: [],
   shopCount: [[], []],         // [진영][팀][칸]
   rage: 1, cordyN: [0, 0], shock: [], flash: 0, holes: [], rush: [0, 0], ooze: [0, 0], sciSide: [false, false], deliv: [], zones: [],
+  wlock: [[], []],             // [진영][팀] = -1이면 전부, 아니면 그 무기 하나만
   cam: { x: 700, s: 1 }
 };
 const GRAV_B = 560, GRAV_W = 900;
@@ -734,6 +742,9 @@ function resolveSlot(team, ti, reg, idx, x, y) {
   }
   const T = G.roster[team][ti], col = G.tcol[team][ti];
   if (reg === 'weapon') {
+    // 무기를 하나로 고정한 팀은 어느 칸에 떨어지든 그 무기만 나온다
+    const lock = G.wlock[team][ti];
+    if (lock >= 0 && lock < T.basics.length) idx = lock;
     const w = WEAPONS[T.basics[idx]];
     if (!w) { popText(x, y, '없음', '#5c6a7c'); return; }
     spawnSoldier(team, ti, w, 1, 1, 1, w.name);
@@ -2030,7 +2041,10 @@ function drawPlinko() {
   for (let i = 0; i < Wg.slots; i++) {
     const cx = Wg.x + ww * (i + .5);
     PG.list.forEach(([t, k], r) => {
-      const w = WEAPONS[G.roster[t][k].basics[i]];
+      const T = G.roster[t][k], lock = G.wlock[t][k];
+      // 무기를 고정한 팀은 모든 칸에 그 무기를 보여준다 (실제로 그것만 나오니까)
+      const on = (lock >= 0 && lock < T.basics.length) ? lock : i;
+      const w = WEAPONS[T.basics[on]];
       if (!w) {
         px.fillStyle = '#3d4a5c'; px.font = '700 9px system-ui'; px.textAlign = 'center';
         px.fillText('—', cx, wLine + 13 + r * RH); return;
@@ -2093,6 +2107,11 @@ function cut(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
    ============================================================ */
 // 같은 팀을 몇 번이든 겹쳐 고를 수 있다. 항목마다 전투력(공격력 배율)을 따로 갖는다.
 const sel = [[], []];
+// 고른 팀이 WEAPON에서 무기 하나만 쓰는지 (-1이면 전부)
+const wlockOf = e => {
+  const n = TEAMS[e.i].basics.length;
+  return (e.wp === undefined || e.wp < 0 || e.wp >= n) ? -1 : e.wp;
+};
 function dropOne(si, i) {
   for (let k = sel[si].length - 1; k >= 0; k--)
     if (sel[si][k].i === i) { sel[si].splice(k, 1); return; }
@@ -2106,7 +2125,7 @@ function buildGrid(side) {
     d.className = 'tcard';
     d.innerHTML = '<b>' + t.name + '</b><i>' + (t.shop[3] ? t.shop[3].name : '표적') + '</i>';
     d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
-      if (e.shiftKey) dropOne(si, i); else sel[si].push({ i, pow: 1 });
+      if (e.shiftKey) dropOne(si, i); else sel[si].push({ i, pow: 1, wp: -1 });
       refresh(side);
     };
     d.oncontextmenu = e => {                 // 우클릭 = 하나 빼기
@@ -2136,7 +2155,7 @@ function refresh(side) {
   det.innerHTML = '';
   if (!sel[si].length) {
     det.innerHTML = '카드를 눌러 추가하세요. 같은 팀을 몇 번이든 겹쳐 고를 수 있고, 겹친 만큼 각자 따로 병력을 만든다.<br>' +
-      'Shift+클릭이나 우클릭으로 하나씩 뺀다. 고르면 팀마다 전투력 조절 막대가 여기 생긴다.';
+      'Shift+클릭이나 우클릭으로 하나씩 뺀다. 고르면 팀마다 전투력 막대와 WEAPON 무기 선택이 여기 생긴다.';
     return;
   }
 
@@ -2170,6 +2189,35 @@ function refresh(side) {
 
     row.append(dot, nm, sl, val);
     list.appendChild(row);
+
+    // WEAPON에서 무기 하나만 나오게 할지, 다 나오게 할지
+    const row2 = document.createElement('div');
+    row2.className = 'prow2';
+    const tag = document.createElement('span');
+    tag.className = 'wtag'; tag.textContent = 'WEAPON';
+    const ws = document.createElement('select');
+    ws.className = 'wsel';
+    if (!t.basics.length) {
+      ws.innerHTML = '<option>무기 없음</option>';
+      ws.disabled = true;
+    } else {
+      const opts = ['<option value="-1">전부 (칸마다 다르게)</option>'];
+      t.basics.forEach((id, bi) => {
+        const w = WEAPONS[id];
+        opts.push('<option value="' + bi + '">' + w.name + '만 (' +
+                  (w.type === 'r' ? '원거리' : '근접') + ')</option>');
+      });
+      ws.innerHTML = opts.join('');
+      if (e.wp >= t.basics.length) e.wp = -1;        // 팀이 바뀌었을 때 대비
+      ws.value = String(e.wp === undefined ? -1 : e.wp);
+      ws.classList.toggle('lock', e.wp >= 0);
+      ws.onchange = () => {
+        e.wp = +ws.value;
+        ws.classList.toggle('lock', e.wp >= 0);
+      };
+    }
+    row2.append(tag, ws);
+    list.appendChild(row2);
   });
   det.appendChild(list);
 
@@ -2183,6 +2231,26 @@ function refresh(side) {
   }
   det.appendChild(bulk);
 
+  const wbulk = document.createElement('div');
+  wbulk.className = 'pbulk';
+  const allBt = document.createElement('button');
+  allBt.textContent = '무기 전부';
+  allBt.onclick = () => { sel[si].forEach(e => e.wp = -1); refresh(side); };
+  const oneBt = document.createElement('button');
+  oneBt.textContent = '무기 1번만';
+  oneBt.onclick = () => { sel[si].forEach(e => e.wp = TEAMS[e.i].basics.length ? 0 : -1); refresh(side); };
+  const rndBt = document.createElement('button');
+  rndBt.textContent = '팀마다 무작위 하나';
+  rndBt.onclick = () => {
+    sel[si].forEach(e => {
+      const n2 = TEAMS[e.i].basics.length;
+      e.wp = n2 ? Math.floor(Math.random() * n2) : -1;
+    });
+    refresh(side);
+  };
+  wbulk.append(allBt, oneBt, rndBt);
+  det.appendChild(wbulk);
+
   const sum = document.createElement('div');
   sum.style.cssText = 'color:var(--hi);margin-top:7px';
   sum.textContent = '연합군 ' + n + '팀 (' + cnt.size + '종류)';
@@ -2194,7 +2262,7 @@ function refresh(side) {
 buildGrid('A'); buildGrid('B');
 document.querySelectorAll('.mini').forEach(b => b.onclick = () => {
   const side = b.dataset.all || b.dataset.none;
-  sel[side === 'A' ? 0 : 1] = b.dataset.all ? TEAMS.map((_, i) => ({ i, pow: 1 })) : [];
+  sel[side === 'A' ? 0 : 1] = b.dataset.all ? TEAMS.map((_, i) => ({ i, pow: 1, wp: -1 })) : [];
   refresh(side);
 });
 
@@ -2280,6 +2348,7 @@ function tintCol(hex, i, n) {
 function startGame() {
   G.roster = [sel[0].map(e => TEAMS[e.i]), sel[1].map(e => TEAMS[e.i])];
   G.pow = [sel[0].map(e => e.pow), sel[1].map(e => e.pow)];
+  G.wlock = [sel[0].map(e => wlockOf(e)), sel[1].map(e => wlockOf(e))];
   G.col = [colA.value, colB.value];
   G.tcol = [0, 1].map(t => G.roster[t].map((_, i) => tintCol(G.col[t], i, G.roster[t].length)));
   // 칸 수는 고른 팀들 중 가장 많은 쪽에 맞춘다. 도전 모드처럼 0개인 팀이 있어도 줄어들지 않는다.
@@ -2316,7 +2385,13 @@ function startGame() {
     const b = BASE[t];
     b.max = startHp; b.hp = startHp; b.cool = 0; b.nuked = false; b.dark = 5; b.hole = 12;
     let rangedId = null;
-    for (const td of G.roster[t]) { rangedId = td.basics.find(id => WEAPONS[id].type === 'r'); if (rangedId) break; }
+    for (let k = 0; k < G.roster[t].length; k++) {
+      const td = G.roster[t][k], lk = G.wlock[t][k];
+      // 무기를 고정한 팀은 그 무기만 포탑 후보가 된다
+      const pool = (lk >= 0 && lk < td.basics.length) ? [td.basics[lk]] : td.basics;
+      rangedId = pool.find(id => WEAPONS[id].type === 'r');
+      if (rangedId) break;
+    }
     b.turret = WEAPONS[rangedId || 'bow'];
   }
   buildBoard();
