@@ -174,6 +174,10 @@ h1 span{color:var(--hi)}
       <button data-sz="2.5">초거대 2.5배</button>
     </div>
     <div class="row" style="margin-top:16px">
+      <label for="shopTgl">SHOP 보드</label>
+      <button class="mini on" id="shopTgl" style="flex:1;padding:7px">사용함</button>
+    </div>
+    <div class="row" style="margin-top:16px">
       <label for="ballNum">최대 공 개수</label>
       <input type="number" id="ballNum" min="1" step="10" value="120">
       <button class="mini" id="ballInf">무한</button>
@@ -201,6 +205,7 @@ h1 span{color:var(--hi)}
     같은 팀을 여러 번 고르면 그 수만큼 공이 따로 떨어지고 상점 게이지도 따로 쌓인다. 색은 조금씩 다르게 나뉘어 구분된다.<br>
     전투력은 팀 목록에서 하나씩 조절한다. 그 팀이 뽑는 모든 병사의 공격력에 곱해지고 (0.2~5배), 체력은 위의 공용 막대가 담당한다.<br>
     도전 모드: 무기도 상점도 없고 베이스가 부서지지 않는 표적이다. 반격도 안 한다. 상대편 화력이 얼마나 나오는지 누적 피해와 초당 피해로 보여준다. 순수한 측정을 위해 격전 배율은 꺼진다.<br>
+    SHOP 보드: 끄면 BALL DROP이 SPLIT / WEAPON 두 칸만 남고 상점 보드가 사라진다. 공으로는 상점 병사를 뽑을 수 없고, WEAPON 보드가 빈 자리를 다 쓰도록 아래까지 넓어진다. 동충하초처럼 보드를 거치지 않는 능력은 그대로 상점급 병사를 꺼낸다.<br>
     공과 병사 상한은 각각 진영 하나 기준이고 숫자로 직접 넣을 수 있다. 칸을 비우거나 <b>무한</b>을 누르면 제한이 사라진다. 공은 서로 부딪히지 않으니 많으면 겹쳐 보인다.<br>
     무한으로 두고 공 간격까지 1초로 줄이면 병사가 계속 불어나서 프레임이 크게 떨어진다. 상한은 천장이라서, 기본 설정에서는 올려도 실제 수는 알아서 균형을 잡는다.</div>
   </div>
@@ -425,7 +430,7 @@ const FORMULA_ATK = [
 /* 원거리 무기가 너무 세서 근접 병사가 붙어보지도 못하고 녹는 문제를 완화한다.
    사거리는 그대로 두고 위력만 깎아서, 접근하는 동안 버틸 수 있게 만든다.
    핵폭탄은 사이언스 버섯 전용 한 방이라 예외로 둔다. */
-let RANGED_NERF = 1;   // 원거리 위력 배율
+let RANGED_NERF = .6;   // 원거리 위력 배율
 let KITE_DIST = 55;   // 원거리 병사가 뒷걸음질 치기 시작하는 거리 (예전엔 사거리의 32%)
 let RANGED_MIN = 0;  // 이 거리 안으로 적이 붙으면 원거리 무기를 못 쏜다
 let RANGED_KNOCK = 0;   // 원거리 피격 넉백 (0 = 없음)
@@ -569,6 +574,7 @@ const G = {
 const GRAV_B = 560, GRAV_W = 900;
 let MAX_BALL = 120, MAX_BALL_SIDE = 120;   // 팀 하나당 / 진영 전체 공 상한 (셋업에서 조절)
 let MAX_SOLD = 130;                        // 진영당 병사 상한 (셋업에서 조절)
+let USE_SHOP = true;                       // 이 매치에 SHOP 보드를 쓸지 (셋업에서 조절)
 const MAX_CORP = 55;
 let SPAWN_EVERY = 7;   // 셋업에서 조절
 let NUKE_HP = 0;       // 이 체력 이하로 떨어지면 베이스가 적 병사를 전멸시킨다 (0 = 끔)
@@ -578,7 +584,7 @@ let SIZE_MUL = 1;         // 병사 크기 배율 (셋업에서 조절)
 const MAX_SPROUT = 1000;  // 팀당 동시에 자라는 버섯 수
 const SPROUT_HP = 1, SPROUT_DMG = 1;      // 버섯병사도 본대와 동급
 const CORDY_CHANCE = .00002; // 포자가 적 몸에 닿았을 때 동충하초가 될 확률 (0.002%)
-const SPORE_CHANCE = .1; // 땅에 떨어진 포자가 버섯으로 자랄 확률 (10%)
+const SPORE_CHANCE = .2; // 땅에 떨어진 포자가 버섯으로 자랄 확률 (20%)
 const rnd = (a, b) => a + Math.random() * (b - a);
 // 사이언스버섯포자가 있는 진영은 시간이 갈수록 기술이 쌓인다
 const techOf = t => G.sciSide[t] ? G.t : 0;
@@ -589,23 +595,49 @@ const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
    ============================================================ */
 const REG = {
   main:   { x: 8, y: 18,  w: 324, h: 214, slots: 3, floor: 40, label: 'BALL DROP' },
-  weapon: { x: 8, y: 262, w: 324, h: 186, slots: 5, floor: 46, label: 'WEAPON' },   // slots는 시작할 때 다시 정한다
-  shop:   { x: 8, y: 478, w: 324, h: 182, slots: 4, floor: 62, label: 'SHOP' }
+  weapon: { x: 8, y: 262, w: 324, h: 186, slots: 5, floor: 46, label: 'WEAPON' },   // slots/h는 시작할 때 다시 정한다
+  shop:   { x: 8, y: 478, w: 324, h: 182, slots: 4, floor: 62, label: 'SHOP', hidden: false }
 };
+// SHOP을 끄면 WEAPON 보드가 그 자리까지 내려온다
+const WEAP_H = 186, WEAP_H_TALL = 398;
 const PEGS = [], WALLS = [];
+// 칸이 고르게 나오도록 맞춘 값들 (분포를 측정해서 고른 수치다)
+const ALIGN_ROWS = 2;   // 이 줄 수 이하면 못을 칸 경계에 맞춘다
+const WALL_REST  = 1;   // 측면 벽 반사 계수 — 낮추면 공이 벽을 타고 내려와 양 끝 칸만 잘 나온다
 
 function buildBoard() {
   PEGS.length = 0; WALLS.length = 0;
   for (const key in REG) {
     const R = REG[key];
+    if (R.hidden) continue;
     const lineY = R.y + R.h - R.floor;
     const big = key === 'main';
     const size = big ? 10 : 8;
-    const gapY = 38, gapX = big ? 50 : 46;
+    const gapY = 38, gapX = big ? 50 : 46, br = big ? 8 : 6.5;
+    const edge = size * 1.42 + br + 3;   // 벽과 못 사이는 공이 지나갈 만큼 띄운다
+    const slotW = R.w / R.slots;
+    let nRows = 0;
+    for (let y = R.y + 44; y < lineY - 22; y += gapY) nRows++;
+    // 못을 왼쪽부터 깔면 오른쪽에 빈 구역이 남아서 그 칸만 유난히 잘 나온다.
+    // 줄 수에 따라 공정한 배치가 다르다. 아래 두 방식은 분포를 측정해서 고른 것이다.
+    let cols, dx, phase;
+    if (nRows <= ALIGN_ROWS) {
+      // 줄이 적으면 공이 섞일 틈이 없으니 못 위치가 그대로 결과가 된다.
+      // 못을 칸 경계에 딱 놓아 반반으로 쪼갠다.
+      // 간격을 더 촘촘히 하면 특정 배치에서 한 칸으로 쏠린다 (측정으로 확인). 칸 폭 그대로 쓴다.
+      dx = slotW; cols = R.slots; phase = 1;
+    } else {
+      // 줄이 많으면 공이 충분히 섞인다. 칸 폭과 안 맞는 간격으로 깔아 쏠림을 없앤다.
+      cols = clamp(Math.round(R.w / gapX), 2, Math.floor(R.w / (2 * edge)));
+      dx = R.w / cols; phase = 0;
+    }
     let row = 0;
     for (let y = R.y + 44; y < lineY - 22; y += gapY, row++) {
-      const off = (row % 2) ? gapX / 2 : 0;
-      for (let x = R.x + 34 + off; x < R.x + R.w - 32; x += gapX) {
+      const gap = (row % 2) !== phase;                // 이 줄이 틈에 들어가는 줄인지
+      const n = gap ? cols - 1 : cols;
+      for (let c = 0; c < n; c++) {
+        const x = R.x + dx * (gap ? c + 1 : c + .5);
+        if (x - R.x < edge || R.x + R.w - x < edge) continue;   // 벽에 붙으면 공이 못 지나간다
         PEGS.push({ x, y, h: size, a: Math.random() * 6.28,
                     sp: (Math.random() < .5 ? -1 : 1) * rnd(.5, 1.5), reg: key });
       }
@@ -663,8 +695,9 @@ function stepPlinko(dt) {
     const b = G.balls[i], R = REG[b.reg];
     b.vy += GRAV_B * dt;
     b.x += b.vx * dt; b.y += b.vy * dt;
-    if (b.x - b.r < R.x) { b.x = R.x + b.r; b.vx = Math.abs(b.vx) * .5; }
-    if (b.x + b.r > R.x + R.w) { b.x = R.x + R.w - b.r; b.vx = -Math.abs(b.vx) * .5; }
+    // 벽 반사를 너무 죽이면 공이 벽을 타고 내려와 양 끝 칸만 잘 나온다
+    if (b.x - b.r < R.x) { b.x = R.x + b.r; b.vx = Math.abs(b.vx) * WALL_REST + 6; }
+    if (b.x + b.r > R.x + R.w) { b.x = R.x + R.w - b.r; b.vx = -(Math.abs(b.vx) * WALL_REST + 6); }
     if (b.y - b.r < R.y) { b.y = R.y + b.r; b.vy = Math.abs(b.vy) * .3; }
     for (const p of PEGS) if (p.reg === b.reg && Math.abs(p.x - b.x) < 34 && Math.abs(p.y - b.y) < 34)
       hitBox(b, p.x, p.y, p.h, p.h, p.a);
@@ -676,6 +709,9 @@ function stepPlinko(dt) {
       if (Math.abs(b.y - b.ly) < 3) { b.vx = rnd(-150, 150); b.vy = 80; b.y += 2; }
       b.ly = b.y; b.st = 0;
     }
+    // 끼지는 않았는데 못 사이에서 계속 튕기며 안 내려오는 공도 있다. 12초가 넘으면 밀어 내린다.
+    b.age = (b.age || 0) + dt;
+    if (b.age > 12) { b.vx *= .3; if (b.vy < 300) b.vy = 300; }
 
     const lineY = R.y + R.h - R.floor;
     const trigger = b.reg === 'main' ? R.y + R.h - 10 : lineY + (R.floor - 16);
@@ -748,6 +784,7 @@ function burstCordyceps(team, ti, x, y) {
   G.cordyN[team]++;
   const T = G.roster[team][ti];
   const u = T.shop[Math.floor(Math.random() * T.shop.length)];
+  if (!u) return;                      // 상점이 없는 팀(도전 모드)이면 꺼낼 게 없다
   spawnSoldier(team, ti, WEAPONS[u.w], u.hp, u.dmg, u.size, u.name, clamp(x, 90, WORLD_W - 90));
   G.nums.push({ x, y: y - 30, vx: 0, vy: -40, v: '동충하초 ' + u.name, col: '#ffb454', big: true, life: 1.6 });
   for (let k = 0; k < 22; k++)
@@ -1959,6 +1996,7 @@ function drawPlinko() {
 
   for (const key in REG) {
     const R = REG[key], lineY = R.y + R.h - R.floor;
+    if (R.hidden) continue;
     px.fillStyle = '#8b96a5'; px.font = '700 10px system-ui'; px.textAlign = 'left';
     px.fillText(R.label, R.x + 1, R.y - 7);
     px.fillStyle = '#0c1118'; px.strokeStyle = '#2a3442'; px.lineWidth = 1;
@@ -1982,9 +2020,9 @@ function drawPlinko() {
   for (const w of WALLS) px.fillRect(w.x - w.hw, w.cy - w.hh, w.hw * 2, w.hh * 2);
 
   // BALL DROP 칸
-  const M = REG.main, mw = M.w / 3, mLine = M.y + M.h - M.floor;
+  const M = REG.main, mw = M.w / M.slots, mLine = M.y + M.h - M.floor;
   px.textAlign = 'center'; px.font = '800 14px system-ui'; px.fillStyle = '#c8d2de';
-  for (let i = 0; i < 3; i++) px.fillText(SLOTNAME[i], M.x + mw * (i + .5), mLine + 26);
+  for (let i = 0; i < M.slots; i++) px.fillText(SLOTNAME[i], M.x + mw * (i + .5), mLine + 26);
 
   // WEAPON 칸 — 고른 팀 수만큼 줄이 늘어난다
   const Wg = REG.weapon, ww = Wg.w / Wg.slots, wLine = Wg.y + Wg.h - Wg.floor;
@@ -2007,7 +2045,7 @@ function drawPlinko() {
 
   // SHOP 칸 — 팀마다 한 줄씩, 남은 개수까지 한 줄에
   const Sg = REG.shop, sw = Sg.w / Sg.slots, sLine = Sg.y + Sg.h - Sg.floor;
-  for (let i = 0; i < Sg.slots; i++) {
+  for (let i = 0; !Sg.hidden && i < Sg.slots; i++) {
     const cx = Sg.x + sw * (i + .5);
     PG.list.forEach(([t, k], r) => {
       const u = G.roster[t][k].shop[i];
@@ -2019,7 +2057,7 @@ function drawPlinko() {
                 cut(u.name, 5) + ' ' + (u.cost - G.shopCount[t][k][i]), G.tcol[t][k], RH > 12 ? .28 : .24);
     });
   }
-  if (PG.pages > 1) {
+  if (!Sg.hidden && PG.pages > 1) {
     px.fillStyle = '#5c6a7c'; px.font = '700 8px system-ui'; px.textAlign = 'right';
     px.fillText((PG.pg + 1) + '/' + PG.pages, Sg.x + Sg.w - 3, sLine - 3);
   }
@@ -2189,6 +2227,12 @@ function syncSz() { szVal.textContent = (+szRange.value).toFixed(2) + '배'; }
 szRange.oninput = syncSz; syncSz();
 const ballNum = document.getElementById('ballNum'), ballInf = document.getElementById('ballInf');
 const soldNum = document.getElementById('soldNum'), soldInf = document.getElementById('soldInf');
+const shopTgl = document.getElementById('shopTgl');
+shopTgl.onclick = () => {
+  const on = !shopTgl.classList.contains('on');
+  shopTgl.classList.toggle('on', on);
+  shopTgl.textContent = on ? '사용함' : '사용 안 함';
+};
 const INF = { ball: false, sold: false };
 function syncInf() {
   ballInf.classList.toggle('on', INF.ball); ballNum.disabled = INF.ball;
@@ -2240,6 +2284,11 @@ function startGame() {
   G.tcol = [0, 1].map(t => G.roster[t].map((_, i) => tintCol(G.col[t], i, G.roster[t].length)));
   // 칸 수는 고른 팀들 중 가장 많은 쪽에 맞춘다. 도전 모드처럼 0개인 팀이 있어도 줄어들지 않는다.
   const all = [...G.roster[0], ...G.roster[1]];
+  // SHOP을 끄면 BALL DROP은 SPLIT/WEAPON 두 칸이 되고 WEAPON 보드가 아래까지 넓어진다
+  USE_SHOP = shopTgl.classList.contains('on');
+  REG.main.slots  = USE_SHOP ? 3 : 2;
+  REG.shop.hidden = !USE_SHOP;
+  REG.weapon.h    = USE_SHOP ? WEAP_H : WEAP_H_TALL;
   REG.weapon.slots = Math.max(1, ...all.map(t => t.basics.length));
   REG.shop.slots   = Math.max(1, ...all.map(t => t.shop.length));
   const rows = Math.min(ROWS_PAGE, G.roster[0].length + G.roster[1].length);
