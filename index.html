@@ -264,6 +264,21 @@ input.pdot:hover{border-color:var(--hi)}
       <button data-ctl="pve">PvE (사람 vs AI)</button>
       <button data-ctl="eve">EvE (AI vs AI)</button>
     </div>
+    <div class="row" style="margin-top:12px">
+      <label style="color:#3b82f6">왼쪽 AI</label>
+      <button class="mini aidif" data-side="0" data-ai="0" style="flex:1;padding:7px">쉬움</button>
+      <button class="mini on aidif" data-side="0" data-ai="1" style="flex:1;padding:7px">보통</button>
+      <button class="mini aidif" data-side="0" data-ai="2" style="flex:1;padding:7px">어려움</button>
+      <button class="mini aidif" data-side="0" data-ai="3" style="flex:1;padding:7px">최강</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <label style="color:#ef4444">오른쪽 AI</label>
+      <button class="mini aidif" data-side="1" data-ai="0" style="flex:1;padding:7px">쉬움</button>
+      <button class="mini on aidif" data-side="1" data-ai="1" style="flex:1;padding:7px">보통</button>
+      <button class="mini aidif" data-side="1" data-ai="2" style="flex:1;padding:7px">어려움</button>
+      <button class="mini aidif" data-side="1" data-ai="3" style="flex:1;padding:7px">최강</button>
+    </div>
+    <div class="hint" id="aiHint" style="margin-top:6px"></div>
     <div class="row" style="margin-top:16px">
       <label for="coinNum">기본 코인</label>
       <input type="number" id="coinNum" min="0" step="1" value="10">
@@ -581,9 +596,20 @@ input.pdot:hover{border-color:var(--hi)}
       <b id="hillHVal">62</b>
     </div>
     <div class="row">
-      <label for="baseEl">기지 지대 높이</label>
+      <label for="baseEl" style="color:#3b82f6">왼쪽 지대</label>
       <input type="range" id="baseEl" min="0" max="220" step="5" value="0">
       <b id="baseElVal">평지</b>
+    </div>
+    <div class="row">
+      <label for="baseElR" style="color:#ef4444">오른쪽 지대</label>
+      <input type="range" id="baseElR" min="0" max="220" step="5" value="0">
+      <b id="baseElRVal">평지</b>
+    </div>
+    <div class="presets">
+      <button data-be="0">둘 다 평지</button>
+      <button data-be="90">둘 다 90</button>
+      <button data-be="160">둘 다 160</button>
+      <button data-be="link">양쪽 맞추기</button>
     </div>
     <div class="row">
       <label for="swampN">늪</label>
@@ -642,7 +668,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b style="color:#4caf5a">숲</b> — 나무가 빽빽해 느려지지만 받는 피해가 25% 줄고, 숲 밖에서는 240 이상 떨어지면 안 보인다. 직사 투사체는 나무에 맞고 박힌다 (곡사는 통과).<br>
     <b style="color:#b08a55">언덕</b> — 올라서면 높은 곳에서 내려다본다. 원거리 사거리 +25%, 받는 피해 −10%, 오르느라 조금 느려진다.<br>
     <b style="color:#8a9a4a">늪</b> — 발이 빠져 크게 느려진다. 그 외의 효과는 없다.<br>
-    <b>언덕 높이</b>는 언덕이 얼마나 솟는지다 (0~200, 기본 62). <b>기지 지대 높이</b>는 기지가 올라선 땅의 높이다 (0~220, 기본 평지) — 발밑은 평평하고 안쪽으로 비탈이 진다. 양쪽이 똑같이 올라가니 유불리는 없고, 지대 자체에는 언덕 같은 전투 보정이 붙지 않는다. 둘 다 그린 지형을 지우지 않고 바로 미리보기에 반영된다.<br>
+    <b>언덕 높이</b>는 언덕이 얼마나 솟는지다 (0~200, 기본 62). <b>왼쪽/오른쪽 지대</b>는 각 기지가 올라선 땅의 높이다 (0~220, 기본 평지) — 발밑은 평평하고 안쪽으로 비탈이 진다. <b>양쪽을 다르게</b> 줄 수 있는데, 높은 쪽 기지 포탑이 더 멀리 쏘니 그만큼 유리해진다 (버튼으로 둘 다 평지/90/160, 또는 오른쪽을 왼쪽에 맞출 수 있다). 지대 자체에는 언덕 같은 전투 보정이 붙지 않는다. 둘 다 그린 지형을 지우지 않고 바로 미리보기에 반영된다.<br>
     <b>그림 크기</b> — 보통 / 크게 / 아주 크게로 편집 그림을 키운다. <b>전체 화면</b>을 누르면 창 전체에 펼쳐져 붓질이 훨씬 수월하다 (Esc 로 닫힌다).<br>
     <b>지형 템플릿</b> — 지금 설정(길이·사거리·강 깊이·개수·높이·직접 그린 지형까지)을 이름 붙여 저장해 두고 언제든 그대로 불러온다. 이 브라우저에 저장되니 창을 닫았다 열어도 남는다.<br>
     <b>지형 편집</b> — 붓(강·숲·언덕·늪)을 고르고 아래 그림 위를 문지르면 그 구간이 칠해진다. 지우개는 지형을 지운다. 처음 칠하면 지금의 자동 배치가 바탕이 되어 그 위에 덧그려지고, 이후로는 직접 그린 지형이 쓰인다. 기지 근처(양끝)는 칠할 수 없다. 프리셋·개수·섞기를 누르면 자동 배치로 돌아간다.<br>
@@ -668,6 +694,8 @@ input.pdot:hover{border-color:var(--hi)}
     <b>STUDY</b> — 진화 대전에만 있다. 정한 개수만큼 채우면 다음 시대로 넘어가고 부대가 통째로 바뀐다.<br>
     <b>SHOP</b> — 상점 보드로 넘어간다. 칸마다 필요한 개수가 다르고, 다 채워야 강한 병사가 나온다. 필요 개수가 클수록 강하다.<br>
     <b>베이스</b> — 적이 다가오면 꼭대기에서 알아서 쏜다. 베이스 체력이 0이 되면 점령.<br>
+    <b>AI 난이도</b> — 왼쪽·오른쪽을 따로 정한다 (쉬움 / 보통 / 어려움 / 최강). 판단 간격(쉬움 1.6~3.2초 → 최강 0.2~0.5초), 실수 확률(55% → 0%), 상대 구성(근접·원거리·뭉침)을 보고 고르는지, 지휘를 쓰는지가 달라진다. 거기에 <b>코인 수입</b>이 쉬움 0.75배 · 보통 1배 · 어려움 1.2배 · 최강 1.5배로 붙는다 (사람 쪽은 늘 1배). 보통은 사람과 똑같은 조건이다.<br>
+    <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에 올라탄 모습으로 나온다. 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
     <b>온라인 PvP</b> — 고용 탭 안에 있다. <b>랜덤 매칭</b>은 닉네임을 적고 누르기만 하면 같은 시간에 누른 다른 사람과 자동으로 붙는다. 아는 사람과 하려면 <b>방 만들기 / 참가하기</b>로 코드를 두 번 주고받으면 된다.<br>
     방장이 왼쪽, 참가자가 오른쪽을 맡고 각자 자기 진영만 고른다. 판은 방장 쪽에서 돌아가므로 설정·시작·배속은 방장이 정한다. 닉네임은 전투 화면 이름표에 팀 이름과 같이 나온다.<br>
@@ -1191,7 +1219,7 @@ const TK = { river: 1, forest: 2, hill: 3, swamp: 4 };
 const TCOL = { river: '#3d86c6', forest: '#2f7a3a', hill: '#9a7a4a', swamp: '#8a9a4a' };
 const TCS = 10;
 let HILL_H = 62;                 // 언덕이 얼마나 솟는지 (셋업에서 조절)
-let BASE_EL = 0;                 // 기지가 올라선 지대 높이 (양쪽 똑같이)
+let BASE_EL = [0, 0];            // 기지가 올라선 지대 높이 — 왼쪽/오른쪽 따로
 const BPLAT = 130, BRAMP = 210;  // 기지 발밑 평평한 폭 / 비탈 길이
 let TERR = [], TCELL = new Uint8Array(0), HCELL = new Float32Array(0);
 let RANGE_MUL = 1, RIVER_DEEP = false, CMD = false;
@@ -1256,20 +1284,22 @@ function bakeTerrain() {
       }
     }
   }
-  if (BASE_EL > 0)                                   // 기지 지대는 지형 위에 덧쌓는다
+  if (anyElev())                                     // 기지 지대는 지형 위에 덧쌓는다
     for (let i = 0; i < n; i++) HCELL[i] = Math.max(HCELL[i], baseElev(i * TCS));
 }
-// 기지가 올라선 지대 — 발밑은 평평하고 안쪽으로 비탈이 진다. 양쪽이 똑같아 유불리는 없다.
+// 기지가 올라선 지대 — 발밑은 평평하고 안쪽으로 비탈이 진다. 양쪽 높이를 따로 준다.
 function baseElev(x) {
-  if (BASE_EL <= 0) return 0;
   const bl = 240, br = WORLD_W - 240;
   const flat = Math.min(BPLAT, (br - bl) * .22), ramp = Math.min(BRAMP, (br - bl) * .3);
-  const sm = k => BASE_EL * k * k * (3 - 2 * k);
-  if (x <= bl + flat || x >= br - flat) return BASE_EL;
-  if (x < bl + flat + ramp) return sm(1 - (x - bl - flat) / ramp);
-  if (x > br - flat - ramp) return sm(1 - (br - flat - x) / ramp);
+  const sm = (h, k) => h * k * k * (3 - 2 * k);
+  const L = BASE_EL[0] || 0, R = BASE_EL[1] || 0;
+  if (x <= bl + flat) return L;
+  if (x < bl + flat + ramp) return sm(L, 1 - (x - bl - flat) / ramp);
+  if (x >= br - flat) return R;
+  if (x > br - flat - ramp) return sm(R, 1 - (br - flat - x) / ramp);
   return 0;
 }
+const anyElev = () => (BASE_EL[0] || 0) > 0 || (BASE_EL[1] || 0) > 0;
 const terrCode = x => { const i = (x / TCS) | 0; return i >= 0 && i < TCELL.length ? TCELL[i] : 0; };
 function groundH(x) {
   const f = x / TCS, i = Math.floor(f);
@@ -1344,8 +1374,8 @@ function snapLine(t, v) {
   if (!SNAP[t]) return v;
   const cand = [WORLD_W / 2];
   for (const z of TERR) cand.push(z.a, z.b);
-  if (BASE_EL > 0) for (const bx of [240, WORLD_W - 240])
-    cand.push(bx + (bx < WORLD_W / 2 ? 1 : -1) * (BPLAT + BRAMP));
+  for (let i = 0; i < 2; i++) if ((BASE_EL[i] || 0) > 0)      // 비탈이 끝나는 자리
+    cand.push((i === 0 ? 240 + (BPLAT + BRAMP) : WORLD_W - 240 - (BPLAT + BRAMP)));
   let best = v, bd = 60;
   for (const c of cand) { const d = Math.abs(c - v); if (d < bd) { bd = d; best = Math.round(c); } }
   return clamp(best, 150, WORLD_W - 150);
@@ -1458,18 +1488,51 @@ function syncCmdUI() {
       (ov.length ? '<br>개별 명령: ' + ov.join(' · ') : '');
   }
 }
+/* ── AI 난이도 ──
+   코인을 더 주는 식으로 속이지 않는다 (최강만 조금 더 받는다).
+   대신 얼마나 자주 판단하는지, 얼마나 잘 고르는지, 지휘를 쓰는지가 달라진다. */
+const AI_LV = [
+  { nm: '쉬움',  buy: [1.6, 3.2], err: .55, cmd: 5.5, use: .4, coin: .75, desc: '느리게 판단하고 아무거나 산다. 지휘도 잘 안 쓰고, 코인도 25% 적게 받는다.' },
+  { nm: '보통',  buy: [.5, 1.4],  err: .25, cmd: 2.5, use: 1,  coin: 1,    desc: '지금까지와 같다. 사람과 똑같은 코인으로 적당히 사고 적당히 지휘한다.' },
+  { nm: '어려움', buy: [.35, .9],  err: .08, cmd: 1.6, use: 1,  coin: 1.2,  desc: '빨리 판단하고 값어치로 고른다. 상대 구성에 맞춰 받아치고 코인을 20% 더 받는다.' },
+  { nm: '최강',  buy: [.2, .5],   err: 0,   cmd: 1,   use: 1,  coin: 1.5,  desc: '실수하지 않고 코인을 50% 더 받는다. 원거리가 몰리면 근접만 따로 돌격시킨다.' }
+];
+let AI_DIF = [1, 1];                                  // 진영별 난이도
+const aiLv = t => AI_LV[clamp(AI_DIF[t] === undefined ? 1 : AI_DIF[t], 0, 3)];
+
+// 상대 구성에 맞춰 점수를 매긴다 (어려움 이상)
+function aiScore(t, it) {
+  let foeM = 0, foeR = 0, foeHp = 0;
+  for (const s of G.sold) if (s.team !== t) { (s.w.type === 'm' ? foeM++ : foeR++); foeHp += s.hp; }
+  // 싼 것만 사면 머릿수는 늘어도 힘이 안 난다. 센 병사 쪽에 무게를 더 둔다.
+  const pw = Math.pow((it.w.dmg || 1) * (it.hp || 1) * (it.dmg || 1), .85);
+  let v = pw / Math.pow(Math.max(1, it.price), .42);          // 값비싼 쪽에 좀 더 무게
+  if ((it.w.bdmg || 0) > 0) v *= 1.25;                        // 기지를 잘 깨는 무기
+  if (foeM > foeR * 1.6 && it.w.type === 'r') v *= 1.35;            // 근접이 몰려오면 원거리
+  if (foeR > foeM * 1.6 && it.w.type === 'm') v *= 1.3;             // 원거리가 많으면 밀고 들어간다
+  if (foeHp > 900 && (it.w.aoe || 0) > 0) v *= 1.3;                 // 뭉쳐 있으면 범위 공격
+  return v;
+}
+
 function aiCommand(dt) {                      // 사람이 없는 진영은 간단히 알아서 지휘한다
   for (let t = 0; t < 2; t++) {
     if (CTRL[t] !== 'ai') continue;
+    const LV = aiLv(t);
     G.aiC[t] -= dt; if (G.aiC[t] > 0) continue;
-    G.aiC[t] = 2.5;
-    let mine = 0, foe = 0;
-    for (const s of G.sold) s.team === t ? mine++ : foe++;
+    G.aiC[t] = LV.cmd;
+    if (Math.random() > LV.use) { setOrder(t, 'adv'); continue; }   // 쉬움은 그냥 밀고 간다
+    let mine = 0, foe = 0, foeR = 0;
+    for (const s of G.sold) {
+      if (s.team === t) mine++;
+      else { foe++; if (s.w.type === 'r') foeR++; }
+    }
     const dir = t === 0 ? 1 : -1, b = BASE[t];
     if (b.hp < b.max * .3 && foe > mine) setOrder(t, 'hold', b.x + dir * 380);
     else if (foe >= 3 && mine < foe * .6) setOrder(t, 'hold', b.x + dir * 700);
     else if (mine >= 4 && mine >= foe * 1.6) setOrder(t, 'base');
     else setOrder(t, 'adv');
+    // 어려움 이상 — 원거리가 많은 상대에게는 근접만 따로 달려들게 한다
+    if (LV.err <= .1 && foeR >= 3 && mine >= 4) setOrder(t, 'base', undefined, '@m');
   }
 }
 
@@ -1532,7 +1595,7 @@ function drawTerrainBack(L, R) {
 }
 // 기지가 올라선 지대 — 땅과 같은 색으로 솟아오른다
 function drawBasePlat(x0, x1) {
-  if (BASE_EL <= 0) return;
+  if (!anyElev()) return;
   for (const bx of [240, WORLD_W - 240]) {
     const a = bx < WORLD_W / 2 ? -200 : bx - BPLAT - BRAMP - 40;
     const b = bx < WORLD_W / 2 ? bx + BPLAT + BRAMP + 40 : WORLD_W + 200;
@@ -3055,6 +3118,283 @@ function drawHorse(ctx, s) {
   ctx.restore();
 }
 
+/* ============================================================
+   탈것 — 졸라맨 대신 전차·장갑차·발리스타·보행병기로 그린다.
+   상점 병사는 이름으로, 기본 무기는 무기 이름으로 찾는다.
+   ============================================================ */
+const VEH = {
+  '전차병': 'tank', '대포': 'tank',
+  '중기관총병': 'apc', '기관총': 'apc',
+  '발리스타대': 'ballista', '발리스타': 'ballista',
+  '융합포병': 'mech', '융합포': 'mech',
+  '궤도 사령관': 'hover', '궤도 포격': 'hover'
+};
+const BEAST = { '매머드 기수': 'mammoth' };                 // 위에 사람이 탄다
+const COMPANION = { '드론 운용병': 'drone', '드론 떼': 'drone' };
+const vehOf  = s => VEH[s.label] || VEH[s.w.name] || null;
+const beastOf = s => BEAST[s.label] || BEAST[s.w.name] || null;
+const compOf = s => COMPANION[s.label] || COMPANION[s.w.name] || null;
+const shade = (c, k) => {                                   // 같은 색의 어두운/밝은 버전
+  if (!(c[0] === '#' && c.length === 7)) return c;
+  const v = p => parseInt(c.slice(p, p + 2), 16);
+  const m = n => Math.round(clamp(n * k, 0, 255)).toString(16).padStart(2, '0');
+  return '#' + m(v(1)) + m(v(3)) + m(v(5));
+};
+
+function drawVehicle(ctx, s, kind) {
+  const S = Math.max(s.size, 1.3) * 1.1, f = s.face, x = s.x, y = s.y;
+  const body = s.hurt > 0 ? '#ffffff' : s.col;
+  const dk = shade(body, .62), lt = shade(body, 1.25), acc = s.td.col;
+  const roll = s.moving ? s.ph * 1.6 : 0;
+  const rec = s.swing > 0 ? Math.min(1, s.swing) : 0;        // 쏠 때 반동
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+  const wheels = (list, r) => {                              // 바퀴 (굴러간다)
+    for (const wx of list) {
+      ctx.fillStyle = '#20262e';
+      ctx.beginPath(); ctx.arc(x + wx * S, y - r * S, r * S, 0, 6.3); ctx.fill();
+      if (LOD) continue;                                     // 많이 몰리면 바퀴살은 접는다
+      ctx.strokeStyle = dk; ctx.lineWidth = 1.6 * S;
+      ctx.beginPath();
+      ctx.moveTo(x + wx * S, y - r * S);
+      ctx.lineTo(x + wx * S + Math.cos(roll) * r * .7 * S, y - r * S + Math.sin(roll) * r * .7 * S);
+      ctx.stroke();
+    }
+  };
+
+  if (kind === 'tank') {
+    const tw = 30, th = 7;                                   // 궤도
+    ctx.fillStyle = '#20262e';
+    ctx.beginPath(); ctx.roundRect(x - tw * S, y - th * 2 * S, tw * 2 * S, th * 2 * S, th * S); ctx.fill();
+    if (!LOD) {
+      ctx.strokeStyle = '#3a434e'; ctx.lineWidth = 1.4 * S;  // 궤도 이음새
+      ctx.beginPath();
+      for (let i = -4; i <= 4; i++) {
+        const px = x + ((i * 7 + (roll * 6) % 7) * S);
+        if (Math.abs(px - x) > tw * S - 3) continue;
+        ctx.moveTo(px, y - th * 2 * S + 1.5 * S); ctx.lineTo(px, y - 1.5 * S);
+      }
+      ctx.stroke();
+      ctx.fillStyle = '#4a545f';                             // 바퀴
+      ctx.beginPath();
+      for (let i = -3; i <= 3; i++) {
+        ctx.moveTo(x + (i * 9 + 3.1) * S, y - th * S);
+        ctx.arc(x + i * 9 * S, y - th * S, 3.1 * S, 0, 6.3);
+      }
+      ctx.fill();
+    }
+    ctx.fillStyle = body;                                    // 차체
+    ctx.beginPath();
+    ctx.moveTo(x - 29 * S, y - 14 * S); ctx.lineTo(x + 29 * S, y - 14 * S);
+    ctx.lineTo(x + 25 * S, y - 23 * S); ctx.lineTo(x - 24 * S, y - 23 * S);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = dk; ctx.fillRect(x - 29 * S, y - 16 * S, 58 * S, 2.4 * S);
+    ctx.fillStyle = lt;                                      // 포탑
+    ctx.beginPath(); ctx.roundRect(x - 13 * S, y - 34 * S, 26 * S, 12 * S, 4 * S); ctx.fill();
+    ctx.fillStyle = body;                                    // 포신
+    const bx = x + f * (12 - rec * 5) * S;
+    ctx.fillRect(bx, y - 30 * S, f * 30 * S, 3.8 * S);
+    ctx.fillStyle = dk; ctx.fillRect(bx + f * 24 * S, y - 31.4 * S, f * 7 * S, 6.6 * S);
+    if (!LOD) {
+      ctx.fillStyle = acc;                                   // 해치 밖으로 머리
+      ctx.beginPath(); ctx.arc(x - f * 5 * S, y - 37 * S, 3.4 * S, 0, 6.3); ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,.3)';
+      ctx.fillRect(x - f * 9 * S, y - 34.5 * S, 8 * S, 2 * S);
+    }
+    if (rec > .6) {                                          // 포구 화염
+      ctx.globalAlpha = (rec - .6) / .4;
+      ctx.fillStyle = '#ffb33a';
+      ctx.beginPath(); ctx.arc(bx + f * 33 * S, y - 28 * S, 7.5 * S, 0, 6.3); ctx.fill();
+      ctx.fillStyle = '#fffdf0';
+      ctx.beginPath(); ctx.arc(bx + f * 32 * S, y - 28 * S, 3.2 * S, 0, 6.3); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  else if (kind === 'apc') {
+    wheels([-19, -5, 9, 20], 7.5);                           // 큼직한 바퀴 넷
+    ctx.fillStyle = body;                                    // 높고 각진 차체 (앞코가 비스듬하다)
+    ctx.beginPath();
+    ctx.moveTo(x - 26 * S, y - 13 * S);
+    ctx.lineTo(x + f * 26 * S, y - 16 * S);
+    ctx.lineTo(x + f * 24 * S, y - 28 * S);
+    ctx.lineTo(x - f * 24 * S, y - 32 * S);
+    ctx.lineTo(x - f * 27 * S, y - 20 * S);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = dk; ctx.fillRect(x - 27 * S, y - 16 * S, 54 * S, 2.6 * S);
+    ctx.fillStyle = '#1b2029';                               // 방탄창
+    ctx.fillRect(x + f * 9 * S, y - 26 * S, f * 11 * S, 5 * S);
+    ctx.fillStyle = dk;                                      // 기관총 방패
+    ctx.beginPath(); ctx.roundRect(x - 9 * S, y - 40 * S, 14 * S, 8 * S, 2 * S); ctx.fill();
+    ctx.fillStyle = lt;                                      // 기관총
+    const gx = x + f * (4 - rec * 3) * S;
+    ctx.fillRect(gx, y - 37 * S, f * 24 * S, 3 * S);
+    ctx.fillRect(gx + f * 9 * S, y - 39 * S, f * 3 * S, 6 * S);
+    if (rec > .5) {
+      ctx.globalAlpha = (rec - .5) / .5;
+      ctx.fillStyle = '#ffe08a';
+      ctx.beginPath(); ctx.arc(gx + f * 25 * S, y - 35.5 * S, 4.5 * S, 0, 6.3); ctx.fill();
+      ctx.fillStyle = '#fffdf0';
+      ctx.beginPath(); ctx.arc(gx + f * 25 * S, y - 35.5 * S, 2.1 * S, 0, 6.3); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    if (!LOD) { ctx.fillStyle = acc; ctx.beginPath(); ctx.arc(x - f * 12 * S, y - 36 * S, 3.2 * S, 0, 6.3); ctx.fill(); }
+  }
+
+  else if (kind === 'ballista') {
+    wheels([-13, 13], 7);
+    ctx.strokeStyle = '#8a6b42'; ctx.lineWidth = 4 * S;      // 나무 받침
+    ctx.beginPath(); ctx.moveTo(x - 20 * S, y - 6 * S); ctx.lineTo(x + 20 * S, y - 6 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - f * 16 * S, y - 7 * S); ctx.lineTo(x + f * 14 * S, y - 26 * S); ctx.stroke();
+    ctx.strokeStyle = '#6d5433'; ctx.lineWidth = 3 * S;
+    ctx.beginPath(); ctx.moveTo(x, y - 7 * S); ctx.lineTo(x + f * 4 * S, y - 20 * S); ctx.stroke();
+    ctx.strokeStyle = body; ctx.lineWidth = 3.4 * S;         // 활
+    ctx.beginPath();
+    ctx.moveTo(x + f * (16 - rec * 4) * S, y - 34 * S);
+    ctx.quadraticCurveTo(x + f * 24 * S, y - 25 * S, x + f * (16 - rec * 4) * S, y - 16 * S);
+    ctx.stroke();
+    ctx.strokeStyle = '#e8e2d2'; ctx.lineWidth = 1.3 * S;    // 시위
+    const px = x + f * (16 - rec * 4) * S, sx2 = x + f * (6 - rec * 7) * S;
+    ctx.beginPath(); ctx.moveTo(px, y - 34 * S); ctx.lineTo(sx2, y - 25 * S); ctx.lineTo(px, y - 16 * S); ctx.stroke();
+    ctx.fillStyle = '#d8cba8';                               // 장전된 창
+    ctx.fillRect(sx2, y - 26.3 * S, f * 26 * S, 2.6 * S);
+    if (!LOD) {                                              // 조작수
+      ctx.strokeStyle = acc; ctx.lineWidth = 2.6 * S;
+      ctx.beginPath(); ctx.moveTo(x - f * 20 * S, y); ctx.lineTo(x - f * 20 * S, y - 14 * S); ctx.stroke();
+      ctx.fillStyle = acc;
+      ctx.beginPath(); ctx.arc(x - f * 20 * S, y - 18 * S, 3.4 * S, 0, 6.3); ctx.fill();
+    }
+  }
+
+  else if (kind === 'mech') {
+    const st = s.moving ? Math.sin(s.ph) : 0;
+    const hipY = y - 40 * S;
+    for (const sg of [-1, 1]) {                              // 역관절 다리 — 넓게 벌려 선다
+      const k = st * sg, ox = sg * 9 * S;
+      ctx.strokeStyle = sg < 0 ? dk : shade(body, .8);
+      ctx.lineWidth = 6 * S;
+      ctx.beginPath();
+      ctx.moveTo(x + ox, hipY);
+      ctx.lineTo(x + ox - f * (10 + k * 5) * S, y - 22 * S);  // 무릎 (뒤로 꺾인다)
+      ctx.lineTo(x + ox + f * (7 + k * 9) * S, y - 5 * S);    // 발목
+      ctx.stroke();
+      ctx.fillStyle = dk;                                    // 발
+      ctx.fillRect(x + ox + f * (1 + k * 9) * S, y - 5 * S, f * 13 * S, 5 * S);
+    }
+    ctx.fillStyle = body;                                    // 동체
+    ctx.beginPath(); ctx.roundRect(x - 15 * S, y - 60 * S, 30 * S, 22 * S, 7 * S); ctx.fill();
+    ctx.fillStyle = dk;                                      // 허리 축
+    ctx.fillRect(x - 6 * S, y - 42 * S, 12 * S, 5 * S);
+    ctx.fillStyle = '#1b2029';                               // 눈창
+    ctx.fillRect(x + f * 3 * S, y - 55 * S, f * 10 * S, 5 * S);
+    ctx.fillStyle = lt;                                      // 어깨
+    ctx.beginPath(); ctx.roundRect(x - 19 * S, y - 62 * S, 10 * S, 11 * S, 3 * S); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(x + 9 * S, y - 62 * S, 10 * S, 11 * S, 3 * S); ctx.fill();
+    const mx2 = x + f * (12 - rec * 5) * S;                  // 포
+    ctx.fillStyle = dk; ctx.fillRect(mx2, y - 58 * S, f * 28 * S, 6.5 * S);
+    ctx.fillStyle = lt; ctx.fillRect(mx2 + f * 22 * S, y - 60 * S, f * 8 * S, 10 * S);
+    if (!LOD) {
+      ctx.fillStyle = '#ffe08a';                             // 코어
+      ctx.globalAlpha = .55 + .45 * Math.sin(G.t * 5);
+      ctx.beginPath(); ctx.arc(x, y - 49 * S, 4 * S, 0, 6.3); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    if (rec > .5) {
+      ctx.fillStyle = '#fff2a8'; ctx.globalAlpha = (rec - .5) / .5;
+      ctx.beginPath(); ctx.arc(mx2 + f * 32 * S, y - 55 * S, 8 * S, 0, 6.3); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  else if (kind === 'hover') {
+    const fl = Math.sin(G.t * 3 + s.ph) * 2.5 * S;           // 둥실둥실
+    ctx.save(); ctx.translate(0, fl);
+    ctx.fillStyle = 'rgba(154,232,255,.25)';                 // 분사 빛
+    ctx.beginPath(); ctx.ellipse(x, y - 4 * S, 20 * S, 5 * S, 0, 0, 6.3); ctx.fill();
+    ctx.fillStyle = dk;                                      // 받침
+    ctx.beginPath(); ctx.ellipse(x, y - 15 * S, 22 * S, 7 * S, 0, 0, 6.3); ctx.fill();
+    if (!LOD) {
+      ctx.fillStyle = '#9ae8ff';                             // 분사구 셋
+      ctx.globalAlpha = .5 + .3 * Math.sin(G.t * 9);
+      for (const ox of [-14, 0, 14]) {
+        ctx.beginPath(); ctx.ellipse(x + ox * S, y - 10 * S, 3.4 * S, 2 * S, 0, 0, 6.3); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = body;                                    // 기둥 · 몸체
+    ctx.fillRect(x - 5 * S, y - 34 * S, 10 * S, 20 * S);
+    ctx.beginPath(); ctx.roundRect(x - 11 * S, y - 50 * S, 22 * S, 18 * S, 6 * S); ctx.fill();
+    ctx.fillStyle = '#1b2029'; ctx.fillRect(x + f * 1 * S, y - 46 * S, f * 9 * S, 5 * S);
+    ctx.fillStyle = lt;                                      // 포신
+    ctx.fillRect(x + f * 8 * S, y - 44 * S, f * 20 * S, 4 * S);
+    ctx.fillStyle = '#ff9ad0';
+    ctx.globalAlpha = .5 + .5 * Math.sin(G.t * 6);
+    ctx.beginPath(); ctx.arc(x, y - 54 * S, 3.4 * S, 0, 6.3); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+// 드론 운용병 머리 위를 도는 작은 드론
+function drawDrone(ctx, s) {
+  const S = s.size, x = s.x, y = s.y, f = s.face;
+  const t = G.t * 2.2 + s.ph;
+  const dx = x + f * (14 + Math.sin(t) * 6) * S, dy = y - (74 + Math.cos(t * 1.3) * 5) * S;
+  ctx.save();
+  ctx.fillStyle = shade(s.col, 1.2);
+  ctx.beginPath(); ctx.roundRect(dx - 4 * S, dy - 2.4 * S, 8 * S, 4.8 * S, 2 * S); ctx.fill();
+  ctx.strokeStyle = 'rgba(200,230,255,.8)'; ctx.lineWidth = 1.1 * S;
+  for (const sg of [-1, 1]) {
+    ctx.beginPath(); ctx.moveTo(dx + sg * 4 * S, dy - 1 * S); ctx.lineTo(dx + sg * 8 * S, dy - 4 * S); ctx.stroke();
+    ctx.globalAlpha = .45 + .3 * Math.sin(G.t * 30 + sg);
+    ctx.beginPath(); ctx.ellipse(dx + sg * 8 * S, dy - 4.6 * S, 4.6 * S, 1.2 * S, 0, 0, 6.3); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  ctx.fillStyle = '#8fd0ff';
+  ctx.beginPath(); ctx.arc(dx + f * 3 * S, dy, 1.3 * S, 0, 6.3); ctx.fill();
+  ctx.restore();
+}
+
+// 매머드 — 기수를 태운다 (말보다 크고 느릿하다)
+const MAMMOTH_H = 30;
+function drawMammoth(ctx, s) {
+  const S = s.size, f = s.face, x = s.x, y = s.y;
+  const body = s.hurt > 0 ? '#ffffff' : shade(s.col, .95);
+  const dk = shade(body, .68), by = y - 36 * S;
+  const run = s.moving ? s.ph * 1.1 : 0;
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = dk; ctx.lineWidth = 7.5 * S;             // 다리 넷
+  for (const [lx, ph] of [[14, 2.4], [-16, 3.6], [11, .6], [-13, 1.8]]) {
+    const k = s.moving ? Math.sin(run + ph) : 0;
+    ctx.beginPath();
+    ctx.moveTo(x + f * lx * S, by + 8 * S);
+    ctx.lineTo(x + f * lx * S + k * 5 * S, y);
+    ctx.stroke();
+  }
+  ctx.fillStyle = body;                                      // 몸통
+  ctx.beginPath(); ctx.ellipse(x, by, 26 * S, 16 * S, 0, 0, 6.3); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x + f * 26 * S, by - 4 * S, 13 * S, 13 * S, 0, 0, 6.3); ctx.fill();  // 머리
+  ctx.strokeStyle = body; ctx.lineWidth = 6 * S;             // 코
+  ctx.beginPath();
+  ctx.moveTo(x + f * 34 * S, by - 2 * S);
+  ctx.quadraticCurveTo(x + f * 46 * S, by + 10 * S, x + f * 38 * S, by + 20 * S);
+  ctx.stroke();
+  ctx.strokeStyle = '#efe6d2'; ctx.lineWidth = 3.6 * S;      // 엄니
+  for (const o of [0, 5]) {
+    ctx.beginPath();
+    ctx.moveTo(x + f * 32 * S, by + (2 + o) * S);
+    ctx.quadraticCurveTo(x + f * 46 * S, by + (10 + o) * S, x + f * 48 * S, by - (2 - o) * S);
+    ctx.stroke();
+  }
+  ctx.fillStyle = dk;                                        // 털 등선
+  ctx.beginPath(); ctx.ellipse(x - f * 4 * S, by - 14 * S, 16 * S, 5 * S, 0, 0, 6.3); ctx.fill();
+  ctx.fillStyle = '#2b2431';
+  ctx.beginPath(); ctx.arc(x + f * 30 * S, by - 8 * S, 1.6 * S, 0, 6.3); ctx.fill();
+  ctx.restore();
+}
+
 function drawSoldier(ctx, s) {
   const S = s.size, f = s.face, x = s.x, y = s.y;
   const body = s.hurt > 0 ? '#ffffff' : s.col;
@@ -3066,7 +3406,22 @@ function drawSoldier(ctx, s) {
   ctx.save();
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
 
-  if (s.w.mount) { drawHorse(ctx, s); ctx.translate(0, -MOUNT_H * S); }
+  const veh = vehOf(s);
+  if (veh) {                                     // 전차·장갑차 등은 통째로 갈아 끼운다
+    drawVehicle(ctx, s, veh);
+    if (s.hp < s.max && !LOD) {                  // 체력바는 차체 위로
+      const tall = veh === 'mech' || veh === 'hover';
+      const bw = 34 * S, byy = y - (tall ? 82 : 62) * S;
+      ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(x - bw / 2, byy, bw, 4 * S);
+      ctx.fillStyle = s.hp / s.max > .4 ? '#6fd36f' : '#e06a4a';
+      ctx.fillRect(x - bw / 2, byy, bw * (s.hp / s.max), 4 * S);
+    }
+    ctx.restore();
+    return;
+  }
+  const beast = beastOf(s);
+  if (beast === 'mammoth') { drawMammoth(ctx, s); ctx.translate(0, -MAMMOTH_H * S); }
+  else if (s.w.mount) { drawHorse(ctx, s); ctx.translate(0, -MOUNT_H * S); }
 
   if (G.rush[s.team] > 0 && s.moving) {          // 무마찰 돌격 중 잔상
     ctx.globalAlpha = .35; ctx.strokeStyle = '#9ae8ff'; ctx.lineWidth = 2 * S;
@@ -3273,6 +3628,8 @@ function drawSoldier(ctx, s) {
     }
     ctx.restore();
   }
+
+  if (!LOD && compOf(s) === 'drone') drawDrone(ctx, s);
 
   // 체력바
   if (s.hp < s.max && !LOD) {
@@ -4516,6 +4873,17 @@ const wRange = document.getElementById('wRange'), wVal = document.getElementById
 function syncInc() { incVal.textContent = incRange.value + '초'; }
 function syncW() { wVal.textContent = (+wRange.value).toFixed(2) + '배'; }
 incRange.oninput = syncInc; wRange.oninput = syncW; syncInc(); syncW();
+function syncAi() {
+  document.querySelectorAll('.aidif').forEach(b =>
+    b.classList.toggle('on', +b.dataset.ai === AI_DIF[+b.dataset.side]));
+  const line = t => '<b>' + AI_LV[AI_DIF[t]].nm + '</b> — ' + AI_LV[AI_DIF[t]].desc;
+  document.getElementById('aiHint').innerHTML =
+    AI_DIF[0] === AI_DIF[1] ? line(0) : '왼쪽 ' + line(0) + '<br>오른쪽 ' + line(1);
+}
+document.querySelectorAll('.aidif').forEach(b => b.onclick = () => {
+  AI_DIF[+b.dataset.side] = +b.dataset.ai; syncAi();
+});
+syncAi();
 syncCtl();
 
 buildGrid('A'); buildGrid('B');
@@ -4758,7 +5126,7 @@ function startGame(asGuest) {
     netSend({ t: 'go', a: sel[0][0], b: sel[1][0], ca: colA.value, cb: colB.value,
               coin: COIN_START, every: COIN_EVERY, w: KILL_W,
               ww: WORLD_W, rm: RANGE_MUL, dp: RIVER_DEEP ? 1 : 0, cm: CMD ? 1 : 0,
-              hh: HILL_H, be: BASE_EL,
+              hh: HILL_H, be: BASE_EL[0], be2: BASE_EL[1],
               tr: TERR.map(z => [z.k, z.a, z.b]) });
   }
 }
@@ -5266,7 +5634,8 @@ function netStartAsGuest(m) {
   MODE = 'hire'; CTRL = ['human', 'human'];
   WORLD_W = clamp(+m.ww || 2800, 1600, 8000); RANGE_MUL = clamp(+m.rm || 1, .5, 2);
   RIVER_DEEP = !!m.dp; CMD = !!m.cm;
-  HILL_H = clamp(+m.hh || 0, 0, 200); BASE_EL = clamp(+m.be || 0, 0, 220);
+  HILL_H = clamp(+m.hh || 0, 0, 200);
+  BASE_EL = [clamp(+m.be || 0, 0, 220), clamp(+(m.be2 === undefined ? m.be : m.be2) || 0, 0, 220)];
   TERR = (m.tr || []).filter(a => TK[a[0]]).map(a => ({ k: a[0], a: +a[1], b: +a[2] }));
   sel[0] = [m.a]; sel[1] = [m.b];
   colA.value = m.ca; colB.value = m.cb;
@@ -5369,22 +5738,31 @@ function stepHire(dt) {
   G.incT += dt;
   if (COIN_EVERY > 0) while (G.incT >= COIN_EVERY) {   // 일정 시간마다 코인 하나
     G.incT -= COIN_EVERY;
-    for (let t = 0; t < 2; t++) { G.coin[t]++; G.earn[t]++; }
+    for (let t = 0; t < 2; t++) {
+      const k = CTRL[t] === 'ai' && !NET.on ? aiLv(t).coin : 1;     // 최강만 조금 더 받는다
+      G.coin[t] += k; G.earn[t] += k;
+    }
   }
   for (let t = 0; t < 2; t++) {
     if (NET.on) break;                      // 온라인은 둘 다 사람이다
     if (CTRL[t] !== 'ai') continue;
+    const LV = aiLv(t);
     G.aiT[t] -= dt;
     if (G.aiT[t] > 0) continue;
-    G.aiT[t] = rnd(.5, 1.4);
-    const list = hireList(t).filter(it => it.price <= G.coin[t]);
+    G.aiT[t] = rnd(LV.buy[0], LV.buy[1]);
+    const all = hireList(t);
+    const list = all.filter(it => it.price <= G.coin[t]);
     if (!list.length) continue;
-    // 아낄수록 센 걸 사지만, 수가 밀리면 싼 걸로 머릿수를 채운다
     let mine = 0, foe = 0;
     for (const s of G.sold) s.team === t ? mine++ : foe++;
-    const greedy = mine >= foe - 2;
-    list.sort((a, b) => greedy ? b.price - a.price : a.price - b.price);
-    const pick = list[Math.random() < .75 ? 0 : Math.floor(Math.random() * list.length)];
+    if (LV.err <= .1) {                           // 어려움 이상 — 상황에 맞는 값어치로 고른다
+      list.sort((a, b) => aiScore(t, b) - aiScore(t, a));
+    } else {                                      // 아낄수록 센 걸 사지만, 밀리면 싼 걸로 머릿수를
+      const greedy = mine >= foe - 2;
+      list.sort((a, b) => greedy ? b.price - a.price : a.price - b.price);
+    }
+    const pick = Math.random() < LV.err
+      ? list[Math.floor(Math.random() * list.length)] : list[0];
     buy(t, pick);
   }
 }
@@ -5412,6 +5790,7 @@ const riverN = document.getElementById('riverN'), forestN = document.getElementB
 const hillN = document.getElementById('hillN'), swampN = document.getElementById('swampN');
 const riverW = document.getElementById('riverW'), deepTgl = document.getElementById('deepTgl');
 const hillH = document.getElementById('hillH'), baseEl = document.getElementById('baseEl');
+const baseElR = document.getElementById('baseElR');
 const terrPrev = document.getElementById('terrPrev');
 const arenaCounts = () => ({ river: +riverN.value, forest: +forestN.value, hill: +hillN.value, swamp: +swampN.value });
 function readArena() {                                  // 방장 / 혼자 할 때 화면 값을 게임에 옮긴다
@@ -5419,7 +5798,8 @@ function readArena() {                                  // 방장 / 혼자 할 �
   RANGE_MUL = clamp(parseFloat(rngRange.value) || 1, .5, 2);
   RIVER_DEEP = deepTgl.classList.contains('on');
   HILL_H  = clamp(parseInt(hillH.value, 10) || 0, 0, 200);
-  BASE_EL = clamp(parseInt(baseEl.value, 10) || 0, 0, 220);
+  BASE_EL = [clamp(parseInt(baseEl.value, 10) || 0, 0, 220),
+             clamp(parseInt(baseElR.value, 10) || 0, 0, 220)];
   TERR = currentTerr(WORLD_W);
 }
 function drawTerrPreview() {
@@ -5431,16 +5811,16 @@ function drawTerrPreview() {
   x.fillStyle = '#16202c'; x.fillRect(0, 0, W, H);
   x.fillStyle = '#3a4a44'; x.fillRect(20, gy0, W - 40, H - gy0 - 8);
   // 높이는 실제 비율대로 — 언덕 높이와 기지 지대를 눈으로 확인하며 조절한다
-  const hh = +hillH.value, be = +baseEl.value;
+  const hh = +hillH.value, beL = +baseEl.value, beR = +baseElR.value, be = Math.max(beL, beR);
   const vk = Math.min(1, (gy0 - 40) / Math.max(90, Math.max(hh, be) * 1.25));
   const plat = px => {                                 // 미리보기용 기지 지대 (게임과 같은 모양)
-    if (be <= 0) return 0;
     const bl = 240, br = L - 240;
     const flat = Math.min(130, (br - bl) * .22), ramp = Math.min(210, (br - bl) * .3);
-    const sm = t => be * t * t * (3 - 2 * t);
-    if (px <= bl + flat || px >= br - flat) return be;
-    if (px < bl + flat + ramp) return sm(1 - (px - bl - flat) / ramp);
-    if (px > br - flat - ramp) return sm(1 - (br - flat - px) / ramp);
+    const sm = (h, t) => h * t * t * (3 - 2 * t);
+    if (px <= bl + flat) return beL;
+    if (px < bl + flat + ramp) return sm(beL, 1 - (px - bl - flat) / ramp);
+    if (px >= br - flat) return beR;
+    if (px > br - flat - ramp) return sm(beR, 1 - (br - flat - px) / ramp);
     return 0;
   };
   if (be > 0) {                                        // 지대 먼저 (땅색)
@@ -5495,6 +5875,7 @@ function syncArena() {
   document.getElementById('riverWVal').textContent = riverW.value;
   document.getElementById('hillHVal').textContent = hillH.value;
   document.getElementById('baseElVal').textContent = +baseEl.value ? baseEl.value : '평지';
+  document.getElementById('baseElRVal').textContent = +baseElR.value ? baseElR.value : '평지';
   deepTgl.classList.toggle('on', RIVER_DEEP_UI);
   deepTgl.textContent = RIVER_DEEP_UI ? '깊은 강 (느리고 다침 · 원거리 못 쏨)' : '얕은 여울 (감속만)';
   drawTerrPreview();
@@ -5504,7 +5885,12 @@ deepTgl.onclick = () => { RIVER_DEEP_UI = !RIVER_DEEP_UI; syncArena(); };
 let CUSTOM = null, CUSTOM_L = 2800;
 const toAuto = () => { CUSTOM = null; syncArena(); };
 lenRange.oninput = syncArena; rngRange.oninput = syncArena;
-hillH.oninput = syncArena; baseEl.oninput = syncArena;   // 높이는 그린 지형을 지우지 않는다
+hillH.oninput = syncArena; baseEl.oninput = syncArena; baseElR.oninput = syncArena;
+document.querySelectorAll('[data-be]').forEach(b => b.onclick = () => {
+  if (b.dataset.be === 'link') baseElR.value = baseEl.value;   // 오른쪽을 왼쪽에 맞춘다
+  else { baseEl.value = b.dataset.be; baseElR.value = b.dataset.be; }
+  syncArena();
+});
 for (const el of [riverN, forestN, hillN, swampN, riverW]) el.oninput = toAuto;
 document.querySelectorAll('[data-len]').forEach(b => b.onclick = () => { lenRange.value = b.dataset.len; syncArena(); });
 const TPRESET = { plain: [0, 0, 0, 0], river: [1, 0, 0, 0], forest: [0, 2, 0, 0], hill: [0, 1, 2, 0],
@@ -5659,7 +6045,8 @@ function tplSaveAll() {
 }
 function tplSnapshot() {
   return { len: +lenRange.value, rng: +rngRange.value, riverW: +riverW.value, deep: RIVER_DEEP_UI,
-           n: arenaCounts(), seed: TSEED, hillH: +hillH.value, baseEl: +baseEl.value,
+           n: arenaCounts(), seed: TSEED, hillH: +hillH.value,
+           baseEl: +baseEl.value, baseElR: +baseElR.value,
            custom: CUSTOM ? CUSTOM.map(z => ({ k: z.k, a: z.a, b: z.b })) : null, cl: CUSTOM_L };
 }
 function tplApply(t) {
@@ -5667,6 +6054,7 @@ function tplApply(t) {
   riverW.value = t.riverW || 110; RIVER_DEEP_UI = !!t.deep;
   hillH.value = t.hillH === undefined ? 62 : t.hillH;
   baseEl.value = t.baseEl || 0;
+  baseElR.value = t.baseElR === undefined ? (t.baseEl || 0) : t.baseElR;   // 예전 템플릿은 양쪽 같게
   const n = t.n || {};
   riverN.value = n.river || 0; forestN.value = n.forest || 0;
   hillN.value = n.hill || 0; swampN.value = n.swamp || 0;
