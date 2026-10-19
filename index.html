@@ -695,6 +695,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>SHOP</b> — 상점 보드로 넘어간다. 칸마다 필요한 개수가 다르고, 다 채워야 강한 병사가 나온다. 필요 개수가 클수록 강하다.<br>
     <b>베이스</b> — 적이 다가오면 꼭대기에서 알아서 쏜다. 베이스 체력이 0이 되면 점령.<br>
     <b>AI 난이도</b> — 왼쪽·오른쪽을 따로 정한다 (쉬움 / 보통 / 어려움 / 최강). 판단 간격(쉬움 1.6~3.2초 → 최강 0.2~0.5초), 실수 확률(55% → 0%), 상대 구성(근접·원거리·뭉침)을 보고 고르는지, 지휘를 쓰는지가 달라진다. 거기에 <b>코인 수입</b>이 쉬움 0.75배 · 보통 1배 · 어려움 1.2배 · 최강 1.5배로 붙는다 (사람 쪽은 늘 1배). 보통은 사람과 똑같은 조건이다.<br>
+    <b>무기 외형</b> — 팀마다 WEAPON·SHOP 무기가 모두 제 모습으로 그려진다. 손에 든 모습(소총은 탄창과 조준경, 저격총은 양각대, 석궁은 당겨진 시위, 횃불은 흔들리는 불꽃, 드릴은 도는 날, 시험관은 찰랑이는 액체 등)과 날아가는 모습(로켓포는 <b>연기 꼬리를 남기는 미사일</b>, 대포는 쇳덩이, 레이저는 빛줄기, 얼음창은 결정, 수류탄은 구르고, 거미줄은 돌아가는 그물)이 따로 있다. 버섯·요리사·융성망 무기는 원래 모습 그대로 둔다.<br>
     <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에 올라탄 모습으로 나온다. 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
     <b>온라인 PvP</b> — 고용 탭 안에 있다. <b>랜덤 매칭</b>은 닉네임을 적고 누르기만 하면 같은 시간에 누른 다른 사람과 자동으로 붙는다. 아는 사람과 하려면 <b>방 만들기 / 참가하기</b>로 코드를 두 번 주고받으면 된다.<br>
@@ -2990,25 +2991,338 @@ function panShape(ctx, S) {
   ctx.beginPath(); ctx.ellipse(24 * S, -8.4 * S, 6 * S, 2.8 * S, -.28, 0, 6.3); ctx.fill();
 }
 
+/* ============================================================
+   무기 외형 — 무기마다 손에 든 모습과 날아가는 모습을 따로 정한다.
+   버섯·요리사·융성망 무기는 손대지 않고 원래 모습 그대로 둔다.
+   ============================================================ */
+const LOOK = {
+  // 총기
+  pistol: 'pistol', revolver: 'pistol', rifle: 'rifle', musket: 'musket', pulse: 'rifle',
+  shotgun: 'shotgun', sniper: 'sniper', mg: 'mg', foodgun: 'bullet',
+  // 발사기 · 포
+  rpg: 'launcher', cannon: 'fieldgun', nuke: 'launcher', mininuke: 'launcher',
+  littleboy: 'launcher', fatman: 'launcher', tsar: 'launcher', plutonium: 'launcher',
+  emc2: 'launcher', orbital: 'launcher',
+  // 던지는 것
+  grenade: 'grenade', dynamite: 'dynamite', bomb: 'grenade',
+  javelin: 'javelin', harpoon: 'harpoon', sling: 'sling', boomerang: 'boomerang',
+  shuriken: 'shuriken', kunai: 'shuriken', blowdart: 'blowgun',
+  // 활
+  bow: 'bow', longbow: 'longbow', crossbow: 'crossbow', firearrow: 'firebow',
+  pilum: 'javelin', ballista: 'ballista',
+  // 칼붙이
+  sword: 'sword', gladius: 'sword', saber: 'saber', cutlass: 'saber', khopesh: 'saber',
+  greatsword: 'greatsword', katana: 'katana', icesword: 'icesword', flameblade: 'fireblade',
+  plasmablade: 'plasmablade', nanoblade: 'plasmablade', dagger: 'dagger', knife: 'dagger',
+  ritualknife: 'dagger', scythe: 'scythe', needle: 'dagger',
+  // 자루 무기
+  spear: 'spear', stonespear: 'stonespear', bonespear: 'bonespear', hasta: 'spear',
+  legionspear: 'spear', holyspear: 'holyspear', lance: 'lance', halberd: 'halberd',
+  trident: 'trident', sting: 'sting', drill: 'drill', macuahuitl: 'macuahuitl',
+  // 둔기
+  mace: 'mace', hammer: 'hammer', flail: 'flail', club: 'club', boneclub: 'boneclub',
+  axe: 'axe', pickaxe: 'pickaxe', stoneaxe: 'stoneaxe', torch: 'torch', scutum: 'shield',
+  // 마법 · 에너지
+  fireball: 'firestaff', meteor: 'meteorstaff', iceshard: 'icestaff', lightning: 'lightstaff',
+  darkbolt: 'darkstaff', bloodbolt: 'darkstaff', holybolt: 'holystaff', laser: 'lasergun',
+  plasma: 'plasmagun', railgun: 'railgun', radbeam: 'raygun', photon: 'raygun',
+  sonicwave: 'sonicgun', sonicboom: 'sonicgun', gravgun: 'raygun', fusion: 'plasmagun',
+  flamethrower: 'flamer', sandblast: 'flamer', thermal: 'flamer', entropy: 'darkstaff',
+  matterwave: 'raygun', formula: 'flask', flask: 'flask', slam: 'fist', gasboom: 'flask',
+  nofric: 'raygun', cern: 'raygun',
+  // 생물 · 괴물
+  claw: 'claw', wolfclaw: 'claw', shadowclaw: 'claw', fang: 'fang', bite: 'fang',
+  pincer: 'pincer', tentacle: 'tentacle', whip: 'whip', vinewhip: 'vine',
+  fist: 'fist', steamfist: 'steamfist', mechfist: 'mechfist',
+  acidspit: 'acidgland', websh: 'webgland', inkshot: 'acidgland', eggthrow: 'egg',
+  poisoncloud: 'acidgland', dronebee: 'drones',
+  // 독·화학 (이름만 쓰는 가짜 물질들)
+  vx: 'flask', sarin: 'flask', chlorine: 'flask', botulinum: 'flask',
+  polonium: 'flask', aquaregia: 'flask', bioooze: 'flask', bioman: 'flask'
+};
+const lookOf = w => LOOK[w.id] || w.shape;
 function wshape(ctx, w, S) {
   ctx.lineCap = 'round'; ctx.strokeStyle = w.col; ctx.fillStyle = w.col;
-  const L = S;
-  switch (w.shape) {
+  const L = S, col = w.col;
+  const wood = '#8a6a44', steel = '#b9c2cc', dark = '#3a4049';
+  const bar = (x0, y0, x1, y1, lw, c) => {                  // 굵은 막대
+    ctx.strokeStyle = c; ctx.lineWidth = lw * L;
+    ctx.beginPath(); ctx.moveTo(x0 * L, y0 * L); ctx.lineTo(x1 * L, y1 * L); ctx.stroke();
+  };
+  const poly = (pts, c) => {
+    ctx.fillStyle = c; ctx.beginPath();
+    pts.forEach((p, i) => i ? ctx.lineTo(p[0] * L, p[1] * L) : ctx.moveTo(p[0] * L, p[1] * L));
+    ctx.closePath(); ctx.fill();
+  };
+  const dot = (x0, y0, r, c) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x0 * L, y0 * L, r * L, 0, 6.3); ctx.fill(); };
+  const flame = (x0, y0, r, c1, c2) => {                    // 흔들리는 불꽃
+    const k = .8 + .3 * Math.sin(G.t * 14 + x0);
+    dot(x0, y0, r * k, c1); dot(x0 + 1, y0 - r * .4, r * .55 * k, c2);
+  };
+
+  switch (lookOf(w)) {
+    /* ── 총기 ── */
+    case 'pistol':
+      poly([[0, -4], [11, -4], [11, -1], [0, -1]], dark);
+      poly([[1, -1], [5, -1], [4, 6], [0, 6]], '#5a6068');
+      dot(12, -2.6, 1.1, '#20252c'); break;
+    case 'rifle':
+      poly([[-6, -1], [-1, -3], [20, -3], [20, -0.5], [-2, 2]], dark);
+      bar(20, -2, 30, -2, 2.1, '#5a6068');                  // 총열
+      poly([[4, 0], [9, 0], [8, 7], [3, 7]], '#4a5058');     // 탄창
+      poly([[6, -5], [13, -5], [13, -3.4], [6, -3.4]], '#6b7480'); break;   // 조준경
+    case 'musket':
+      bar(-6, 2, 8, -1, 3.4, wood); bar(8, -1, 32, -3, 2.3, '#5a6068');
+      poly([[30, -5], [34, -3.4], [30, -1.8]], steel); break;
+    case 'shotgun':
+      poly([[-6, -1], [-1, -3], [14, -3], [14, 0], [-2, 2]], '#6b4a2e');
+      bar(14, -2.4, 32, -2.4, 2.6, dark); bar(14, 0, 32, 0, 2.6, dark);
+      dot(31, -1.2, 1.4, '#20252c'); break;
+    case 'sniper':
+      poly([[-7, -1], [-2, -3], [16, -3], [16, -0.5], [-3, 2]], '#2f3640');
+      bar(16, -2, 40, -2, 2, '#5a6068');
+      poly([[4, -7], [16, -7], [16, -4], [4, -4]], '#6b7480');   // 긴 조준경
+      bar(26, 1, 34, 4, 1.6, '#5a6068'); break;              // 양각대
+    case 'mg':
+      poly([[-6, -2], [16, -4], [16, 0], [-6, 2]], dark);
+      bar(16, -2.4, 36, -2.4, 3, '#5a6068');
+      for (let i = 0; i < 4; i++) bar(20 + i * 4, -5, 20 + i * 4, -0.5, 1.2, '#7b8490');  // 방열구
+      poly([[0, 2], [10, 2], [10, 7], [0, 5]], '#4a5058');   // 탄통
+      bar(24, 1, 30, 6, 1.8, '#5a6068'); bar(24, 1, 18, 6, 1.8, '#5a6068'); break;
+    case 'fieldgun':
+      bar(-4, 0, 26, -4, 3.4, '#5a6068'); dot(28, -4.4, 2.2, dark);
+      ctx.strokeStyle = '#4a5058'; ctx.lineWidth = 1.6 * L;
+      ctx.beginPath(); ctx.arc(2 * L, 4 * L, 6 * L, 0, 6.3); ctx.stroke(); break;
+    case 'launcher':
+      bar(-8, -2, 26, -6, 5.2, '#4a5058');                   // 발사관
+      poly([[26, -9], [34, -6], [26, -3]], col);             // 탄두
+      poly([[-10, -5], [-4, -5], [-4, 1]], '#5a6068');       // 뒤쪽 화염구
+      bar(4, -1, 8, 5, 1.8, '#5a6068'); break;               // 손잡이
+    /* ── 던지는 것 ── */
+    case 'grenade':
+      dot(8, -4, 4, '#4a6b3f'); bar(8, -8, 11, -9.5, 1.2, steel);
+      bar(6, -7, 10, -7, .9, '#2f3a2a'); bar(6, -4.5, 10, -4.5, .9, '#2f3a2a'); break;
+    case 'dynamite':
+      poly([[2, -7], [12, -7], [12, -1], [2, -1]], '#b2432a');
+      bar(12, -6, 18, -11, 1.1, '#d8c48a');
+      flame(18, -11, 1.6, '#ffb33a', '#fff2a8'); break;
+    case 'javelin':
+      bar(-10, 4, 30, -8, 1.8, wood); poly([[30, -8], [38, -11], [31, -5]], steel); break;
+    case 'harpoon':
+      bar(-10, 4, 28, -7, 1.8, '#6b7480'); poly([[28, -7], [37, -10], [29, -4]], steel);
+      bar(26, -4, 31, -2, 1.2, steel); break;
+    case 'sling':
+      ctx.strokeStyle = '#8a7a5a'; ctx.lineWidth = 1 * L;
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(10 * L, 12 * L, 20 * L, 2 * L); ctx.stroke();
+      dot(12, 9, 3, '#8b8b8b'); break;
+    case 'boomerang':
+      ctx.strokeStyle = wood; ctx.lineWidth = 2.6 * L;
+      ctx.beginPath(); ctx.moveTo(2 * L, 4 * L); ctx.lineTo(10 * L, -6 * L); ctx.lineTo(20 * L, -2 * L); ctx.stroke(); break;
+    case 'shuriken':
+      ctx.save(); ctx.translate(12 * L, -5 * L); ctx.rotate(G.t * 7);
+      for (let i = 0; i < 4; i++) { ctx.rotate(1.57); poly([[0, -1.4], [6, 0], [0, 1.4]], steel); }
+      ctx.restore(); break;
+    case 'blowgun':
+      bar(0, -2, 26, -6, 2, '#6b5a3a'); dot(26, -6, 1.3, col); break;
+    /* ── 활 ── */
+    case 'bow': case 'longbow': {
+      const R = lookOf(w) === 'longbow' ? 17 : 13;
+      ctx.strokeStyle = wood; ctx.lineWidth = 2 * L;
+      ctx.beginPath(); ctx.arc(4 * L, -6 * L, R * L, -1.15, 1.15); ctx.stroke();
+      ctx.strokeStyle = '#e8e2d2'; ctx.lineWidth = .9 * L;
+      ctx.beginPath(); ctx.moveTo(9 * L, (-6 - R * .92) * L); ctx.lineTo(-1 * L, -6 * L);
+      ctx.lineTo(9 * L, (-6 + R * .92) * L); ctx.stroke();
+      bar(-1, -6, 20, -6, 1.2, '#cfc6ad'); poly([[20, -7.4], [26, -6], [20, -4.6]], steel); break;
+    }
+    case 'firebow':
+      ctx.strokeStyle = wood; ctx.lineWidth = 2 * L;
+      ctx.beginPath(); ctx.arc(4 * L, -6 * L, 13 * L, -1.15, 1.15); ctx.stroke();
+      bar(-1, -6, 20, -6, 1.2, '#cfc6ad'); flame(22, -6, 3, '#ff8a3a', '#ffe08a'); break;
+    case 'crossbow':
+      bar(-4, -2, 22, -6, 2.4, '#6b4a2e');                   // 몸통
+      ctx.strokeStyle = steel; ctx.lineWidth = 1.8 * L;
+      ctx.beginPath(); ctx.moveTo(16 * L, -16 * L); ctx.quadraticCurveTo(22 * L, -6 * L, 16 * L, 4 * L); ctx.stroke();
+      bar(2, -5, 24, -5.5, 1, '#e8e2d2'); poly([[24, -7], [30, -5.4], [24, -3.8]], steel); break;
+    case 'ballista':
+      bar(-6, 0, 20, -4, 3.4, '#8a6b42');
+      ctx.strokeStyle = '#6d5433'; ctx.lineWidth = 2.4 * L;
+      ctx.beginPath(); ctx.moveTo(16 * L, -16 * L); ctx.quadraticCurveTo(24 * L, -5 * L, 16 * L, 6 * L); ctx.stroke();
+      bar(0, -3, 26, -4, 1.6, '#d8cba8'); poly([[26, -6], [34, -4], [26, -2]], steel); break;
+    /* ── 칼붙이 ── */
+    case 'sword':
+      poly([[2, -2], [28, -6], [34, -5], [28, -3], [2, 1]], steel);
+      bar(0, -3, 2, 3, 2.4, '#6b5a3a'); bar(2, -4, 2, 3, 1.6, col); break;
+    case 'saber':
+      ctx.strokeStyle = steel; ctx.lineWidth = 2.2 * L;
+      ctx.beginPath(); ctx.moveTo(2 * L, 0); ctx.quadraticCurveTo(20 * L, -10 * L, 33 * L, -8 * L); ctx.stroke();
+      bar(0, -3, 0, 3, 2.2, col); break;
+    case 'greatsword':
+      poly([[2, -5], [30, -8], [38, -6], [30, -2], [2, 2]], '#d6dde6');
+      bar(-2, -7, -2, 7, 2.6, col); bar(-8, 0, 2, -2, 3, '#6b5a3a'); break;
+    case 'katana':
+      ctx.strokeStyle = '#e4ecf4'; ctx.lineWidth = 2 * L;
+      ctx.beginPath(); ctx.moveTo(2 * L, 1 * L); ctx.quadraticCurveTo(18 * L, -6 * L, 32 * L, -9 * L); ctx.stroke();
+      dot(1, 1, 2.4, '#2f3640'); bar(-7, 4, 1, 1, 2.4, '#1f242b'); break;
+    case 'icesword': case 'fireblade': case 'plasmablade': {
+      const glow = lookOf(w) === 'icesword' ? '#9fe8ff' : lookOf(w) === 'fireblade' ? '#ff9a4a' : '#c9a8ff';
+      poly([[2, -2], [28, -6], [34, -5], [28, -3], [2, 1]], col);
+      ctx.globalAlpha = .45 + .25 * Math.sin(G.t * 8);
+      poly([[2, -3.5], [30, -7.5], [36, -5], [30, -1.5], [2, 2.5]], glow);
+      ctx.globalAlpha = 1; bar(0, -3, 0, 3, 2.2, '#4a5058'); break;
+    }
+    case 'dagger':
+      poly([[2, -1.5], [15, -4], [19, -3], [15, -2], [2, .5]], steel);
+      bar(-1, -2.5, -1, 2.5, 1.8, col); break;
+    case 'scythe':
+      bar(-8, 6, 24, -10, 2.2, '#6b5a3a');
+      ctx.strokeStyle = steel; ctx.lineWidth = 2.4 * L;
+      ctx.beginPath(); ctx.moveTo(24 * L, -10 * L); ctx.quadraticCurveTo(14 * L, -22 * L, 0 * L, -19 * L); ctx.stroke(); break;
+    /* ── 자루 무기 ── */
+    case 'spear': case 'lance': case 'holyspear': {
+      const lk = lookOf(w), len = lk === 'lance' ? 44 : 38;
+      bar(-12, 4, len, -7, 2, lk === 'holyspear' ? '#e8dcb0' : wood);
+      poly([[len, -9.5], [len + 10, -8], [len, -4.5]], lk === 'holyspear' ? '#fff2a8' : steel);
+      if (lk === 'lance') poly([[6, -1], [14, -4], [14, 2]], col);     // 손 보호대
+      if (lk === 'holyspear') { ctx.globalAlpha = .5 + .3 * Math.sin(G.t * 6); dot(len + 4, -7, 4, '#fff2a8'); ctx.globalAlpha = 1; }
+      break;
+    }
+    case 'stonespear':
+      bar(-12, 4, 34, -6, 2.2, '#9a7a52'); poly([[34, -9], [42, -6], [34, -3]], '#b9b0a0');
+      bar(32, -8, 36, -4, .9, '#6b5a3a'); break;
+    case 'bonespear':
+      bar(-12, 4, 34, -6, 2.2, '#e8e4d0'); poly([[34, -9], [43, -6], [34, -3]], '#f4f0e0'); break;
+    case 'halberd':
+      bar(-12, 5, 36, -8, 2.2, wood);
+      poly([[28, -6], [38, -18], [40, -5]], steel);                    // 도끼날
+      poly([[36, -9], [46, -10], [36, -6]], steel); break;             // 창끝
+    case 'trident':
+      bar(-10, 4, 30, -6, 2, '#6b7480');
+      for (const o of [-6, 0, 6]) poly([[30, -6 + o * .45], [40, -8 + o], [31, -4 + o * .45]], steel);
+      break;
+    case 'sting':
+      bar(0, 0, 18, -5, 1.6, col); poly([[18, -6.5], [26, -5], [18, -3.5]], '#e0ffb0'); break;
+    case 'drill': {
+      bar(-4, 0, 10, -3, 3, '#5a6068');
+      ctx.save(); ctx.translate(10 * L, -3 * L); ctx.rotate(G.t * 12);
+      for (let i = 0; i < 3; i++) { ctx.rotate(2.09); poly([[0, -3], [20, 0], [0, 3]], steel); }
+      ctx.restore(); break;
+    }
+    case 'macuahuitl':
+      bar(0, 0, 26, -7, 3.4, '#8a6a44');
+      for (let i = 0; i < 4; i++) { poly([[4 + i * 6, -1 - i * 1.6], [7 + i * 6, -6 - i * 1.6], [10 + i * 6, -2 - i * 1.6]], '#2b2b33'); }
+      break;
+    /* ── 둔기 ── */
+    case 'mace':
+      bar(0, 0, 20, -5, 2.6, '#6b5a3a'); dot(23, -6, 5, steel);
+      for (let i = 0; i < 6; i++) { const a = i * 1.05; poly([[23 + Math.cos(a) * 5, -6 + Math.sin(a) * 5],
+        [23 + Math.cos(a) * 9, -6 + Math.sin(a) * 9], [23 + Math.cos(a + .5) * 5, -6 + Math.sin(a + .5) * 5]], steel); }
+      break;
+    case 'hammer':
+      bar(0, 0, 22, -6, 2.6, wood);
+      poly([[18, -12], [30, -14], [31, -1], [19, 0]], '#8e98a4'); break;
+    case 'flail':
+      bar(0, 0, 14, -4, 2.4, wood);
+      ctx.strokeStyle = '#6b7480'; ctx.lineWidth = 1.1 * L;
+      ctx.beginPath(); ctx.moveTo(14 * L, -4 * L); ctx.lineTo(22 * L, 4 * L); ctx.stroke();
+      dot(25, 6, 4.4, steel); break;
+    case 'boneclub':
+      bar(0, 0, 20, -6, 3, '#e8e4d0'); dot(23, -7, 5, '#f4f0e0'); dot(21, -11, 3.4, '#f4f0e0'); break;
+    case 'axe':
+      bar(0, 0, 22, -6, 2.4, wood);
+      poly([[17, -5], [30, -15], [32, -1], [19, -2]], steel); break;
+    case 'stoneaxe':
+      bar(0, 0, 20, -6, 2.6, '#9a7a52');
+      poly([[15, -4], [27, -13], [29, -2], [17, -1]], '#a8a096');
+      bar(15, -8, 21, -2, .9, '#6b5a3a'); break;
+    case 'pickaxe':
+      bar(0, 0, 20, -6, 2.4, wood);
+      ctx.strokeStyle = '#8e98a4'; ctx.lineWidth = 2.4 * L;
+      ctx.beginPath(); ctx.moveTo(10 * L, -16 * L); ctx.quadraticCurveTo(20 * L, -8 * L, 30 * L, -12 * L); ctx.stroke(); break;
+    case 'torch':
+      bar(0, 2, 18, -7, 2.4, '#6b5a3a');
+      flame(21, -11, 4.6, '#ff8a3a', '#ffe08a'); break;
+    case 'shield':
+      poly([[4, -14], [16, -11], [16, 8], [4, 13]], col);
+      poly([[6, -11], [13, -9], [13, 6], [6, 10]], 'rgba(255,255,255,.25)'); break;
+    /* ── 마법 · 에너지 ── */
+    case 'firestaff': case 'icestaff': case 'lightstaff': case 'darkstaff':
+    case 'holystaff': case 'meteorstaff': {
+      const lk = lookOf(w);
+      bar(-6, 8, 20, -18, 2.2, lk === 'holystaff' ? '#e8dcb0' : '#7a6a52');
+      const r = lk === 'meteorstaff' ? 6 : 4.6;
+      ctx.globalAlpha = .35 + .3 * Math.sin(G.t * 7); dot(22, -20, r * 1.9, col); ctx.globalAlpha = 1;
+      dot(22, -20, r, col);
+      if (lk === 'lightstaff') { ctx.strokeStyle = '#fff2a8'; ctx.lineWidth = 1.2 * L;
+        ctx.beginPath(); ctx.moveTo(20 * L, -26 * L); ctx.lineTo(24 * L, -21 * L); ctx.lineTo(21 * L, -19 * L); ctx.stroke(); }
+      break;
+    }
+    case 'lasergun': case 'raygun': case 'plasmagun': case 'railgun': case 'sonicgun': {
+      const lk = lookOf(w);
+      poly([[-5, -2], [14, -5], [14, 1], [-5, 3]], '#5a6068');
+      poly([[3, 1], [8, 1], [7, 7], [2, 7]], '#4a5058');
+      if (lk === 'railgun') { bar(14, -5, 34, -5, 1.6, '#8e98a4'); bar(14, 0, 34, 0, 1.6, '#8e98a4');
+        ctx.globalAlpha = .5 + .4 * Math.sin(G.t * 12); bar(16, -2.5, 32, -2.5, 2, col); ctx.globalAlpha = 1; }
+      else if (lk === 'sonicgun') { ctx.strokeStyle = col; ctx.lineWidth = 1.4 * L;
+        for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.arc(14 * L, -2 * L, i * 5 * L, -.8, .8); ctx.stroke(); } }
+      else { bar(14, -2, 28, -2, 3, '#6b7480'); ctx.globalAlpha = .5 + .4 * Math.sin(G.t * 10);
+        dot(29, -2, lk === 'plasmagun' ? 4.4 : 2.8, col); ctx.globalAlpha = 1; }
+      break;
+    }
+    case 'flamer':
+      poly([[-4, -2], [12, -4], [12, 2], [-4, 4]], '#5a6068');
+      bar(12, -1, 26, -3, 2.4, '#6b7480');
+      poly([[-10, -8], [-2, -8], [-2, 4], [-10, 4]], '#7a4a2a');      // 등짐 연료통
+      flame(28, -3.5, 3.4, col, '#ffe08a'); break;
+    case 'flask': {
+      poly([[6, -10], [12, -10], [12, -6], [15, 2], [3, 2], [6, -6]], '#cfd8e2');
+      ctx.globalAlpha = .9; poly([[5, -2], [13, -2], [14.5, 2], [3.5, 2]], col); ctx.globalAlpha = 1;
+      dot(9, -11, 1.6, '#e8eef5'); break;
+    }
+    /* ── 생물 ── */
+    case 'claw':
+      ctx.strokeStyle = col; ctx.lineWidth = 2 * L;
+      for (let i = -1; i <= 1; i++) {
+        ctx.beginPath(); ctx.moveTo(0, i * 3 * L);
+        ctx.quadraticCurveTo(9 * L, (i * 4 - 2) * L, 15 * L, (i * 5 - 5) * L); ctx.stroke();
+      } break;
+    case 'fang':
+      poly([[0, -4], [12, -7], [4, 1]], '#f2efe4'); poly([[0, 2], [12, 5], [4, -1]], '#f2efe4'); break;
+    case 'pincer':
+      ctx.strokeStyle = col; ctx.lineWidth = 3 * L;
+      ctx.beginPath(); ctx.moveTo(0, -2 * L); ctx.quadraticCurveTo(12 * L, -10 * L, 18 * L, -2 * L); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 2 * L); ctx.quadraticCurveTo(12 * L, 10 * L, 18 * L, 2 * L); ctx.stroke(); break;
+    case 'tentacle': case 'vine': {
+      ctx.strokeStyle = col; ctx.lineWidth = 3 * L;
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(14 * L, 10 * L, 24 * L, -10 * L, 36 * L, -2 * L); ctx.stroke();
+      if (lookOf(w) === 'tentacle') for (let i = 1; i <= 3; i++) dot(8 * i + 4, (i % 2 ? 2 : -3), 1.6, 'rgba(255,255,255,.4)');
+      break;
+    }
+    case 'steamfist': case 'mechfist':
+      poly([[0, -6], [12, -7], [13, 4], [1, 5]], lookOf(w) === 'mechfist' ? '#8e98a4' : '#a07a4a');
+      bar(-4, -3, 0, -3, 3, '#5a6068');
+      if (lookOf(w) === 'steamfist') { ctx.globalAlpha = .4; dot(10, -10, 3.4, '#dfe6ee'); ctx.globalAlpha = 1; }
+      break;
+    case 'acidgland': case 'webgland':
+      dot(7, -2, 4.6, col); ctx.globalAlpha = .5; dot(11, -4, 2.4, col); ctx.globalAlpha = 1; break;
+    case 'egg':
+      ctx.fillStyle = '#f0e4c0'; ctx.beginPath(); ctx.ellipse(8 * L, -4 * L, 4.4 * L, 5.6 * L, .3, 0, 6.3); ctx.fill(); break;
+    case 'drones':
+      for (let i = 0; i < 3; i++) {
+        const a = G.t * 3 + i * 2.1;
+        dot(10 + Math.cos(a) * 7, -8 + Math.sin(a) * 5, 1.8, col);
+      } break;
+
+    /* ── 예전 모양 (요리사 · 버섯 · 융성망 등은 그대로) ── */
     case 'blade':
       ctx.lineWidth = 2.4 * L; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(26 * L, -4 * L); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(26 * L, -4 * L); ctx.lineTo(33 * L, -6 * L); ctx.lineTo(26 * L, -8 * L); ctx.fill(); break;
     case 'pole':
       ctx.lineWidth = 2 * L; ctx.strokeStyle = '#9a7a52'; ctx.beginPath(); ctx.moveTo(-10 * L, 3 * L); ctx.lineTo(38 * L, -6 * L); ctx.stroke();
       ctx.fillStyle = w.col; ctx.beginPath(); ctx.moveTo(38 * L, -6 * L); ctx.lineTo(48 * L, -8 * L); ctx.lineTo(38 * L, -10 * L); ctx.fill(); break;
-    case 'axe':
-      ctx.lineWidth = 2.4 * L; ctx.strokeStyle = '#8a6a44'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(22 * L, -6 * L); ctx.stroke();
-      ctx.fillStyle = w.col; ctx.beginPath(); ctx.moveTo(18 * L, -5 * L); ctx.lineTo(30 * L, -14 * L); ctx.lineTo(31 * L, -2 * L); ctx.fill(); break;
     case 'club':
       ctx.lineWidth = 3 * L; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(22 * L, -6 * L); ctx.stroke();
       ctx.beginPath(); ctx.arc(25 * L, -7 * L, 6 * L, 0, 6.3); ctx.fill(); break;
-    case 'claw':
-      ctx.lineWidth = 2 * L;
-      for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(0, i * 3 * L); ctx.lineTo(13 * L, i * 5 * L - 3 * L); ctx.stroke(); } break;
     case 'whip':
       ctx.lineWidth = 1.8 * L; ctx.beginPath(); ctx.moveTo(0, 0);
       ctx.quadraticCurveTo(20 * L, 8 * L, 34 * L, -6 * L); ctx.stroke(); break;
@@ -3641,6 +3955,193 @@ function drawSoldier(ctx, s) {
   ctx.restore();
 }
 
+/* 날아가는 것 — 무기마다 다르게. 로켓은 미사일로, 대포알은 쇳덩이로, 레이저는 빛줄기로. */
+const PLOOK = {
+  rpg: 'missile', nuke: 'nukemissile', mininuke: 'missile', littleboy: 'nukemissile',
+  fatman: 'nukemissile', tsar: 'nukemissile', plutonium: 'missile', emc2: 'nukemissile',
+  orbital: 'nukemissile', cannon: 'cannonball', ballista: 'bolt', dynamite: 'dynamite',
+  grenade: 'grenade', bomb: 'grenade', javelin: 'javelin', pilum: 'javelin',
+  harpoon: 'harpoon', sling: 'rock', meteor: 'meteor', boomerang: 'boomerang',
+  shuriken: 'star', kunai: 'star', blowdart: 'dart', iceshard: 'icecrystal',
+  fireball: 'fire', firearrow: 'firearrow', flamethrower: 'fire', sandblast: 'sand',
+  lightning: 'lightning', railgun: 'rail', laser: 'laser', radbeam: 'laser',
+  photon: 'laser', holybolt: 'laser', sonicwave: 'sonic', sonicboom: 'sonic',
+  plasma: 'plasma', fusion: 'plasma', gravgun: 'orb', darkbolt: 'orb', bloodbolt: 'orb',
+  entropy: 'orb', thermal: 'fire', websh: 'web', acidspit: 'acid', inkshot: 'acid',
+  poisoncloud: 'cloud', sporeburst: 'cloud', eggthrow: 'egg', dronebee: 'drone',
+  sniper: 'tracer', mg: 'tracer', rifle: 'tracer', pulse: 'tracer', musket: 'smokeball',
+  vx: 'acid', sarin: 'cloud', chlorine: 'cloud', botulinum: 'acid', polonium: 'orb',
+  aquaregia: 'acid', bioooze: 'acid', bioman: 'cloud', flask: 'flaskp', formula: 'orb',
+  cern: 'orb', nofric: 'orb', slam: 'sonic', gasboom: 'cloud', matterwave: 'sonic'
+};
+function drawProj(p) {
+  const w = p.w, c = w.col, k = PLOOK[w.id] || w.shape;
+  // 꼬리 — 그라데이션은 매 프레임 만들면 비싸서 삼각형 둘로 대신한다
+  const tail = (len, wid, col1) => {
+    fx.fillStyle = col1;
+    fx.beginPath(); fx.moveTo(0, -wid); fx.lineTo(-len * .55, 0); fx.lineTo(0, wid); fx.closePath(); fx.fill();
+    fx.globalAlpha *= .45;
+    fx.beginPath(); fx.moveTo(0, -wid * .6); fx.lineTo(-len, 0); fx.lineTo(0, wid * .6); fx.closePath(); fx.fill();
+    fx.globalAlpha /= .45;
+  };
+  switch (k) {
+    case 'missile': case 'nukemissile': {
+      const big = k === 'nukemissile';
+      const fl = 7 + Math.sin(G.t * 40) * 3;
+      fx.fillStyle = 'rgba(200,200,210,.33)';              // 연기 자국
+      fx.beginPath(); fx.moveTo(-10, -2.6); fx.lineTo(-34, 0); fx.lineTo(-10, 2.6); fx.closePath(); fx.fill();
+      fx.fillStyle = '#ff9a3a';                            // 분사 화염
+      fx.beginPath(); fx.moveTo(-9, -2.4); fx.lineTo(-9 - fl, 0); fx.lineTo(-9, 2.4); fx.closePath(); fx.fill();
+      fx.fillStyle = '#fff2a8';
+      fx.beginPath(); fx.moveTo(-9, -1.2); fx.lineTo(-9 - fl * .5, 0); fx.lineTo(-9, 1.2); fx.closePath(); fx.fill();
+      fx.fillStyle = '#d8dee6';                            // 동체
+      fx.fillRect(-9, big ? -4 : -3, big ? 17 : 16, big ? 8 : 6);
+      fx.fillStyle = c;                                    // 탄두
+      fx.beginPath(); fx.moveTo(big ? 8 : 7, big ? -4 : -3);
+      fx.lineTo(big ? 16 : 13, 0); fx.lineTo(big ? 8 : 7, big ? 4 : 3); fx.closePath(); fx.fill();
+      fx.fillStyle = '#9aa4b0';                            // 날개
+      fx.beginPath(); fx.moveTo(-9, -3); fx.lineTo(-13, -7); fx.lineTo(-5, -3); fx.closePath(); fx.fill();
+      fx.beginPath(); fx.moveTo(-9, 3); fx.lineTo(-13, 7); fx.lineTo(-5, 3); fx.closePath(); fx.fill();
+      break;
+    }
+    case 'cannonball':
+      fx.fillStyle = 'rgba(190,190,195,.3)';
+      fx.beginPath(); fx.arc(-11, 0, 5, 0, 6.3); fx.fill();
+      fx.fillStyle = '#3f454d'; fx.beginPath(); fx.arc(0, 0, 6.2, 0, 6.3); fx.fill();
+      fx.fillStyle = 'rgba(255,255,255,.35)'; fx.beginPath(); fx.arc(-2, -2, 2, 0, 6.3); fx.fill(); break;
+    case 'bolt':
+      fx.fillStyle = '#d8cba8'; fx.fillRect(-14, -1.5, 28, 3);
+      fx.fillStyle = '#b9c2cc'; fx.beginPath(); fx.moveTo(14, -3); fx.lineTo(22, 0); fx.lineTo(14, 3); fx.closePath(); fx.fill();
+      fx.fillStyle = '#8a6b42'; fx.fillRect(-16, -3.5, 5, 7); break;
+    case 'javelin': case 'harpoon':
+      fx.fillStyle = '#9a7a52'; fx.fillRect(-16, -1.2, 30, 2.4);
+      fx.fillStyle = '#b9c2cc'; fx.beginPath(); fx.moveTo(14, -3); fx.lineTo(23, 0); fx.lineTo(14, 3); fx.closePath(); fx.fill();
+      if (k === 'harpoon') { fx.fillRect(10, -4.5, 3, 4); fx.fillRect(10, 1, 3, 4); } break;
+    case 'grenade':
+      fx.save(); fx.rotate(G.t * 9);
+      fx.fillStyle = '#4a6b3f'; fx.beginPath(); fx.roundRect(-4, -3, 8, 6, 2.4); fx.fill();
+      fx.fillStyle = '#2f3a2a'; fx.fillRect(-4, -1, 8, 1); fx.restore(); break;
+    case 'dynamite':
+      fx.save(); fx.rotate(G.t * 7);
+      fx.fillStyle = '#b2432a'; fx.fillRect(-6, -3, 12, 6);
+      fx.fillStyle = '#ffb33a'; fx.beginPath(); fx.arc(7, -3, 2 + Math.sin(G.t * 30), 0, 6.3); fx.fill();
+      fx.restore(); break;
+    case 'rock': case 'meteor': {
+      const r = k === 'meteor' ? 9 : 5;
+      if (k === 'meteor') { fx.fillStyle = 'rgba(255,140,60,.5)';
+        fx.beginPath(); fx.moveTo(-6, -5); fx.lineTo(-26, 0); fx.lineTo(-6, 5); fx.closePath(); fx.fill(); }
+      fx.fillStyle = k === 'meteor' ? '#6b4a34' : '#8b8b8b';
+      fx.beginPath();
+      for (let i = 0; i < 7; i++) { const a = i / 7 * 6.28, rr = r * (.75 + .3 * ((i * 7) % 3) / 2);
+        i ? fx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : fx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+      fx.closePath(); fx.fill(); break;
+    }
+    case 'star':
+      fx.save(); fx.rotate(G.t * 22); fx.fillStyle = '#c9d2dc';
+      for (let i = 0; i < 4; i++) { fx.rotate(1.57);
+        fx.beginPath(); fx.moveTo(0, -1.6); fx.lineTo(7, 0); fx.lineTo(0, 1.6); fx.closePath(); fx.fill(); }
+      fx.restore(); break;
+    case 'boomerang':
+      fx.save(); fx.rotate(G.t * 14); fx.strokeStyle = '#9a7a52'; fx.lineWidth = 2.6;
+      fx.beginPath(); fx.moveTo(-6, 4); fx.lineTo(0, -5); fx.lineTo(7, 1); fx.stroke(); fx.restore(); break;
+    case 'dart':
+      fx.fillStyle = c; fx.fillRect(-5, -.9, 10, 1.8);
+      fx.fillStyle = '#e8e8f0'; fx.fillRect(-6, -2.2, 2.4, 4.4); break;
+    case 'icecrystal':
+      tail(14, 2.4, 'rgba(159,232,255,.5)');
+      fx.fillStyle = '#bfefff';
+      fx.beginPath(); fx.moveTo(9, 0); fx.lineTo(0, -4); fx.lineTo(-6, 0); fx.lineTo(0, 4); fx.closePath(); fx.fill();
+      fx.fillStyle = 'rgba(255,255,255,.7)';
+      fx.beginPath(); fx.moveTo(7, 0); fx.lineTo(0, -1.8); fx.lineTo(-3, 0); fx.closePath(); fx.fill(); break;
+    case 'fire': case 'firearrow': {
+      const fl = 1 + .25 * Math.sin(G.t * 30);
+      if (k === 'firearrow') { fx.fillStyle = '#9a7a52'; fx.fillRect(-11, -1.1, 20, 2.2); }
+      fx.fillStyle = 'rgba(255,120,40,.55)';
+      fx.beginPath(); fx.moveTo(4, 0); fx.lineTo(-14 * fl, -4); fx.lineTo(-18 * fl, 0); fx.lineTo(-14 * fl, 4); fx.closePath(); fx.fill();
+      fx.fillStyle = '#ff9a3a'; fx.beginPath(); fx.arc(0, 0, 4.4 * fl, 0, 6.3); fx.fill();
+      fx.fillStyle = '#fff2a8'; fx.beginPath(); fx.arc(1.4, 0, 2.2 * fl, 0, 6.3); fx.fill(); break;
+    }
+    case 'sand':
+      fx.globalAlpha = .75; fx.fillStyle = c;
+      for (let i = 0; i < 5; i++) { const a = G.t * 9 + i * 1.3;
+        fx.beginPath(); fx.arc(Math.cos(a) * 5 - 3, Math.sin(a) * 4, 2.2, 0, 6.3); fx.fill(); }
+      fx.globalAlpha = 1; break;
+    case 'lightning': {
+      fx.strokeStyle = '#fff2a8'; fx.lineWidth = 2.4; fx.beginPath();
+      fx.moveTo(-18, 0);
+      for (let i = -14; i <= 18; i += 8) fx.lineTo(i, ((i / 8) % 2 ? -4 : 4) * (.6 + .4 * Math.sin(G.t * 40)));
+      fx.stroke();
+      fx.strokeStyle = c; fx.lineWidth = 1; fx.stroke(); break;
+    }
+    case 'laser':
+      fx.globalAlpha = .4; fx.fillStyle = c; fx.fillRect(-22, -4, 44, 8);
+      fx.globalAlpha = 1; fx.fillStyle = c; fx.fillRect(-20, -1.8, 40, 3.6);
+      fx.fillStyle = '#ffffff'; fx.fillRect(-20, -.7, 40, 1.4); break;
+    case 'rail':
+      fx.globalAlpha = .35; fx.fillStyle = c; fx.fillRect(-34, -5, 68, 10);
+      fx.globalAlpha = 1; fx.fillStyle = '#ffffff'; fx.fillRect(-30, -1.3, 60, 2.6);
+      fx.fillStyle = c; fx.fillRect(-30, -2.6, 60, 1); fx.fillRect(-30, 1.6, 60, 1); break;
+    case 'sonic':
+      fx.strokeStyle = c; fx.globalAlpha = .8;
+      for (let i = 1; i <= 3; i++) { fx.lineWidth = 4 - i; fx.beginPath();
+        fx.arc(-i * 6, 0, 4 + i * 3, -1, 1); fx.stroke(); }
+      fx.globalAlpha = 1; break;
+    case 'plasma': case 'orb': {
+      const pu = .8 + .25 * Math.sin(G.t * 16);
+      tail(16, 3, 'rgba(255,255,255,.22)');
+      fx.globalAlpha = .4; fx.fillStyle = c;
+      fx.beginPath(); fx.arc(0, 0, 9 * pu, 0, 6.3); fx.fill();
+      fx.globalAlpha = 1; fx.fillStyle = c;
+      fx.beginPath(); fx.arc(0, 0, 5 * pu, 0, 6.3); fx.fill();
+      fx.fillStyle = 'rgba(255,255,255,.85)';
+      fx.beginPath(); fx.arc(0, 0, 2.2 * pu, 0, 6.3); fx.fill(); break;
+    }
+    case 'web':
+      fx.strokeStyle = c; fx.lineWidth = 1.1;
+      fx.beginPath(); fx.arc(0, 0, 6, 0, 6.3); fx.stroke();
+      fx.beginPath(); fx.arc(0, 0, 3, 0, 6.3); fx.stroke();
+      for (let i = 0; i < 4; i++) { const a = i * .78 + G.t * 2;
+        fx.beginPath(); fx.moveTo(Math.cos(a) * 6, Math.sin(a) * 6);
+        fx.lineTo(-Math.cos(a) * 6, -Math.sin(a) * 6); fx.stroke(); } break;
+    case 'acid':
+      fx.fillStyle = c;
+      fx.beginPath(); fx.ellipse(0, 0, 6, 4.2, 0, 0, 6.3); fx.fill();
+      fx.globalAlpha = .6;
+      fx.beginPath(); fx.arc(-7, 1.6, 2.2, 0, 6.3); fx.fill();
+      fx.globalAlpha = 1;
+      fx.fillStyle = 'rgba(255,255,255,.4)'; fx.beginPath(); fx.arc(1.6, -1.4, 1.5, 0, 6.3); fx.fill(); break;
+    case 'cloud':
+      fx.globalAlpha = .55; fx.fillStyle = c;
+      for (const [ox, oy, r] of [[0, 0, 6], [-5, -2.6, 4.4], [-5, 2.6, 4], [4, 1.4, 3.6]]) {
+        fx.beginPath(); fx.arc(ox + Math.sin(G.t * 6 + ox) * .8, oy, r, 0, 6.3); fx.fill(); }
+      fx.globalAlpha = 1; break;
+    case 'egg':
+      fx.save(); fx.rotate(G.t * 5); fx.fillStyle = '#f0e4c0';
+      fx.beginPath(); fx.ellipse(0, 0, 4.4, 5.6, 0, 0, 6.3); fx.fill(); fx.restore(); break;
+    case 'drone':
+      fx.fillStyle = c; fx.beginPath(); fx.roundRect(-3, -1.8, 6, 3.6, 1.6); fx.fill();
+      fx.strokeStyle = 'rgba(200,230,255,.75)'; fx.lineWidth = .9;
+      for (const sg of [-1, 1]) { fx.beginPath(); fx.ellipse(sg * 4.4, -2.4, 3.4, 1, 0, 0, 6.3); fx.stroke(); } break;
+    case 'tracer':
+      fx.globalAlpha = .5; fx.fillStyle = c; fx.fillRect(-14, -1, 20, 2);
+      fx.globalAlpha = 1; fx.fillStyle = '#fff2c8'; fx.fillRect(0, -1.2, 9, 2.4); break;
+    case 'smokeball':
+      fx.fillStyle = 'rgba(210,210,215,.4)'; fx.beginPath(); fx.arc(-9, 0, 4, 0, 6.3); fx.fill();
+      fx.fillStyle = '#5a6068'; fx.beginPath(); fx.arc(0, 0, 3.2, 0, 6.3); fx.fill(); break;
+    case 'flaskp':
+      fx.save(); fx.rotate(G.t * 8);
+      fx.fillStyle = '#cfd8e2'; fx.beginPath(); fx.roundRect(-3, -4.5, 6, 9, 2.4); fx.fill();
+      fx.fillStyle = c; fx.fillRect(-2.4, 0, 4.8, 3.6); fx.restore(); break;
+    /* 예전 모양 */
+    case 'beam': fx.fillRect(-16, -1.6, 32, 3.2); break;
+    case 'arrow': fx.fillRect(-11, -1.2, 22, 2.4); fx.fillRect(8, -3, 5, 6); break;
+    case 'bomb': fx.beginPath(); fx.arc(0, 0, p.aoe > 180 ? 10 : 5, 0, 6.3); fx.fill(); break;
+    case 'shard': fx.beginPath(); fx.moveTo(7, 0); fx.lineTo(-5, -3.5); fx.lineTo(-5, 3.5); fx.fill(); break;
+    case 'bullet': fx.fillRect(-6, -1.3, 12, 2.6); break;
+    default: fx.beginPath(); fx.arc(0, 0, 4.6, 0, 6.3); fx.fill();
+  }
+}
+
 function drawCorpse(ctx, c) {
   const a = clamp(c.life / 2, 0, 1);
   ctx.save(); ctx.globalAlpha = a;
@@ -4178,12 +4679,7 @@ function drawField() {
     if (!onScreen(p.x)) continue;
     fx.save(); fx.translate(p.x, p.y); fx.rotate(p.ang);
     fx.fillStyle = p.w.col;
-    if (p.w.shape === 'beam') { fx.fillRect(-16, -1.6, 32, 3.2); }
-    else if (p.w.shape === 'arrow') { fx.fillRect(-11, -1.2, 22, 2.4); fx.fillRect(8, -3, 5, 6); }
-    else if (p.w.shape === 'bomb') { fx.beginPath(); fx.arc(0, 0, p.aoe > 180 ? 10 : 5, 0, 6.3); fx.fill(); }
-    else if (p.w.shape === 'shard') { fx.beginPath(); fx.moveTo(7, 0); fx.lineTo(-5, -3.5); fx.lineTo(-5, 3.5); fx.fill(); }
-    else if (p.w.shape === 'bullet') { fx.fillRect(-6, -1.3, 12, 2.6); }
-    else { fx.beginPath(); fx.arc(0, 0, 4.6, 0, 6.3); fx.fill(); }
+    drawProj(p);
     fx.restore();
   }
 
