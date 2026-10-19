@@ -696,7 +696,8 @@ input.pdot:hover{border-color:var(--hi)}
     <b>베이스</b> — 적이 다가오면 꼭대기에서 알아서 쏜다. 베이스 체력이 0이 되면 점령.<br>
     <b>AI 난이도</b> — 왼쪽·오른쪽을 따로 정한다 (쉬움 / 보통 / 어려움 / 최강). 판단 간격(쉬움 1.6~3.2초 → 최강 0.2~0.5초), 실수 확률(55% → 0%), 상대 구성(근접·원거리·뭉침)을 보고 고르는지, 지휘를 쓰는지가 달라진다. 거기에 <b>코인 수입</b>이 쉬움 0.75배 · 보통 1배 · 어려움 1.2배 · 최강 1.5배로 붙는다 (사람 쪽은 늘 1배). 보통은 사람과 똑같은 조건이다.<br>
     <b>무기 외형</b> — 팀마다 WEAPON·SHOP 무기가 모두 제 모습으로 그려진다. 손에 든 모습(소총은 탄창과 조준경, 저격총은 양각대, 석궁은 당겨진 시위, 횃불은 흔들리는 불꽃, 드릴은 도는 날, 시험관은 찰랑이는 액체 등)과 날아가는 모습(로켓포는 <b>연기 꼬리를 남기는 미사일</b>, 대포는 쇳덩이, 레이저는 빛줄기, 얼음창은 결정, 수류탄은 구르고, 거미줄은 돌아가는 그물)이 따로 있다. 버섯·요리사·융성망 무기는 원래 모습 그대로 둔다.<br>
-    <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에 올라탄 모습으로 나온다. 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
+    <b>반동</b> — 쏘는 순간 총구에서 연기와 섬광이 터지고, 총이면 탄피가 튀고, 포·로켓처럼 무거운 것은 발밑 흙먼지까지 인다. 쏜 사람(또는 전차·장갑차·수레)은 뒤로 밀렸다가 제자리로 돌아오고, 차체는 앞이 살짝 들린다.<br>
+    <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에, 고대 이집트의 전차병은 말이 끄는 <b>나무 수레</b> 위에 올라탄 모습으로 나온다 (같은 이름이라도 현대 전차병은 전차다). 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
     <b>온라인 PvP</b> — 고용 탭 안에 있다. <b>랜덤 매칭</b>은 닉네임을 적고 누르기만 하면 같은 시간에 누른 다른 사람과 자동으로 붙는다. 아는 사람과 하려면 <b>방 만들기 / 참가하기</b>로 코드를 두 번 주고받으면 된다.<br>
     방장이 왼쪽, 참가자가 오른쪽을 맡고 각자 자기 진영만 고른다. 판은 방장 쪽에서 돌아가므로 설정·시작·배속은 방장이 정한다. 닉네임은 전투 화면 이름표에 팀 이름과 같이 나온다.<br>
@@ -2419,6 +2420,30 @@ function makeCorpse(s, kx, ky) {
   if (G.corp.length > MAX_CORP) G.corp.shift();
 }
 
+/* 쏘는 순간의 반동 — 총구 연기, 발밑 흙먼지, 탄피, 섬광.
+   무기 종류에 따라 세기가 다르다 (대포·로켓이 가장 크다). */
+function recoilFx(s, w, dir) {
+  const S = s.size, mx = s.x + dir * 20 * S, my = s.y - 34 * S;
+  const heavy = (w.aoe || 0) > 40 || w.ps < 460 || w.dmg >= 60;   // 포·로켓류
+  if (G.part.length > 1400) return;                               // 이미 연기가 자욱하면 생략
+  const busy = G.part.length > 700;                               // 많으면 입자를 줄인다
+  // 연사가 빠른 무기는 한 발마다 연기를 많이 내면 화면이 뿌예지고 느려진다
+  const n = busy ? 1 : heavy ? 7 : (w.cd < .45 ? 1 : 3);
+  for (let i = 0; i < n; i++)                                      // 총구 연기
+    G.part.push({ x: mx, y: my, vx: dir * rnd(40, heavy ? 260 : 150) + rnd(-30, 30),
+                  vy: rnd(-70, 20), life: heavy ? .5 : .28,
+                  col: i % 3 ? '#cfd6de' : '#ffe08a', sz: rnd(1.6, heavy ? 4.6 : 3) });
+  if (heavy && !busy) {
+    for (let i = 0; i < 5; i++)                                    // 발밑 흙먼지
+      G.part.push({ x: s.x - dir * 6 * S, y: s.y - 2, vx: -dir * rnd(30, 150),
+                    vy: rnd(-70, -10), life: .45, col: '#9a8a6a', sz: rnd(1.6, 3.4) });
+  } else if (w.shape === 'bullet' && !busy && (w.cd >= .45 || Math.random() < .4)) {
+    G.part.push({ x: mx, y: my, vx: -dir * rnd(60, 140), vy: rnd(-150, -60),   // 탄피
+                  life: .5, col: '#d8b24a', sz: 1.5 });
+  }
+  s.rec = Math.min(1, (s.rec || 0) + (heavy ? 1 : .55));           // 몸이 뒤로 밀린다
+}
+
 function fire(sx, sy, w, tx, ty, team, ti, dmgMul) {
   let dx = tx - sx, dy = ty - sy;
   const d = Math.max(20, Math.hypot(dx, dy));
@@ -2518,6 +2543,7 @@ function stepBattle(dt) {
                     life: .35, col: '#ff4a7a', sz: 2.4 });
     }
     if (s.chgHit > 0) s.chgHit -= dt;
+    if (s.rec > 0) s.rec = Math.max(0, s.rec - dt * 4.5);   // 반동이 가라앉는다
     if (s.chgB > 0) s.chgB -= dt;
     const sm = s.sm || 1;
     if (walk) { s.vx += mdir * s.spd * 8 * rush * dt; s.ph += dt * 10 * rush * sm; s.moving = true; }
@@ -2631,7 +2657,10 @@ function stepBattle(dt) {
           fw = WEAPONS[pick[1]];
           say(s, pick[0], '#b8f070');
         } else if (s.w.cry) say(s, s.w.cry, '#9ae8ff');
-        if (fw) fire(s.x + dir * 12 * s.size, s.y - 34 * s.size, fw, tx, ty, s.team, s.ti, s.dmg * G.rage);
+        if (fw) {
+          fire(s.x + dir * 12 * s.size, s.y - 34 * s.size, fw, tx, ty, s.team, s.ti, s.dmg * G.rage);
+          recoilFx(s, fw, dir);
+        }
       }
       if (s.sci) say(s, FORMULAS[Math.floor(Math.random() * FORMULAS.length)]);
     }
@@ -3444,9 +3473,18 @@ const VEH = {
   '궤도 사령관': 'hover', '궤도 포격': 'hover'
 };
 const BEAST = { '매머드 기수': 'mammoth' };                 // 위에 사람이 탄다
+// 같은 이름이라도 팀이 다르면 다른 탈것 — 고대 이집트 전차병은 나무 수레를 몬다
+const VEH_TEAM = { '고대 이집트': { '전차병': '@chariot' } };
 const COMPANION = { '드론 운용병': 'drone', '드론 떼': 'drone' };
-const vehOf  = s => VEH[s.label] || VEH[s.w.name] || null;
-const beastOf = s => BEAST[s.label] || BEAST[s.w.name] || null;
+function teamVeh(s) {
+  const t = s.td && VEH_TEAM[s.td.name];
+  return (t && t[s.label]) || null;
+}
+// '@' 로 시작하면 사람이 위에 타는 것, 아니면 통째로 갈아 끼우는 것
+const vehOf  = s => { const tv = teamVeh(s); if (tv) return tv[0] === '@' ? null : tv;
+                      return VEH[s.label] || VEH[s.w.name] || null; };
+const beastOf = s => { const tv = teamVeh(s); if (tv && tv[0] === '@') return tv.slice(1);
+                       return BEAST[s.label] || BEAST[s.w.name] || null; };
 const compOf = s => COMPANION[s.label] || COMPANION[s.w.name] || null;
 const shade = (c, k) => {                                   // 같은 색의 어두운/밝은 버전
   if (!(c[0] === '#' && c.length === 7)) return c;
@@ -3460,8 +3498,12 @@ function drawVehicle(ctx, s, kind) {
   const body = s.hurt > 0 ? '#ffffff' : s.col;
   const dk = shade(body, .62), lt = shade(body, 1.25), acc = s.td.col;
   const roll = s.moving ? s.ph * 1.6 : 0;
-  const rec = s.swing > 0 ? Math.min(1, s.swing) : 0;        // 쏠 때 반동
+  const rec = Math.max(s.swing > 0 ? Math.min(1, s.swing) : 0, s.rec || 0);   // 쏠 때 반동
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if (rec > 0) {                                   // 차체가 통째로 뒤로 밀리고 앞이 들린다
+    ctx.translate(x, y); ctx.translate(-f * rec * 5 * S, 0);
+    ctx.rotate(-f * rec * .05); ctx.translate(-x, -y);
+  }
 
   const wheels = (list, r) => {                              // 바퀴 (굴러간다)
     for (const wx of list) {
@@ -3671,6 +3713,68 @@ function drawDrone(ctx, s) {
   ctx.restore();
 }
 
+// 고대 전차 — 말이 끄는 나무 수레. 사람은 수레 위에 선다.
+const CHARIOT_H = 14;
+function drawChariot(ctx, s) {
+  const S = s.size * 1.05, f = s.face, x = s.x, y = s.y;
+  const body = s.hurt > 0 ? '#ffffff' : s.col;
+  const wood = '#8a6a44', wood2 = '#6d5433', gold = '#d8b24a';
+  const roll = s.moving ? s.ph * 1.5 : 0;
+  const rec = s.swing > 0 ? Math.min(1, s.swing) : 0;
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.translate(-f * rec * 3 * S, 0);                  // 던질 때 수레가 뒤로 밀린다
+
+  // 말 — 수레 앞에서 끈다
+  ctx.save(); ctx.translate(f * 50 * S, 0);
+  const horse = { size: s.size * .95, face: f, x: x, y: y, col: shade(body, .85),
+                  hurt: 0, moving: s.moving, ph: s.ph * 1.2 };
+  drawHorse(ctx, horse);
+  ctx.restore();
+
+  // 끌채 (말과 수레를 잇는 막대)
+  ctx.strokeStyle = wood2; ctx.lineWidth = 3 * S;
+  ctx.beginPath(); ctx.moveTo(x + f * 6 * S, y - 15 * S); ctx.lineTo(x + f * 52 * S, y - 26 * S); ctx.stroke();
+  ctx.lineWidth = 2 * S;                               // 멍에
+  ctx.beginPath(); ctx.moveTo(x + f * 48 * S, y - 32 * S); ctx.lineTo(x + f * 52 * S, y - 22 * S); ctx.stroke();
+
+  // 수레 바구니 — 앞(말 쪽)은 높고 뒤는 트였다. 바퀴보다 먼저 그려 뒤에 둔다.
+  ctx.fillStyle = wood;
+  ctx.beginPath();
+  ctx.moveTo(x - f * 17 * S, y - 11 * S);
+  ctx.lineTo(x + f * 15 * S, y - 11 * S);
+  ctx.lineTo(x + f * 16 * S, y - 30 * S);
+  ctx.lineTo(x + f * 4 * S, y - 28 * S);
+  ctx.lineTo(x - f * 17 * S, y - 20 * S);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.22)';                   // 바닥 그늘
+  ctx.fillRect(x - f * 17 * S, y - 14 * S, f * 33 * S, 3 * S);
+  ctx.strokeStyle = wood2; ctx.lineWidth = 1.6 * S;    // 난간 살
+  for (let i = 0; i < 3; i++) {
+    const px = x + f * (4 + i * 5) * S;
+    ctx.beginPath(); ctx.moveTo(px, y - 12 * S); ctx.lineTo(px, y - (27 - i * .6) * S); ctx.stroke();
+  }
+  ctx.fillStyle = gold;                                // 금박 테두리
+  ctx.beginPath();
+  ctx.moveTo(x - f * 17 * S, y - 20 * S); ctx.lineTo(x + f * 4 * S, y - 28 * S);
+  ctx.lineTo(x + f * 16 * S, y - 30 * S); ctx.lineTo(x + f * 16 * S, y - 27.5 * S);
+  ctx.lineTo(x + f * 4 * S, y - 25.5 * S); ctx.lineTo(x - f * 17 * S, y - 17.5 * S);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = body;                                // 진영 색 문양
+  ctx.beginPath(); ctx.arc(x + f * 7 * S, y - 20 * S, 3.6 * S, 0, 6.3); ctx.fill();
+
+  // 바퀴 — 바큇살이 돈다 (수레 앞에 보이게 나중에)
+  const wx = x - f * 3 * S, wy = y - 11 * S, wr = 11 * S;
+  ctx.strokeStyle = wood2; ctx.lineWidth = 2.6 * S;
+  ctx.beginPath(); ctx.arc(wx, wy, wr, 0, 6.3); ctx.stroke();
+  ctx.lineWidth = 1.5 * S;
+  for (let i = 0; i < 6; i++) {
+    const a = roll + i * 1.047;
+    ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(wx + Math.cos(a) * wr, wy + Math.sin(a) * wr); ctx.stroke();
+  }
+  ctx.fillStyle = gold; ctx.beginPath(); ctx.arc(wx, wy, 2.6 * S, 0, 6.3); ctx.fill();
+  ctx.restore();
+}
+
 // 매머드 — 기수를 태운다 (말보다 크고 느릿하다)
 const MAMMOTH_H = 30;
 function drawMammoth(ctx, s) {
@@ -3720,6 +3824,8 @@ function drawSoldier(ctx, s) {
   ctx.save();
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
 
+  if (s.rec > 0 && !LOD) ctx.translate(-f * s.rec * 3 * S, -s.rec * .8 * S);   // 쏜 반동
+
   const veh = vehOf(s);
   if (veh) {                                     // 전차·장갑차 등은 통째로 갈아 끼운다
     drawVehicle(ctx, s, veh);
@@ -3735,6 +3841,7 @@ function drawSoldier(ctx, s) {
   }
   const beast = beastOf(s);
   if (beast === 'mammoth') { drawMammoth(ctx, s); ctx.translate(0, -MAMMOTH_H * S); }
+  else if (beast === 'chariot') { drawChariot(ctx, s); ctx.translate(0, -CHARIOT_H * S); }
   else if (s.w.mount) { drawHorse(ctx, s); ctx.translate(0, -MOUNT_H * S); }
 
   if (G.rush[s.team] > 0 && s.moving) {          // 무마찰 돌격 중 잔상
@@ -3928,6 +4035,19 @@ function drawSoldier(ctx, s) {
   if (hold) {
     ctx.save(); ctx.translate(hx, hy); ctx.scale(f, 1); ctx.rotate(rot);
     if (s.style === 'chef') panShape(ctx, S); else wshape(ctx, s.w, S);
+    if (s.rec > .3 && s.w.type === 'r' && !LOD) {         // 총구 섬광
+      const k = (s.rec - .3) / .7, big = (s.w.aoe || 0) > 40 || s.w.ps < 460;
+      const mzx = (big ? 30 : 26) * S, mzy = -3 * S, r = (big ? 7 : 4.4) * S * (.6 + k);
+      ctx.globalAlpha = Math.min(1, k * 1.6);
+      ctx.fillStyle = '#ffb33a';
+      ctx.beginPath(); ctx.arc(mzx, mzy, r, 0, 6.3); ctx.fill();
+      ctx.fillStyle = '#fff6d0';
+      ctx.beginPath(); ctx.arc(mzx, mzy, r * .45, 0, 6.3); ctx.fill();
+      ctx.strokeStyle = '#ffd36a'; ctx.lineWidth = 1.2 * S;   // 십자 섬광
+      ctx.beginPath(); ctx.moveTo(mzx - r * 1.5, mzy); ctx.lineTo(mzx + r * 1.7, mzy);
+      ctx.moveTo(mzx, mzy - r * 1.2); ctx.lineTo(mzx, mzy + r * 1.2); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
     ctx.restore();
   } else if (sg > .3 && !LOD) {                    // 발차기는 무기 대신 발끝에 충격 표시
     const fx = lp(x + 7 * S - sw * 13 * S, x + f * 41 * S, kk);
