@@ -153,6 +153,27 @@ input.pdot:hover{border-color:var(--hi)}
 .hai{font-size:10.5px;color:var(--dim);text-align:center;padding:5px}
 #tip{position:absolute;left:12px;bottom:10px;font-size:11.5px;color:var(--dim);background:rgba(13,17,23,.7);padding:6px 10px;border-radius:8px}
 @media(max-width:1100px){#plinkoBox{flex:0 0 300px}}
+
+/* ---------- 전장 설정 / 지휘 ---------- */
+.arena .row{margin-top:14px}
+.arena .row:first-child{margin-top:0}
+.arena h3{font-size:13px;font-weight:800;margin:18px 0 0;color:var(--hi)}
+.arena h3:first-child{margin-top:0}
+#terrPrev{display:block;width:100%;height:120px;border-radius:9px;background:#0f141b;border:1px solid var(--line);margin-top:10px;touch-action:none}
+#terrPrev.paint{cursor:crosshair;border-color:var(--hi)}
+.cmdbox{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.cmdbox h5{font-size:11.5px;color:var(--dim);margin-bottom:7px;font-weight:700}
+.cbtns{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cbtns button{background:#121820;border:1px solid var(--line);color:var(--ink);border-radius:7px;padding:8px 4px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+.cbtns button:hover{border-color:var(--hi)}
+.cbtns button.on{background:var(--hi);color:#1a1206;border-color:var(--hi)}
+.cbtns button i{display:block;font-style:normal;font-size:9.5px;opacity:.7;font-weight:600;margin-top:2px}
+.cline{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:11.5px;color:var(--dim)}
+.cline input{flex:1;accent-color:var(--hi)}
+.csel{width:100%;background:#121820;border:1px solid var(--line);color:var(--ink);border-radius:7px;padding:7px 8px;font-size:12.5px;font-weight:700;font-family:inherit}
+.cline .mini:disabled{opacity:.4;cursor:default}
+.cstat{margin-top:8px;font-size:11px;color:var(--dim);line-height:1.5}
+.cstat b{color:var(--hi)}
 </style>
 </head>
 <body>
@@ -165,6 +186,7 @@ input.pdot:hover{border-color:var(--hi)}
     <button class="tab on" data-mode="sim">시뮬레이션</button>
     <button class="tab" data-mode="hire">고용</button>
     <button class="tab" data-mode="evo">진화</button>
+    <button class="tab" data-mode="cmd">지휘</button>
   </div>
 
   <div class="picks">
@@ -204,6 +226,11 @@ input.pdot:hover{border-color:var(--hi)}
   </div>
 
   <div class="opts" id="hireOpts" style="display:none">
+    <div class="hint" id="cmdHint" style="display:none;margin:0 0 14px;color:var(--ink)">
+      <b style="color:var(--hi)">지휘 탭</b> — 병사를 사는 것에 더해 <b>전진 · 방어선 · 후퇴 · 베이스 돌격</b> 명령을 내려 군 전체를 움직인다.
+      아래 <b>온라인 PvP</b>로 붙으면 방장은 왼쪽, 참가자는 오른쪽 군대를 지휘하고, 명령은 실시간으로 서로에게 전해진다.
+      방어선은 전투 화면의 미니맵을 눌러서도 정할 수 있다.<br>
+      명령은 <b>군대 전체 · 근접 전체 · 원거리 전체 · 병사 종류별</b>로 따로 내릴 수 있다. 종류별 명령이 근접/원거리 명령보다, 그것이 전체 명령보다 우선한다. 전체 명령을 내리면 개별 명령은 모두 풀린다.</div>
     <div class="row">
       <label for="ctlA">왼쪽 조종</label>
       <button class="mini on" id="ctlA" style="flex:1;padding:7px">사람</button>
@@ -471,6 +498,99 @@ input.pdot:hover{border-color:var(--hi)}
     SHOP 보드: 끄면 BALL DROP이 SPLIT / WEAPON 두 칸만 남고 (수식을 켠 경우는 위 설명대로) 상점 보드가 사라진다. 공으로는 상점 병사를 뽑을 수 없고, WEAPON 보드가 빈 자리를 다 쓰도록 아래까지 넓어진다. 동충하초처럼 보드를 거치지 않는 능력은 그대로 상점급 병사를 꺼낸다.<br>
     공과 병사 상한은 각각 진영 하나 기준이고 숫자로 직접 넣을 수 있다. 칸을 비우거나 <b>무한</b>을 누르면 제한이 사라진다. 공은 서로 부딪히지 않으니 많으면 겹쳐 보인다.<br>
     무한으로 두고 공 간격까지 1초로 줄이면 병사가 계속 불어나서 프레임이 크게 떨어진다. 상한은 천장이라서, 기본 설정에서는 올려도 실제 수는 알아서 균형을 잡는다.</div>
+  </div>
+
+  <div class="opts arena" id="arenaOpts">
+    <h3>거리 설정</h3>
+    <div class="row">
+      <label for="lenRange">기지 간 거리</label>
+      <input type="range" id="lenRange" min="1600" max="8000" step="200" value="2800">
+      <b id="lenVal">2,320</b>
+    </div>
+    <div class="presets">
+      <button data-len="1800">가깝게</button>
+      <button data-len="2800">기본</button>
+      <button data-len="4500">멀게</button>
+      <button data-len="7000">초장거리</button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <label for="rngRange">사거리 배율</label>
+      <input type="range" id="rngRange" min="0.5" max="2" step="0.05" value="1">
+      <b id="rngVal">1.00배</b>
+    </div>
+
+    <h3>지형 설정</h3>
+    <div class="presets" style="margin-top:10px">
+      <button data-tp="plain">평원</button>
+      <button data-tp="river">강</button>
+      <button data-tp="forest">숲</button>
+      <button data-tp="hill">고지</button>
+      <button data-tp="swamp">늪지</button>
+      <button data-tp="mix">혼합</button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <label for="riverN">강</label>
+      <input type="range" id="riverN" min="0" max="3" step="1" value="0">
+      <b id="riverNVal">0개</b>
+    </div>
+    <div class="row">
+      <label for="riverW">강 폭</label>
+      <input type="range" id="riverW" min="50" max="240" step="10" value="110">
+      <b id="riverWVal">110</b>
+    </div>
+    <div class="row">
+      <label for="deepTgl">강 깊이</label>
+      <button class="mini" id="deepTgl" style="flex:1;padding:7px">얕은 여울 (감속만)</button>
+    </div>
+    <div class="row">
+      <label for="forestN">숲 (나무)</label>
+      <input type="range" id="forestN" min="0" max="4" step="1" value="0">
+      <b id="forestNVal">0개</b>
+    </div>
+    <div class="row">
+      <label for="hillN">언덕</label>
+      <input type="range" id="hillN" min="0" max="3" step="1" value="0">
+      <b id="hillNVal">0개</b>
+    </div>
+    <div class="row">
+      <label for="swampN">늪</label>
+      <input type="range" id="swampN" min="0" max="3" step="1" value="0">
+      <b id="swampNVal">0개</b>
+    </div>
+    <div class="row">
+      <label for="terrShuffle">배치</label>
+      <button class="mini" id="terrShuffle" style="flex:1;padding:7px">다시 섞기</button>
+    </div>
+    <h3 style="margin-top:20px">지형 편집 (붓)</h3>
+    <div class="presets" id="brushTools" style="margin-top:10px">
+      <button data-br="river">강</button>
+      <button data-br="forest">숲</button>
+      <button data-br="hill">언덕</button>
+      <button data-br="swamp">늪</button>
+      <button data-br="erase">지우개</button>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <label for="brushSz">붓 크기</label>
+      <input type="range" id="brushSz" min="20" max="400" step="10" value="100">
+      <b id="brushSzVal">100</b>
+    </div>
+    <div class="row">
+      <label for="symTgl">대칭</label>
+      <button class="mini on" id="symTgl" style="flex:1;padding:7px">좌우 대칭으로 그린다</button>
+    </div>
+    <div class="presets">
+      <button id="brClear">모두 지우기</button>
+      <button id="brAuto">자동 배치로 되돌리기</button>
+    </div>
+    <div class="hint" id="brState" style="margin-top:8px"></div>
+    <canvas id="terrPrev" width="1120" height="240"></canvas>
+    <div class="hint">양 진영이 공평하도록 지형은 <b>좌우 대칭</b>으로 놓인다. 개수가 홀수면 하나는 한가운데에 놓이고, 그 자리가 이미 찼으면 짝수로 올림한다.<br>
+    <b style="color:#5aa7e0">강</b> — 건너는 병사는 느려진다. <b>깊은 강</b>이면 더 느려지고, 헤엄치는 동안 조금씩 다치며 원거리 병사는 쏠 수 없다. 이동 방향만 있는 1차원 전장이라 다리는 두지 않는다.<br>
+    <b style="color:#4caf5a">숲</b> — 나무가 빽빽해 느려지지만 받는 피해가 25% 줄고, 숲 밖에서는 240 이상 떨어지면 안 보인다. 직사 투사체는 나무에 맞고 박힌다 (곡사는 통과).<br>
+    <b style="color:#b08a55">언덕</b> — 올라서면 높은 곳에서 내려다본다. 원거리 사거리 +25%, 받는 피해 −10%, 오르느라 조금 느려진다.<br>
+    <b style="color:#8a9a4a">늪</b> — 발이 빠져 크게 느려진다. 그 외의 효과는 없다.<br>
+    <b>지형 편집</b> — 붓(강·숲·언덕·늪)을 고르고 아래 그림 위를 문지르면 그 구간이 칠해진다. 지우개는 지형을 지운다. 처음 칠하면 지금의 자동 배치가 바탕이 되어 그 위에 덧그려지고, 이후로는 직접 그린 지형이 쓰인다. 기지 근처(양끝)는 칠할 수 없다. 프리셋·개수·섞기를 누르면 자동 배치로 돌아간다.<br>
+    <b>사거리 배율</b>은 모든 무기에 똑같이 곱해진다. 키우면 멀리서 쏘는 포격전이, 줄이면 난전이 된다. 기지 간 거리가 길수록 첫 교전까지 시간이 걸린다.</div>
   </div>
 
   <button class="go" id="startBtn" disabled>양쪽 팀을 고르세요</button>
@@ -954,7 +1074,8 @@ const G = {
   eras: [[], []], era: [0, 0], study: [0, 0],         // 진화 모드
   fslot: [], nslot: [], fval: [1, 1],                 // 수식 / 숫자 뽑기 보드
   que: [[], []], qt: [0, 0],                          // 줄 서서 나오는 병사 (수식 전용)
-  cam: { x: 700, s: 1 }
+  cam: { x: 700, s: 1 },
+  order: [{ t: 'adv', x: 700 }, { t: 'adv', x: 2100 }], aiC: [0, 0]      // 지휘
 };
 const GRAV_B = 560, GRAV_W = 900;
 let MAX_BALL = 120, MAX_BALL_SIDE = 120;   // 팀 하나당 / 진영 전체 공 상한 (셋업에서 조절)
@@ -982,7 +1103,8 @@ let CTRL = ['human', 'ai'];                // 진영별 조종
 const MAX_CORP = 55;
 let SPAWN_EVERY = 7;   // 셋업에서 조절
 let NUKE_HP = 0;       // 이 체력 이하로 떨어지면 베이스가 적 병사를 전멸시킨다 (0 = 끔)
-const WORLD_W = 2800, GROUND = 520;
+let WORLD_W = 2800;
+const GROUND = 520;
 let SOLDIER_HP = 135;     // 병사 기본 체력 (셋업에서 조절)
 let SIZE_MUL = 1;         // 병사 크기 배율 (셋업에서 조절)
 const MAX_SPROUT = 1000;  // 팀당 동시에 자라는 버섯 수
@@ -993,6 +1115,334 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 // 사이언스버섯포자가 있는 진영은 시간이 갈수록 기술이 쌓인다
 const techOf = t => G.sciSide[t] ? G.t : 0;
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+
+/* ============================================================
+   지형 · 거리 · 지휘
+   전장은 가로 한 줄이라 지형은 x 구간으로 둔다.
+   ============================================================ */
+const TK = { river: 1, forest: 2, hill: 3, swamp: 4 };
+const TCOL = { river: '#3d86c6', forest: '#2f7a3a', hill: '#9a7a4a', swamp: '#8a9a4a' };
+const TCS = 10, HILL_H = 62;
+let TERR = [], TCELL = new Uint8Array(0), HCELL = new Float32Array(0);
+let RANGE_MUL = 1, RIVER_DEEP = false, CMD = false;
+let TSEED = Math.floor(Math.random() * 90000) + 1000;
+const ORDERS = ['adv', 'hold', 'retreat', 'base'];
+const ORD_NAME = { adv: '전진', hold: '방어선', retreat: '후퇴', base: '베이스 돌격' };
+
+function mkRng(seed) {
+  let a = (seed >>> 0) || 1;
+  return () => {
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// 왼쪽 절반에 놓고 거울처럼 오른쪽에 되비춘다 — 양쪽이 똑같이 불리하거나 유리하다
+function genTerrain(seed, n, L, riverW) {
+  const R = mkRng(seed), out = [];
+  const widthOf = k => k === 'river' ? riverW
+    : k === 'forest' ? 280 + R() * 120 : k === 'hill' ? 320 + R() * 100 : 240 + R() * 100;
+  const items = []; let center = null;
+  for (const k of ['river', 'hill', 'swamp', 'forest']) {
+    let c = n[k] || 0; if (!c) continue;
+    if (c % 2 === 1) { if (!center) { center = k; c--; } else c++; }
+    for (let i = 0; i < c / 2; i++) items.push(k);
+  }
+  for (let i = items.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [items[i], items[j]] = [items[j], items[i]]; }
+  const mid = L / 2, lo = 240 + 230;
+  let hiEdge = mid - 40;
+  if (center) {
+    const w = Math.min(widthOf(center), (L - 2 * lo) * .5);
+    out.push({ k: center, a: mid - w / 2, b: mid + w / 2 });
+    hiEdge = mid - w / 2 - 50;
+  }
+  const span = hiEdge - lo;
+  if (items.length && span > 80) {
+    const slot = span / items.length;
+    for (let i = 0; i < items.length; i++) {
+      const w = Math.min(widthOf(items[i]), slot - 36);
+      if (w < 44) continue;
+      const a = lo + slot * i + 18 + (slot - 36 - w) * R(), b = a + w;
+      out.push({ k: items[i], a, b });
+      out.push({ k: items[i], a: L - b, b: L - a });
+    }
+  }
+  return out.sort((p, q) => p.a - q.a).map(z => ({ k: z.k, a: Math.round(z.a), b: Math.round(z.b) }));
+}
+
+function bakeTerrain() {
+  const n = Math.ceil(WORLD_W / TCS) + 3;
+  TCELL = new Uint8Array(n); HCELL = new Float32Array(n);
+  for (const z of TERR) {
+    const c = TK[z.k];
+    for (let i = Math.max(0, Math.floor(z.a / TCS)); i <= Math.ceil(z.b / TCS) && i < n; i++) {
+      const x = i * TCS; if (x < z.a || x > z.b) continue;
+      TCELL[i] = c;
+      if (z.k === 'hill') {
+        const t = (x - z.a) / (z.b - z.a), k = Math.min(1, Math.min(t, 1 - t) / .3);
+        HCELL[i] = HILL_H * k * k * (3 - 2 * k);
+      }
+    }
+  }
+}
+const terrCode = x => { const i = (x / TCS) | 0; return i >= 0 && i < TCELL.length ? TCELL[i] : 0; };
+function groundH(x) {
+  const f = x / TCS, i = Math.floor(f);
+  if (i < 0 || i + 1 >= HCELL.length) return 0;
+  return HCELL[i] + (HCELL[i + 1] - HCELL[i]) * (f - i);
+}
+const gyAt = x => GROUND - groundH(x);
+function terrSpd(x) {
+  switch (terrCode(x)) {
+    case 1: return RIVER_DEEP ? .4 : .62;
+    case 2: return .8;
+    case 3: return .85;
+    case 4: return .55;
+    default: return 1;
+  }
+}
+const RG = s => s.w.range * RANGE_MUL * (s.w.type === 'r' && terrCode(s.x) === 3 ? 1.25 : 1);
+
+/* ── 지휘 ── */
+const keyName = k => k === '@m' ? '근접 전체' : k === '@r' ? '원거리 전체' : k;
+const newU = () => Object.create(null);
+// 병사에게 적용될 명령: 병사 이름 > 근접/원거리 > 전체
+function orderFor(s) {
+  const root = G.order[s.team] || G.order[0], u = root.u;
+  if (u) return u[s.label] || u[s.w.type === 'm' ? '@m' : '@r'] || root;
+  return root;
+}
+function setOrder(t, ty, x, k) {
+  if (!G.order || !G.order[t]) return;
+  const root = G.order[t];
+  if (ty === 'clear') {                                   // 개별 명령 해제
+    if (typeof k === 'string' && root.u) delete root.u[k];
+    return;
+  }
+  if (!ORDERS.includes(ty)) return;
+  let o;
+  if (k !== undefined && k !== null && k !== '') {
+    if (typeof k !== 'string' || k.length > 32) return;
+    if (!root.u) root.u = newU();
+    if (!(k in root.u) && Object.keys(root.u).length >= 40) return;
+    o = root.u[k] || (root.u[k] = { t: root.t, x: root.x });
+  } else { o = root; root.u = newU(); }                    // 전체 명령은 개별 명령을 모두 덮는다
+  const was = o.t;
+  o.t = ty;
+  if (typeof x === 'number' && isFinite(x)) o.x = clamp(x, 150, WORLD_W - 150);
+  if (was !== ty && G.sold) {
+    const b = BASE[t];
+    G.nums.push({ x: b.x, y: GROUND - b.h - 96, vx: 0, vy: -20,
+                  v: (k ? keyName(k) + ' ' : '') + ORD_NAME[ty] + '!', col: G.col[t], big: true, life: 1.6 });
+  }
+}
+function issueOrder(t, ty, x, k) {
+  if (G.over) return;
+  if (NET.on && NET.role === 'guest') {               // 참가자는 방장에게 명령을 보낸다
+    if (t !== 1) return;
+    netSend({ t: 'cmd', o: ty, x: x, k: k });
+    setOrder(1, ty, x, k);                              // 눈에 바로 보이게 (곧 방장 상태로 덮인다)
+    return;
+  }
+  setOrder(t, ty, x, k);
+}
+function myCmdTeams() {
+  if (NET.on) return [NET.role === 'host' ? 0 : 1];
+  return [0, 1].filter(t => CTRL[t] === 'human');
+}
+
+let CMD_UI = [null, null], CMD_SEL = ['', ''];
+function buildCmdBox(t) {
+  const box = document.createElement('div'); box.className = 'cmdbox';
+  const h = document.createElement('h5'); h.textContent = '지휘 — 명령 내릴 대상을 고른다'; box.appendChild(h);
+  // 대상: 전체 / 근접 / 원거리 / 병사 종류별
+  const sel = document.createElement('select'); sel.className = 'csel';
+  const addOpt = (v, txt) => { const o = document.createElement('option'); o.value = v; o.textContent = txt; sel.appendChild(o); };
+  addOpt('', '군대 전체');
+  addOpt('@m', '근접 병사 전체'); addOpt('@r', '원거리 병사 전체');
+  const seen = new Set();
+  for (const it of hireList(t)) {
+    if (seen.has(it.name)) continue; seen.add(it.name);
+    addOpt(it.name, it.name + (it.w.type === 'm' ? ' (근접)' : ' (원거리)'));
+  }
+  if (![...sel.options].some(o => o.value === CMD_SEL[t])) CMD_SEL[t] = '';
+  sel.value = CMD_SEL[t];
+  sel.onchange = () => { CMD_SEL[t] = sel.value; syncCmdUI(); };
+  box.appendChild(sel);
+
+  const g = document.createElement('div'); g.className = 'cbtns'; g.style.marginTop = '7px';
+  const btns = {};
+  for (const [id, nm, sub] of [['adv', '전진', '적을 향해 나아가 교전'],
+                               ['hold', '방어선', '선을 지키며 근처만 교전'],
+                               ['retreat', '후퇴', '베이스 앞으로 물러난다'],
+                               ['base', '베이스 돌격', '병사 무시하고 곧장']]) {
+    const b = document.createElement('button');
+    b.innerHTML = nm + '<i>' + sub + '</i>';
+    b.onclick = () => issueOrder(t, id, undefined, CMD_SEL[t] || undefined);
+    g.appendChild(b); btns[id] = b;
+  }
+  const ln = document.createElement('div'); ln.className = 'cline';
+  const lab = document.createElement('span'); lab.textContent = '방어선 위치';
+  const rg = document.createElement('input'); rg.type = 'range'; rg.min = 0; rg.max = 100; rg.step = 1;
+  rg.value = Math.round(G.order[t].x / WORLD_W * 100);
+  rg.onchange = () => issueOrder(t, 'hold', rg.value / 100 * WORLD_W, CMD_SEL[t] || undefined);
+  ln.append(lab, rg);
+  const row = document.createElement('div'); row.className = 'cline';
+  const c1 = document.createElement('button'); c1.className = 'mini'; c1.textContent = '이 대상 명령 해제';
+  c1.title = '이 대상이 군대 전체 명령을 따르게 한다';
+  c1.onclick = () => { if (CMD_SEL[t]) issueOrder(t, 'clear', undefined, CMD_SEL[t]); };
+  const c2 = document.createElement('button'); c2.className = 'mini'; c2.textContent = '개별 명령 모두 해제';
+  c2.onclick = () => { for (const k of Object.keys(G.order[t].u || {})) issueOrder(t, 'clear', undefined, k); };
+  row.append(c1, c2);
+  const st = document.createElement('div'); st.className = 'cstat';
+  box.append(g, ln, row, st);
+  CMD_UI[t] = { btns, rg, st, sel, c1 };
+  return box;
+}
+function syncCmdUI() {
+  for (let t = 0; t < 2; t++) {
+    const ui = CMD_UI[t]; if (!ui) continue;
+    const root = G.order[t], k = CMD_SEL[t], own = k && root.u && root.u[k];
+    const o = own || root;                                 // 이 대상에게 실제로 적용되는 명령
+    for (const id in ui.btns) ui.btns[id].classList.toggle('on', o.t === id);
+    if (document.activeElement !== ui.rg) ui.rg.value = Math.round(o.x / WORLD_W * 100);
+    ui.c1.disabled = !own;
+    let n = 0; for (const s of G.sold) if (s.team === t) n++;
+    const ov = Object.entries(root.u || {}).map(([kk, v]) => keyName(kk) + ' <b>' + ORD_NAME[v.t] + '</b>');
+    ui.st.innerHTML = '전체 명령 <b>' + ORD_NAME[root.t] + '</b>' +
+      (root.t === 'hold' ? ' · 위치 ' + Math.round(root.x / WORLD_W * 100) + '%' : '') + ' · 병사 ' + n + '명' +
+      (k && !own ? '<br>' + keyName(k) + ': 개별 명령 없음 (전체 명령을 따름)' : '') +
+      (ov.length ? '<br>개별 명령: ' + ov.join(' · ') : '');
+  }
+}
+function aiCommand(dt) {                      // 사람이 없는 진영은 간단히 알아서 지휘한다
+  for (let t = 0; t < 2; t++) {
+    if (CTRL[t] !== 'ai') continue;
+    G.aiC[t] -= dt; if (G.aiC[t] > 0) continue;
+    G.aiC[t] = 2.5;
+    let mine = 0, foe = 0;
+    for (const s of G.sold) s.team === t ? mine++ : foe++;
+    const dir = t === 0 ? 1 : -1, b = BASE[t];
+    if (b.hp < b.max * .3 && foe > mine) setOrder(t, 'hold', b.x + dir * 380);
+    else if (foe >= 3 && mine < foe * .6) setOrder(t, 'hold', b.x + dir * 700);
+    else if (mine >= 4 && mine >= foe * 1.6) setOrder(t, 'base');
+    else setOrder(t, 'adv');
+  }
+}
+
+/* ── 전장 그리기 ── */
+function hash01(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+function drawTerrainBack(L, R) {
+  if (!TERR.length) return;
+  for (const z of TERR) {
+    if (z.b < L || z.a > R) continue;
+    const w = z.b - z.a, x0 = Math.max(z.a, L), x1 = Math.min(z.b, R);
+    if (z.k === 'river') {
+      fx.fillStyle = RIVER_DEEP ? '#1b4b78' : '#2c6c9a';
+      fx.fillRect(z.a, GROUND - 1, w, 420);
+      fx.fillStyle = 'rgba(0,0,0,.28)';
+      fx.fillRect(z.a - 5, GROUND - 1, 5, 16); fx.fillRect(z.b, GROUND - 1, 5, 16);
+      fx.fillStyle = 'rgba(255,255,255,.16)';
+      for (let x = Math.floor(x0 / 34) * 34; x < x1; x += 34) {
+        const y = GROUND + 8 + ((x / 34) % 5 + 5) % 5 * 13;
+        fx.fillRect(x + Math.sin(G.t * 1.7 + x * .05) * 7, y, 20, 2);
+      }
+    } else if (z.k === 'swamp') {
+      fx.fillStyle = '#3f4d34'; fx.fillRect(z.a, GROUND - 1, w, 420);
+      fx.fillStyle = 'rgba(160,190,90,.18)';
+      for (let x = Math.floor(x0 / 38) * 38; x < x1; x += 38) {
+        const bob = Math.abs(Math.sin(G.t * 1.3 + x));
+        fx.beginPath(); fx.ellipse(x + 10, GROUND + 14 + (x % 3) * 12, 7 + bob * 3, 3, 0, 0, 6.3); fx.fill();
+      }
+      fx.strokeStyle = '#6b7d3c'; fx.lineWidth = 2;                       // 갈대
+      for (let x = Math.floor(x0 / 46) * 46 + 12; x < x1; x += 46) {
+        if (x < z.a + 6 || x > z.b - 6) continue;
+        const h = 22 + hash01(x) * 22;
+        fx.beginPath(); fx.moveTo(x, GROUND); fx.lineTo(x + Math.sin(G.t + x) * 2, GROUND - h); fx.stroke();
+        fx.fillStyle = '#7a5a34'; fx.fillRect(x - 2 + Math.sin(G.t + x) * 2, GROUND - h - 7, 4, 8);
+      }
+    } else if (z.k === 'hill') {
+      fx.beginPath(); fx.moveTo(z.a, GROUND);
+      for (let x = z.a; x < z.b; x += 10) fx.lineTo(x, gyAt(x));
+      fx.lineTo(z.b, gyAt(z.b)); fx.lineTo(z.b, GROUND); fx.closePath();
+      fx.fillStyle = '#4b5e51'; fx.fill();
+      fx.strokeStyle = '#7d9582'; fx.lineWidth = 3; fx.stroke();
+      fx.fillStyle = 'rgba(0,0,0,.14)';
+      for (let x = Math.floor(x0 / 40) * 40; x < x1; x += 40) {
+        const gy0 = gyAt(x);
+        if (gy0 < GROUND - 6) fx.fillRect(x, gy0 + 14 + (x % 3) * 6, 18, 3);
+      }
+    } else if (z.k === 'forest') {
+      fx.fillStyle = 'rgba(40,90,52,.55)'; fx.fillRect(z.a, GROUND - 1, w, 420);
+      for (let x = Math.floor(z.a / 30) * 30 + 15; x < z.b - 6; x += 30) {
+        if (x < x0 - 40 || x > x1 + 40 || x < z.a + 6) continue;
+        const r = hash01(x), h = 100 + r * 70, cw = 24 + r * 10, base = GROUND + 4;
+        fx.fillStyle = '#4a3624'; fx.fillRect(x - 3, base - 26, 6, 26);
+        for (let k = 0; k < 3; k++) {                                     // 소나무
+          const top = base - 26 - h * (k + 1) / 3, bot = base - 18 - h * k / 3 * .9, ww = cw * (1 - k * .22);
+          fx.fillStyle = k % 2 ? '#2f7a3a' : '#25642f';
+          fx.beginPath(); fx.moveTo(x, top); fx.lineTo(x + ww, bot); fx.lineTo(x - ww, bot); fx.closePath(); fx.fill();
+        }
+      }
+    }
+  }
+}
+function drawTerrainFront(L, R) {
+  if (!TERR.length) return;
+  for (const z of TERR) {
+    if (z.b < L || z.a > R) continue;
+    const w = z.b - z.a, x0 = Math.max(z.a, L), x1 = Math.min(z.b, R);
+    if (z.k === 'river') {
+      const d = RIVER_DEEP ? 22 : 12;
+      fx.fillStyle = RIVER_DEEP ? 'rgba(27,75,120,.66)' : 'rgba(44,108,154,.5)';
+      fx.fillRect(z.a, GROUND - d, w, d + 6);
+      fx.fillStyle = 'rgba(255,255,255,.3)';
+      for (let x = Math.floor(x0 / 26) * 26; x < x1; x += 26)
+        fx.fillRect(x + Math.sin(G.t * 2.2 + x * .07) * 6, GROUND - d, 12, 2);
+    } else if (z.k === 'swamp') {
+      fx.fillStyle = 'rgba(63,77,52,.5)'; fx.fillRect(z.a, GROUND - 9, w, 12);
+    } else if (z.k === 'forest') {
+      for (let x = Math.floor(x0 / 46) * 46 + 8; x < x1; x += 46) {       // 앞쪽 덤불
+        if (x < z.a + 8 || x > z.b - 8) continue;
+        const r = hash01(x * 3.1);
+        fx.fillStyle = 'rgba(30,86,42,.88)';
+        fx.beginPath(); fx.ellipse(x, GROUND + 2, 15 + r * 8, 10 + r * 7, 0, Math.PI, 0); fx.fill();
+      }
+    }
+  }
+}
+function drawOrders() {
+  if (!CMD) return;
+  for (let t = 0; t < 2; t++) {
+    const root = G.order[t], b = BASE[t], col = G.col[t];
+    if (!root) continue;
+    const flags = [[root.t === 'hold' ? root.x : null, '']];
+    for (const k in (root.u || {})) if (root.u[k].t === 'hold') flags.push([root.u[k].x, keyName(k)]);
+    for (const [fx0, nm] of flags) {
+      if (fx0 === null) continue;
+      fx.save();
+      fx.strokeStyle = col; fx.globalAlpha = .75; fx.lineWidth = 2.5; fx.setLineDash([10, 8]);
+      fx.beginPath(); fx.moveTo(fx0, GROUND + 30); fx.lineTo(fx0, GROUND - 230); fx.stroke();
+      fx.setLineDash([]); fx.globalAlpha = 1; fx.fillStyle = col;
+      fx.fillRect(fx0 - 2, GROUND - 230, 4, 70);
+      fx.beginPath(); fx.moveTo(fx0 + 2, GROUND - 230); fx.lineTo(fx0 + 36, GROUND - 216); fx.lineTo(fx0 + 2, GROUND - 202); fx.fill();
+      if (nm) { fx.font = '700 12px system-ui'; fx.textAlign = 'left'; fx.fillText(nm, fx0 + 6, GROUND - 238); }
+      fx.restore();
+    }
+    fx.fillStyle = col; fx.font = '800 14px system-ui'; fx.textAlign = 'center';
+    fx.fillText('지휘: ' + ORD_NAME[root.t], b.x, GROUND - b.h - 78);
+    const ks = Object.keys(root.u || {});
+    if (ks.length) {
+      fx.font = '700 11px system-ui';
+      fx.fillText(ks.slice(0, 3).map(k => keyName(k) + ' ' + ORD_NAME[root.u[k].t]).join(' · ') + (ks.length > 3 ? ' …' : ''),
+                  b.x, GROUND - b.h - 94);
+    }
+  }
+}
+
+
 
 /* ============================================================
    4. 플링코 보드
@@ -1499,6 +1949,7 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX, price) {
     sm,                                                  // 팀별 돌진 속도 배율
     spd: (58 + rnd(-6, 6)) / (0.72 + 0.28 * size) * sm * (w.mv || 1)
   };
+  made.y = gyAt(made.x);
   G.sold.push(made);
   return made;
 }
@@ -1599,7 +2050,8 @@ function buildBucket() {
 }
 
 function pickTarget(s) {
-  const k0 = Math.floor(s.x / BK), maxR = Math.ceil(780 / BK);
+  const SR = 780 * Math.max(1, RANGE_MUL);
+  const k0 = Math.floor(s.x / BK), maxR = Math.ceil(SR / BK);
   let best = null, bd = 1e9;
   for (let r = 0; r <= maxR; r++) {
     const keys = r === 0 ? [k0] : [k0 - r, k0 + r];
@@ -1608,12 +2060,13 @@ function pickTarget(s) {
       for (const o of a) {
         if (o.team === s.team || o.hp <= 0) continue;
         const d = Math.abs(o.x - s.x);
+        if (TERR.length && d > 240 && terrCode(o.x) === 2) continue;   // 숲 속은 가까이 가야 보인다
         if (d < bd) { bd = d; best = o; }
       }
     }
     if (best && bd <= r * BK) break;   // 더 바깥 칸은 볼 필요가 없다
   }
-  s.tgt = (best && bd < 780) ? best : null;
+  s.tgt = (best && bd < SR) ? best : null;
 }
 
 // L6 / L12 형만믿어 — 가장 가까운 적을 그 수만큼 끝낸다
@@ -1693,6 +2146,10 @@ function dmgNum(x, y, v, col) {
 }
 
 function damage(s, amount, kx, ky) {
+  if (TERR.length && amount < s.hp + 1) {            // 숲·언덕은 방어에 유리하다 (즉사급 기술은 그대로)
+    const tc = terrCode(s.x);
+    if (tc === 2) amount *= .75; else if (tc === 3) amount *= .9;
+  }
   dmgNum(s.x, s.y - 42 * s.size, amount, amount >= 40 ? '#ffd76a' : '#ffffff');
   s.hp -= amount; s.hurt = .18;
   s.vx += kx; s.vy += ky;
@@ -1743,7 +2200,7 @@ function fire(sx, sy, w, tx, ty, team, ti, dmgMul) {
   const tm = (G.sciSide[team] && w.shape === 'bomb') ? 1 + Math.min(2.5, techOf(team) / 120) : 1;
   G.proj.push({ x: sx, y: sy, vx, vy, w, team, ti, dmg: w.dmg * dmgMul * tm,
                 aoe: w.aoe * (1 + (tm - 1) * .55), arc: w.arc,
-                life: 4, ang: Math.atan2(vy, vx) });
+                life: 4, from: terrCode(sx), ang: Math.atan2(vy, vx) });
 }
 
 // 베이스가 무너지기 직전에 딱 한 번 터뜨리는 최후의 발악
@@ -1774,17 +2231,39 @@ function stepBattle(dt) {
     s.hurt = Math.max(0, s.hurt - dt);
     if (s.think <= 0) { pickTarget(s); s.think = .22 + Math.random() * .22; }
 
+    const tc = TERR.length ? terrCode(s.x) : 0;
+    const tmv = tc ? terrSpd(s.x) : 1;
+    if (RIVER_DEEP && tc === 1) {                         // 깊은 강에서는 조금씩 다친다
+      s.tw = (s.tw || 0) + dt;
+      if (s.tw >= .5) { s.tw = 0; damage(s, 2.5 * Math.max(1, s.size), 0, 0); if (s.hp <= 0) continue; }
+    }
+    const od = orderFor(s);
     const eb = BASE[1 - s.team];
     let tx, ty, isBase = false, tgtR = 20;
-    if (s.tgt && s.tgt.hp > 0) { tx = s.tgt.x; ty = s.tgt.y - 26 * s.tgt.size; tgtR = 14 * s.tgt.size; }
+    if (od.t !== 'base' && s.tgt && s.tgt.hp > 0) { tx = s.tgt.x; ty = s.tgt.y - 26 * s.tgt.size; tgtR = 14 * s.tgt.size; }
     else { tx = eb.x; ty = GROUND - eb.h * .5; isBase = true; tgtR = eb.w / 2; }
 
     const dist = Math.abs(tx - s.x) - tgtR;
-    const want = s.w.type === 'm' ? s.w.range * .55 : s.w.range * .8;
+    const rgS = RG(s);
+    const want = s.w.type === 'm' ? rgS * .55 : rgS * .8;
     const dir = tx > s.x ? 1 : -1;
     s.face = dir;
     s.moving = false;
     let rush = (G.rush[s.team] > 0 ? 3 : 1) * (s.w.dash || (s.w.id === 'marchcook' ? 2.1 : 1));
+    if (od.t === 'base') rush *= 1.25; else if (od.t === 'retreat') rush *= 1.5;
+
+    // 지휘 명령 — 어디로 걸어갈지 정한다
+    let walk = dist > want, mdir = dir;
+    if (od.t === 'retreat') {
+      const hx = BASE[s.team].x + (s.team === 0 ? 1 : -1) * 120;
+      walk = Math.abs(s.x - hx) > 40; mdir = hx > s.x ? 1 : -1;
+      if (walk) s.face = mdir;
+    } else if (od.t === 'hold') {
+      const hx = od.x, LEASH = 220, far = Math.abs(s.x - hx);
+      if (!isBase && dist <= want) walk = false;
+      else if (!isBase && Math.abs(tx - hx) < LEASH) walk = true;       // 선 근처의 적만 쫓는다
+      else { walk = far > LEASH * .35; mdir = hx > s.x ? 1 : -1; if (walk) s.face = mdir; }
+    }
     if (s.chg > 0) {                                 // 융성망 외치기 돌진
       s.chg -= dt; rush *= 3.4;
       const k0 = Math.floor((s.x - 46) / BK), k1 = Math.floor((s.x + 46) / BK);
@@ -1813,8 +2292,8 @@ function stepBattle(dt) {
     if (s.chgHit > 0) s.chgHit -= dt;
     if (s.chgB > 0) s.chgB -= dt;
     const sm = s.sm || 1;
-    if (dist > want) { s.vx += dir * s.spd * 8 * rush * dt; s.ph += dt * 10 * rush * sm; s.moving = true; }
-    else if (dist < KITE_DIST && s.w.type === 'r' && !isBase) { s.vx -= dir * s.spd * 2 * dt; s.ph += dt * 8 * sm; s.moving = true; }
+    if (walk) { s.vx += mdir * s.spd * 8 * rush * dt; s.ph += dt * 10 * rush * sm; s.moving = true; }
+    else if (dist < KITE_DIST && s.w.type === 'r' && !isBase && od.t !== 'retreat') { s.vx -= dir * s.spd * 2 * dt; s.ph += dt * 8 * sm; s.moving = true; }
     s.vx = clamp(s.vx, -s.spd * 2 * rush, s.spd * 2 * rush);
     s.vx *= s.ground ? (rush > 1 ? .97 : .86) : .99;   // 무마찰이면 미끄러진다
 
@@ -1835,7 +2314,7 @@ function stepBattle(dt) {
         } else {
           // 고칠 아군이 없을 때 가만히 서 있으면 전진이 영영 멈춘다. 베이스라도 두드린다.
           const hb = BASE[1 - s.team];
-          if (hb.hp > 0 && Math.abs(s.x - hb.x) < hb.w / 2 + s.w.range * .9) {
+          if (hb.hp > 0 && Math.abs(s.x - hb.x) < hb.w / 2 + rgS * .9) {
             s.cool = s.w.cd; s.swing = 1;
             const dv = 14 * s.dmg * G.rage;
             hb.hp -= dv;
@@ -1843,15 +2322,16 @@ function stepBattle(dt) {
           } else s.cool = .7;
         }
       }
-      s.vy += GRAV_W * dt; s.x += s.vx * dt; s.y += s.vy * dt;
-      if (s.y >= GROUND) { s.y = GROUND; s.vy = 0; s.ground = true; } else s.ground = false;
+      s.vy += GRAV_W * dt; s.x += s.vx * dt * tmv; s.y += s.vy * dt;
+      const GYh = gyAt(s.x);
+      if (s.y >= GYh || (s.ground && s.vy >= 0 && s.y >= GYh - 8)) { s.y = GYh; s.vy = 0; s.ground = true; } else s.ground = false;
       s.x = clamp(s.x, 60, WORLD_W - 60);
       continue;
     }
 
     // 코앞까지 붙으면 총·활을 제대로 겨눌 수 없다 — 근접이 붙을 이유를 만들어 준다
     const pinned = s.w.type === 'r' && !isBase && dist < RANGED_MIN;
-    if (dist <= s.w.range && s.cool <= 0 && !pinned) {
+    if (dist <= rgS && s.cool <= 0 && !pinned && !(RIVER_DEEP && tc === 1 && s.w.type === 'r')) {
       s.cool = s.w.cd * rnd(.9, 1.1); s.swing = 1;
       // 특수기는 적 병사만 노리게 돼 있었다. 베이스 앞에 서면 아무것도 못 하고 멈춰 있었다.
       const bangBase = dv => {
@@ -1934,9 +2414,10 @@ function stepBattle(dt) {
       s.vx = clamp(togo * 2.2, -900, 900);
       s.face = togo > 0 ? 1 : -1;
     }
-    s.x += s.vx * dt; s.y += s.vy * dt;
-    if (s.y >= GROUND) {
-      s.y = GROUND; s.vy = 0; s.ground = true;
+    s.x += s.vx * dt * (s.slam ? 1 : tmv); s.y += s.vy * dt;
+    const GY = gyAt(s.x);
+    if (s.y >= GY || (s.ground && s.vy >= 0 && s.y >= GY - 8)) {
+      s.y = GY; s.vy = 0; s.ground = true;
       if (s.slam) { s.slam = 0; s.vx = 0; slamLand(s); }
     } else s.ground = false;
     s.x = clamp(s.x, 60, WORLD_W - 60);
@@ -2004,6 +2485,12 @@ function stepBattle(dt) {
     if (p.arc) p.vy += GRAV_W * .85 * dt;
     p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
     p.ang = Math.atan2(p.vy, p.vx);
+    if (TERR.length && !p.arc && p.from !== 2 && p.y > GROUND - 80 && terrCode(p.x) === 2 &&
+        Math.random() < dt * .9) {                         // 나무에 맞고 박힌다
+      p.life = 0;
+      for (let k = 0; k < 3; k++)
+        G.part.push({ x: p.x, y: p.y, vx: rnd(-50, 50), vy: rnd(-90, -10), life: .35, col: '#3f9a4a', sz: 2.4 });
+    }
     let hit = null;
     const pk = Math.floor(p.x / BK);
     for (let k = pk - 1; k <= pk + 1 && !hit; k++) {
@@ -2016,7 +2503,7 @@ function stepBattle(dt) {
     }
     const eb = BASE[1 - p.team];
     const inBase = Math.abs(p.x - eb.x) < eb.w / 2 + 4 && p.y > GROUND - eb.h && eb.hp > 0;
-    if (hit || inBase || p.y >= GROUND || p.life <= 0) {
+    if (hit || inBase || p.y >= gyAt(p.x) || p.life <= 0) {
       if (hit) {
         if (p.w.immune === 'mushroom' && isShroom(hit)) {   // 버섯한테는 안 통한다
           G.nums.push({ x: hit.x, y: hit.y - 52 * hit.size, vx: 0, vy: -24,
@@ -2099,7 +2586,7 @@ function stepBattle(dt) {
       dx *= f; dy *= f;
       a.x += dx; a.y += dy; d.x -= dx; d.y -= dy;
     }
-    for (const p of c.j) if (p.y > GROUND) { p.y = GROUND; p.ox = p.x + (p.x - p.ox) * .35; }
+    for (const p of c.j) if (p.y > gyAt(p.x)) { p.y = gyAt(p.x); p.ox = p.x + (p.x - p.ox) * .35; }
     if (c.life <= 0) G.corp.splice(i, 1);
   }
 
@@ -2979,7 +3466,7 @@ function drawField() {
 
   // 먼 배경
   fx.fillStyle = 'rgba(255,255,255,.035)';
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0, nb = Math.ceil(WORLD_W / 104) + 1; i < nb; i++) {
     const bx = i * 104 + 20, bw = 44 + (i * 37) % 46, bh = 70 + (i * 53) % 150;
     fx.fillRect(bx, GROUND - bh, bw, bh);
   }
@@ -2988,6 +3475,7 @@ function drawField() {
   fx.fillStyle = 'rgba(0,0,0,.22)'; fx.fillRect(-200, GROUND, WORLD_W + 400, 5);
   fx.fillStyle = 'rgba(255,255,255,.06)';
   for (let x = 0; x < WORLD_W; x += 120) fx.fillRect(x, GROUND + 16, 46, 3);
+  drawTerrainBack(G.cam.x - W / (2 * s) - 120, G.cam.x + W / (2 * s) + 120);
 
   // 베이스
   for (let t = 0; t < 2; t++) {
@@ -3122,6 +3610,8 @@ function drawField() {
   for (const so of G.sold) if (onScreen(so.x)) shown++;
   LOD = LOD ? shown > LOD_OFF : shown > LOD_ON;
   for (const so of G.sold) if (onScreen(so.x)) drawSoldier(fx, so);
+  drawTerrainFront(viewL, viewR);
+  drawOrders();
 
   for (const h of G.holes) {
     const k = clamp(h.life / Math.min(1, h.max || 1), 0, 1);
@@ -3230,6 +3720,24 @@ function drawMini() {
   // 하늘 / 땅
   mx.fillStyle = 'rgba(30,42,56,.85)'; mx.fillRect(pad, 8, W - pad * 2, gy - 8);
   mx.fillStyle = '#3a4a44'; mx.fillRect(pad, gy, W - pad * 2, H - gy - 10);
+  for (const z of TERR) {                                   // 지형
+    const a = wx(z.a), b = wx(z.b);
+    mx.fillStyle = TCOL[z.k]; mx.globalAlpha = .75;
+    if (z.k === 'river') mx.fillRect(a, gy, b - a, H - gy - 10);
+    else if (z.k === 'swamp') mx.fillRect(a, gy - 5, b - a, 8);
+    else if (z.k === 'hill') { mx.beginPath(); mx.moveTo(a, gy); mx.quadraticCurveTo(a + (b - a) * .3, gy - 17, (a + b) / 2, gy - 17);
+                               mx.quadraticCurveTo(b - (b - a) * .3, gy - 17, b, gy); mx.fill(); }
+    else for (let t = a + 3; t < b - 2; t += 5) { mx.beginPath(); mx.moveTo(t, gy - 13); mx.lineTo(t + 3, gy); mx.lineTo(t - 3, gy); mx.fill(); }
+    mx.globalAlpha = 1;
+  }
+  if (CMD) for (let t = 0; t < 2; t++) {                    // 방어선 깃발
+    const root = G.order[t]; if (!root) continue;
+    const xs = []; if (root.t === 'hold') xs.push(root.x);
+    for (const k in (root.u || {})) if (root.u[k].t === 'hold') xs.push(root.u[k].x);
+    mx.strokeStyle = G.col[t]; mx.lineWidth = 2; mx.setLineDash([4, 3]);
+    for (const hx of xs) { mx.beginPath(); mx.moveTo(wx(hx), 10); mx.lineTo(wx(hx), gy + 4); mx.stroke(); }
+    mx.setLineDash([]);
+  }
 
   // 현재 카메라가 비추는 범위
   const half = fc.width / (2 * G.cam.s);
@@ -3720,17 +4228,21 @@ ctlA.onclick = () => { if (NET.on) return netSt('온라인에서는 둘 다 사�
   CTRL[0] = CTRL[0] === 'human' ? 'ai' : 'human'; syncCtl(); };
 ctlB.onclick = () => { if (NET.on) return netSt('온라인에서는 둘 다 사람이다.');
   CTRL[1] = CTRL[1] === 'human' ? 'ai' : 'human'; syncCtl(); };
-function setMode(m) {
+function setMode(tab) {
+  CMD = tab === 'cmd';
+  const m = CMD ? 'hire' : tab;                    // 지휘 탭은 고용 위에 명령을 얹은 것
   MODE = m;
-  if (m !== 'hire' && NET.on) netClose();          // 온라인은 고용에서만 쓴다
-  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+  if (m !== 'hire' && NET.on) netClose();          // 온라인은 고용·지휘에서만 쓴다
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.mode === tab));
   document.getElementById('hireOpts').style.display = m === 'hire' ? 'block' : 'none';
+  document.getElementById('cmdHint').style.display  = CMD ? 'block' : 'none';
   document.getElementById('evoOpts').style.display  = m === 'evo'  ? 'block' : 'none';
   document.getElementById('hpBig').style.display    = m === 'evo'  ? 'flex' : 'none';
   document.querySelectorAll('.simonly').forEach(e => e.style.display = m === 'hire' ? 'none' : '');
   syncForm();
   document.getElementById('subTxt').textContent =
-    m === 'hire' ? '코인으로 병사를 산다. 코인 하나가 공 하나다. 시간이 지나면 코인이 들어오고, 적을 잡아도 들어온다.'
+    CMD ? '병사를 사고, 군 전체에게 전진·방어선·후퇴·돌격을 명령한다. 온라인으로 붙으면 서로의 지휘가 실시간으로 부딪힌다.'
+  : m === 'hire' ? '코인으로 병사를 산다. 코인 하나가 공 하나다. 시간이 지나면 코인이 들어오고, 적을 잡아도 들어온다.'
   : m === 'evo'  ? '고른 순서대로 시대가 흘러간다. STUDY 칸을 채우면 다음 시대로 넘어가고 부대가 통째로 바뀐다.'
   : '7초마다 양 팀의 공이 하나씩 떨어진다. 공이 어느 칸에 빠지느냐가 병력을 결정하고, 병력이 상대 베이스를 부수면 이긴다.';
   if (m === 'hire') for (const si of [0, 1]) if (sel[si].length > 1) sel[si] = [sel[si][0]];
@@ -3935,6 +4447,10 @@ function tintCol(hex, i, n) {
 function startGame(asGuest) {
   // 진화에서는 고른 순서가 곧 시대 순서다. 판에는 지금 시대 하나만 올라간다.
   const evo = MODE === 'evo';
+  if (!asGuest) readArena();                         // 참가자는 방장이 보낸 지형을 그대로 쓴다
+  bakeTerrain();
+  BASE[0].x = 240; BASE[1].x = WORLD_W - 240;
+  G.order = [{ t: 'adv', x: Math.round(WORLD_W * .35), u: newU() }, { t: 'adv', x: Math.round(WORLD_W * .65), u: newU() }]; G.aiC = [0, 0];
   G.eras = [sel[0].slice(), sel[1].slice()];
   G.era = [0, 0]; G.study = [0, 0];
   STUDY_NEED = clamp(parseInt(stRange.value, 10) || 8, 1, 40);
@@ -4047,7 +4563,9 @@ function startGame(asGuest) {
   if (NET.on && NET.role === 'host' && !asGuest) {   // 참가자도 같은 판을 차리게 한다
     NET.started = true;
     netSend({ t: 'go', a: sel[0][0], b: sel[1][0], ca: colA.value, cb: colB.value,
-              coin: COIN_START, every: COIN_EVERY, w: KILL_W });
+              coin: COIN_START, every: COIN_EVERY, w: KILL_W,
+              ww: WORLD_W, rm: RANGE_MUL, dp: RIVER_DEEP ? 1 : 0, cm: CMD ? 1 : 0,
+              tr: TERR.map(z => [z.k, z.a, z.b]) });
   }
 }
 document.getElementById('startBtn').onclick = () => {
@@ -4418,6 +4936,7 @@ function netSnapshot() {
     ov: G.over ? G.winner + 1 : 0,
     rg: Math.round(G.rage * 100) / 100,
     cam: [r1(G.cam.x), Math.round(G.cam.s * 1000) / 1000],
+    od: G.order.map(o => [o.t, r1(o.x), Object.entries(o.u || {}).map(([k, v]) => [k, v.t, r1(v.x)])]),
     sd, pj
   };
 }
@@ -4430,6 +4949,11 @@ function netApply(m) {
   BASE[0].hp = m.hp[0]; BASE[1].hp = m.hp[1];
   G.coin = m.co.slice(); G.kills = m.ki.slice();
   G.over = m.ov > 0; G.winner = m.ov - 1;
+  if (m.od) G.order = m.od.map(a => {
+    const u = newU();
+    for (const e of (a[2] || [])) if (typeof e[0] === 'string') u[e[0]] = { t: ORDERS.includes(e[1]) ? e[1] : 'adv', x: +e[2] || 0 };
+    return { t: ORDERS.includes(a[0]) ? a[0] : 'adv', x: +a[1] || 0, u };
+  });
 
   const old = new Map();
   for (const s of G.sold) old.set(s.key, s);
@@ -4529,6 +5053,8 @@ function netRecv(m) {
     NET.peerTeam = m.i; NET.peerCol = m.col;
     sel[1] = [{ i: m.i, pow: m.pow, wp: m.wp, spd: m.spd, col: m.col }];
     colB.value = m.col; refresh('B');
+  } else if (m.t === 'cmd' && NET.role === 'host') {      // 참가자의 명령
+    if (CMD) setOrder(1, m.o, typeof m.x === 'number' ? m.x : undefined, typeof m.k === 'string' ? m.k : undefined);
   } else if (m.t === 'buy' && NET.role === 'host') {     // 참가자가 병사를 샀다
     const list = hireList(1);
     buy(1, list[m.i]);
@@ -4544,6 +5070,9 @@ function netRecv(m) {
 // 방장이 보낸 설정으로 참가자도 같은 판을 차린다
 function netStartAsGuest(m) {
   MODE = 'hire'; CTRL = ['human', 'human'];
+  WORLD_W = clamp(+m.ww || 2800, 1600, 8000); RANGE_MUL = clamp(+m.rm || 1, .5, 2);
+  RIVER_DEEP = !!m.dp; CMD = !!m.cm;
+  TERR = (m.tr || []).filter(a => TK[a[0]]).map(a => ({ k: a[0], a: +a[1], b: +a[2] }));
   sel[0] = [m.a]; sel[1] = [m.b];
   colA.value = m.ca; colB.value = m.cb;
   COIN_START = m.coin; COIN_EVERY = m.every; KILL_W = m.w;
@@ -4589,6 +5118,7 @@ function buy(t, it) {
 function buildHirePanel() {
   const box = document.getElementById('hireBox');
   box.innerHTML = '';
+  CMD_UI = [null, null];
   if (MODE !== 'hire') return;
   HIRE_BTN = [[], []];
   for (let t = 0; t < 2; t++) {
@@ -4619,6 +5149,7 @@ function buildHirePanel() {
         HIRE_BTN[t].push([b, it]);
       }
       p.appendChild(g);
+      if (CMD) p.appendChild(buildCmdBox(t));
     } else {
       const a = document.createElement('div');
       a.className = 'hai'; a.textContent = mine ? '자동 운영 중' : '상대가 고르는 중';
@@ -4630,6 +5161,7 @@ function buildHirePanel() {
 let HIRE_BTN = [[], []];
 
 function syncHirePanel() {
+  if (CMD) syncCmdUI();
   for (let t = 0; t < 2; t++) {
     const c = document.getElementById('coin' + t);
     if (c) c.textContent = G.coin[t] + ' 코인';
@@ -4638,6 +5170,7 @@ function syncHirePanel() {
 }
 
 function stepHire(dt) {
+  if (CMD && !NET.on) aiCommand(dt);
   G.incT += dt;
   if (COIN_EVERY > 0) while (G.incT >= COIN_EVERY) {   // 일정 시간마다 코인 하나
     G.incT -= COIN_EVERY;
@@ -4676,6 +5209,167 @@ function step(dt) {
   stepQueue(dt);
   stepBattle(dt);
 }
+
+/* ── 설정 화면 ── */
+const lenRange = document.getElementById('lenRange'), lenVal = document.getElementById('lenVal');
+const rngRange = document.getElementById('rngRange'), rngVal = document.getElementById('rngVal');
+const riverN = document.getElementById('riverN'), forestN = document.getElementById('forestN');
+const hillN = document.getElementById('hillN'), swampN = document.getElementById('swampN');
+const riverW = document.getElementById('riverW'), deepTgl = document.getElementById('deepTgl');
+const terrPrev = document.getElementById('terrPrev');
+const arenaCounts = () => ({ river: +riverN.value, forest: +forestN.value, hill: +hillN.value, swamp: +swampN.value });
+function readArena() {                                  // 방장 / 혼자 할 때 화면 값을 게임에 옮긴다
+  WORLD_W = clamp(parseInt(lenRange.value, 10) || 2800, 1600, 8000);
+  RANGE_MUL = clamp(parseFloat(rngRange.value) || 1, .5, 2);
+  RIVER_DEEP = deepTgl.classList.contains('on');
+  TERR = currentTerr(WORLD_W);
+}
+function drawTerrPreview() {
+  const L = clamp(parseInt(lenRange.value, 10) || 2800, 1600, 8000);
+  const zs = currentTerr(L);
+  const c = terrPrev, x = c.getContext('2d'), W = c.width, H = c.height, k = (W - 40) / L, gy0 = H * .72;
+  x.clearRect(0, 0, W, H);
+  x.fillStyle = '#16202c'; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#3a4a44'; x.fillRect(20, gy0, W - 40, H - gy0 - 8);
+  for (const z of zs) {
+    const a = 20 + z.a * k, b = 20 + z.b * k;
+    x.fillStyle = TCOL[z.k];
+    if (z.k === 'river') x.fillRect(a, gy0, b - a, H - gy0 - 8);
+    else if (z.k === 'swamp') { x.globalAlpha = .85; x.fillRect(a, gy0 - 6, b - a, H - gy0 - 2); x.globalAlpha = 1; }
+    else if (z.k === 'hill') {
+      x.beginPath(); x.moveTo(a, gy0);
+      x.quadraticCurveTo(a + (b - a) * .28, gy0 - 40, (a + b) / 2, gy0 - 40);
+      x.quadraticCurveTo(b - (b - a) * .28, gy0 - 40, b, gy0); x.fill();
+    } else {
+      for (let t = a + 6; t < b - 4; t += 11) {
+        x.beginPath(); x.moveTo(t, gy0 - 30); x.lineTo(t + 7, gy0); x.lineTo(t - 7, gy0); x.fill();
+      }
+    }
+  }
+  for (const [bx, col] of [[240, '#3b82f6'], [L - 240, '#ef4444']]) {
+    x.fillStyle = col; x.fillRect(20 + bx * k - 7, gy0 - 30, 14, 30);
+  }
+  x.fillStyle = 'rgba(255,255,255,.45)'; x.font = '700 15px system-ui'; x.textAlign = 'left';
+  x.fillText(BR.tool ? '붓으로 칠하는 중 — 눌러서 문지르세요' : '미리보기 (왼쪽 ■ 기지 ↔ 오른쪽 ■ 기지)', 24, 22);
+  if (BR.tool && BR.hover != null) {                       // 붓 모양
+    const r = BR.size / 2 * k, cx = 20 + BR.hover * k;
+    x.fillStyle = BR.tool === 'erase' ? 'rgba(255,255,255,.12)' : TCOL[BR.tool] + '55';
+    x.fillRect(cx - r, 34, r * 2, gy0 - 30 + (H - gy0 - 8));
+    x.strokeStyle = BR.tool === 'erase' ? '#fff' : TCOL[BR.tool]; x.lineWidth = 2;
+    x.strokeRect(cx - r, 34, r * 2, gy0 - 30 + (H - gy0 - 8));
+  }
+}
+function syncArena() {
+  const L1 = +lenRange.value;
+  if (CUSTOM && CUSTOM_L !== L1) {                       // 길이를 바꾸면 그린 지형도 비율대로 늘어난다
+    CUSTOM = CUSTOM.map(z => ({ k: z.k, a: Math.round(z.a * L1 / CUSTOM_L), b: Math.round(z.b * L1 / CUSTOM_L) }));
+  }
+  CUSTOM_L = L1;
+  const bs = document.getElementById('brState');
+  if (bs) bs.innerHTML = CUSTOM ? '<b style="color:var(--hi)">직접 그린 지형 사용 중</b> — 구간 ' + CUSTOM.length + '개'
+                                : '자동 배치 사용 중 — 붓을 고르고 아래 그림을 문질러 칠하면 직접 편집으로 바뀐다.';
+  lenVal.textContent = (+lenRange.value - 480).toLocaleString();
+  rngVal.textContent = (+rngRange.value).toFixed(2) + '배';
+  for (const id of ['riverN', 'forestN', 'hillN', 'swampN'])
+    document.getElementById(id + 'Val').textContent = document.getElementById(id).value + '개';
+  document.getElementById('riverWVal').textContent = riverW.value;
+  deepTgl.classList.toggle('on', RIVER_DEEP_UI);
+  deepTgl.textContent = RIVER_DEEP_UI ? '깊은 강 (느리고 다침 · 원거리 못 쏨)' : '얕은 여울 (감속만)';
+  drawTerrPreview();
+}
+let RIVER_DEEP_UI = false;
+deepTgl.onclick = () => { RIVER_DEEP_UI = !RIVER_DEEP_UI; syncArena(); };
+let CUSTOM = null, CUSTOM_L = 2800;
+const toAuto = () => { CUSTOM = null; syncArena(); };
+lenRange.oninput = syncArena; rngRange.oninput = syncArena;
+for (const el of [riverN, forestN, hillN, swampN, riverW]) el.oninput = toAuto;
+document.querySelectorAll('[data-len]').forEach(b => b.onclick = () => { lenRange.value = b.dataset.len; syncArena(); });
+const TPRESET = { plain: [0, 0, 0, 0], river: [1, 0, 0, 0], forest: [0, 2, 0, 0], hill: [0, 1, 2, 0],
+                  swamp: [1, 0, 0, 2], mix: [1, 2, 2, 2] };
+document.querySelectorAll('[data-tp]').forEach(b => b.onclick = () => {
+  const p = TPRESET[b.dataset.tp];
+  riverN.value = p[0]; forestN.value = p[1]; hillN.value = p[2]; swampN.value = p[3];
+  TSEED = Math.floor(Math.random() * 90000) + 1000; toAuto();
+});
+document.getElementById('terrShuffle').onclick = () => { TSEED = Math.floor(Math.random() * 90000) + 1000; toAuto(); };
+mc.addEventListener('click', e => {                     // 미니맵을 눌러 방어선을 정한다
+  if (!CMD || G.over) return;
+  const mt = myCmdTeams(); if (!mt.length) return;
+  const r = mc.getBoundingClientRect();
+  const px = (e.clientX - r.left) / r.width * mc.width;
+  const x = (px - 16) / ((mc.width - 32) / WORLD_W);
+  const t = mt.length === 1 ? mt[0] : (x < WORLD_W / 2 ? 0 : 1);
+  issueOrder(t, 'hold', clamp(x, 150, WORLD_W - 150), CMD_SEL[t] || undefined);
+});
+
+/* ── 지형 편집 (붓) ── */
+const BR = { tool: null, size: 100, sym: true, last: null, hover: null, down: false };
+function currentTerr(L) {
+  if (CUSTOM) return CUSTOM.map(z => ({ k: z.k, a: z.a, b: z.b }));
+  return genTerrain(TSEED, arenaCounts(), L, +riverW.value || 110);
+}
+function applyBrush(k, x0, x1, L) {
+  const lo = 360, hi = L - 360;
+  const one = (a, b) => {
+    a = Math.max(lo, a); b = Math.min(hi, b); if (b - a < 1) return;
+    const out = [];
+    for (const z of CUSTOM) {                              // 칠한 구간은 기존 지형을 덮어쓴다
+      if (z.b <= a || z.a >= b) { out.push(z); continue; }
+      if (z.a < a) out.push({ k: z.k, a: z.a, b: a });
+      if (z.b > b) out.push({ k: z.k, a: b, b: z.b });
+    }
+    CUSTOM = out;
+    if (k !== 'erase') CUSTOM.push({ k, a, b });
+  };
+  one(x0, x1);
+  if (BR.sym) one(L - x1, L - x0);
+  CUSTOM.sort((p, q) => p.a - q.a);
+  const m = [];
+  for (const z of CUSTOM) {
+    const l = m[m.length - 1];
+    if (l && l.k === z.k && z.a - l.b <= 1) l.b = z.b; else m.push({ k: z.k, a: z.a, b: z.b });
+  }
+  CUSTOM = m.filter(z => z.b - z.a >= 16).map(z => ({ k: z.k, a: Math.round(z.a), b: Math.round(z.b) }));
+}
+const brX = e => {
+  const r = terrPrev.getBoundingClientRect(), L = +lenRange.value;
+  return ((e.clientX - r.left) / r.width * terrPrev.width - 20) / ((terrPrev.width - 40) / L);
+};
+function brStroke(a, b) {
+  const L = +lenRange.value, r = BR.size / 2;
+  if (!CUSTOM) { CUSTOM = currentTerr(L); CUSTOM_L = L; }
+  applyBrush(BR.tool, Math.min(a, b) - r, Math.max(a, b) + r, L);
+  syncArena();
+}
+terrPrev.addEventListener('pointerdown', e => {
+  if (!BR.tool) return;
+  e.preventDefault(); terrPrev.setPointerCapture(e.pointerId);
+  BR.down = true; BR.last = BR.hover = brX(e); brStroke(BR.last, BR.last);
+});
+terrPrev.addEventListener('pointermove', e => {
+  if (!BR.tool) return;
+  const x = brX(e); BR.hover = x;
+  if (BR.down) { brStroke(BR.last, x); BR.last = x; } else drawTerrPreview();
+});
+const brEnd = () => { BR.down = false; };
+terrPrev.addEventListener('pointerup', brEnd);
+terrPrev.addEventListener('pointercancel', brEnd);
+terrPrev.addEventListener('pointerleave', () => { BR.hover = null; if (BR.tool) drawTerrPreview(); });
+document.querySelectorAll('[data-br]').forEach(b => b.onclick = () => {
+  BR.tool = BR.tool === b.dataset.br ? null : b.dataset.br;
+  document.querySelectorAll('[data-br]').forEach(o => o.classList.toggle('on', o.dataset.br === BR.tool));
+  terrPrev.classList.toggle('paint', !!BR.tool);
+  drawTerrPreview();
+});
+const brushSz = document.getElementById('brushSz');
+brushSz.oninput = () => { BR.size = +brushSz.value; document.getElementById('brushSzVal').textContent = brushSz.value; };
+const symTgl = document.getElementById('symTgl');
+symTgl.onclick = () => { BR.sym = !BR.sym; symTgl.classList.toggle('on', BR.sym);
+  symTgl.textContent = BR.sym ? '좌우 대칭으로 그린다' : '대칭 없이 그린다 (한쪽만 유리할 수 있음)'; };
+document.getElementById('brClear').onclick = () => { CUSTOM = []; CUSTOM_L = +lenRange.value; syncArena(); };
+document.getElementById('brAuto').onclick = toAuto;
+
+syncArena();
 
 let last = performance.now(), acc = 0;
 function frame(now) {
