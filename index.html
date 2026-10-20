@@ -5593,7 +5593,7 @@ function buildGrid(side) {
   TEAMS.forEach((t, i) => {
     const d = document.createElement('div');
     d.className = 'tcard';
-    d.innerHTML = '<b>' + (t.mine !== undefined ? '✎ ' : '') + t.name + '</b><i>' +
+    d.innerHTML = '<b>' + (t.mine !== undefined ? '✎ ' + esc(t.name) : t.name) + '</b><i>' +
                   (t.mine !== undefined ? '내가 만든 군대' : t.shop[3] ? t.shop[3].name : '표적') + '</i>';
     d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
       if (NET.on && si !== (NET.role === 'host' ? 0 : 1)) {   // 상대 진영은 못 건드린다
@@ -7411,6 +7411,8 @@ function myaStore() {
   catch (e) { MYA_MEM = true; }
 }
 const myaNow = () => MYA[MYA_I] || null;
+const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g,
+  c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const myaUnits = a => (MYA_K === 'w' ? a.wep : a.shop);
 const myaCur = () => { const a = myaNow(); if (!a) return null; const l = myaUnits(a); return l[Math.min(MYA_U, l.length - 1)] || null; };
 
@@ -7579,7 +7581,7 @@ function myaFill() {
   if (!box || !box.classList.contains('on')) return;
   const sel2 = document.getElementById('myaList');
   MYA_I = clamp(MYA_I, 0, Math.max(0, MYA.length - 1));
-  sel2.innerHTML = MYA.map((a, i) => '<option value="' + i + '">' + (a.nm || '군대') + '</option>').join('');
+  sel2.innerHTML = MYA.map((a, i) => '<option value="' + i + '">' + esc(a.nm || '군대') + '</option>').join('');
   sel2.value = String(MYA_I);
   const a = myaNow();
   document.getElementById('myaState').innerHTML = !a ? '' :
@@ -7595,7 +7597,7 @@ function myaFill() {
     const list = k === 'w' ? a.wep : a.shop;
     document.getElementById(k === 'w' ? 'myaWList' : 'myaSList').innerHTML =
       list.map((u, i) => '<div class="myaU' + (MYA_K === k && MYA_U === i ? ' on' : '') + '" data-k="' + k + '" data-i="' + i + '">' +
-        '<b>' + (u.nm || '이름 없음') + '</b><em>' + (u.ty === 'r' ? '원거리' : '근접') + ' ' + Math.round(u.dmg) +
+        '<b>' + esc(u.nm || '이름 없음') + '</b><em>' + (u.ty === 'r' ? '원거리' : '근접') + ' ' + Math.round(u.dmg) +
         (k === 's' ? ' · 값 ' + u.cost : '') + '</em>' +
         (u.img ? '<em title="그림 올림">🖼</em>' : '') + '<span class="x" data-x="1">✕</span></div>').join('');
   }
@@ -7611,6 +7613,14 @@ function myaFill() {
     };
   });
   myaEditor();
+}
+let myaGridT = 0;
+function myaUnitName() {                              // 목록·팀 카드의 이름만 살짝 바꾼다
+  const u = myaCur(); if (!u) return;
+  const row = document.querySelector('#mya' + (MYA_K === 'w' ? 'W' : 'S') + 'List .myaU[data-i="' + MYA_U + '"] b');
+  if (row) row.textContent = u.nm || '이름 없음';
+  clearTimeout(myaGridT);
+  myaGridT = setTimeout(() => { buildGrid('A'); buildGrid('B'); }, 400);
 }
 function myaMsg(t) { const e = document.getElementById('myaState'); if (e) e.innerHTML = '<b style="color:#e0a060">' + t + '</b>'; }
 
@@ -7628,7 +7638,7 @@ function myaEditor() {
     '<b id="' + id + 'V">' + v + (suf || '') + '</b></div>';
   m.innerHTML =
     '<div class="myaTop"><b style="color:var(--hi)">' + (shop ? 'SHOP' : 'WEAPON') + ' 병사</b>' +
-      '<input type="text" id="myaUN" maxlength="14" value="' + (u.nm || '').replace(/"/g, '') + '" style="flex:1;min-width:120px">' +
+      '<input type="text" id="myaUN" maxlength="14" value="' + esc(u.nm) + '" style="flex:1;min-width:120px">' +
       '<button class="mini' + (u.ty === 'm' ? ' on' : '') + '" id="myaTM">근접</button>' +
       '<button class="mini' + (u.ty === 'r' ? ' on' : '') + '" id="myaTR">원거리</button>' +
       '<label for="myaUC" style="color:var(--dim);font-size:12px">무기 색</label>' +
@@ -7676,7 +7686,10 @@ function myaEditor() {
   };
   bind('myaDmg', 'dmg'); bind('myaCd', 'cd', 1); bind('myaRng', 'rng'); bind('myaHp', 'hp', 1);
   bind('myaSz', 'sz', 1); bind('myaMv', 'mv', 1); bind('myaPs', 'ps'); bind('myaAoe', 'aoe'); bind('myaCost', 'cost');
-  document.getElementById('myaUN').oninput = e => { u.nm = e.target.value.slice(0, 14); myaTouch(1); };
+  document.getElementById('myaUN').oninput = e => {
+    u.nm = e.target.value.slice(0, 14);                // 다시 그리면 글자가 끊긴다 — 이름표만 고친다
+    myaStore(); myaReg(); myaUnitName(); myaAfter();
+  };
   document.getElementById('myaUC').oninput = e => { u.col = e.target.value; myaTouch(); };
   document.getElementById('myaTM').onclick = () => { u.ty = 'm'; myaTouch(1); };
   document.getElementById('myaTR').onclick = () => { u.ty = 'r'; myaTouch(1); };
@@ -7835,7 +7848,14 @@ function myaShareOpen(on) {
     if (!MYA.length) MYA.push(myaDef());
     MYA_K = 'w'; MYA_U = 0; myaSync();
   };
-  document.getElementById('myaName').oninput = e => { const a = myaNow(); if (a) { a.nm = e.target.value.slice(0, 14); myaTouch(); myaListName(); } };
+  document.getElementById('myaName').oninput = e => {
+    const a = myaNow();
+    if (!a) return;
+    a.nm = e.target.value.slice(0, 14);
+    myaStore(); myaReg(); myaListName();
+    clearTimeout(myaGridT);
+    myaGridT = setTimeout(() => { buildGrid('A'); buildGrid('B'); }, 400);
+  };
   document.getElementById('myaCol').oninput = e => { const a = myaNow(); if (a) { a.col = e.target.value; myaTouch(); } };
   document.getElementById('myaStyle').onchange = e => { const a = myaNow(); if (a) { a.style = e.target.value; myaTouch(); } };
   document.getElementById('myaWAdd').onclick = () => {
