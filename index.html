@@ -529,7 +529,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>숫자 뽑기 방식</b>은 셋 중 하나다. <b>랜덤</b>은 앞칸부터 1, 2, 3 … 으로 시작해 뒤로 갈수록 큰 수가 나온다 (n번째 칸은 n ~ 2n). 이때만 <b>숫자 고정</b>이 뜨는데, 켜면 판 내내 그대로고 끄면 공이 들어간 그 칸만 새로 뽑힌다.<br>
     <b>1,2,3…</b> 은 칸 순서대로 1, 2, 3 … 이 박히고 안 바뀐다. <b>직접</b>은 쓸 숫자를 쉼표로 넣으면 (예: 1,2,3,5,10) 그대로 박힌다. 칸보다 적게 넣으면 앞에서부터 다시 쓰고, 많이 넣으면 남는 건 버린다 (1~999, 최대 16개).<br>
     아직 안 나온 병사 수는 전투 화면 <b>좌우 위</b>에 크게 뜬다 (= 10 이 떠서 3명이 나왔으면 7).<br>
-    <b>병사 나오는 간격</b>은 공 하나가 갈라져 병사가 쏟아질 때 한 명씩 사이에 두는 시간이다 (0~1초, 기본 0.2초). 0으로 두면 예전처럼 한꺼번에 나온다. 줄은 진영마다 따로 서고 최대 400명까지 기다린다.<br>
+    <b>병사 나오는 간격</b>은 공 하나가 갈라져 병사가 쏟아질 때 한 명씩 사이에 두는 시간이다 (0~1초, 기본 0.2초). 0으로 두면 예전처럼 한꺼번에 나온다. 줄은 진영마다 따로 서고, 공 하나의 상한만큼(상한 999면 2,997명까지) 기다린다. 전장이 꽉 차 있으면 줄에서 기다렸다가 자리가 나는 대로 나온다.<br>
     WEAPON 보드: 끄면 기본 무기 보드가 사라지고 <b>SHOP 으로만</b> 싸운다. BALL DROP 에는 SPLIT / SHOP 만 남고, 공은 모두 상점 물건 값으로 들어간다. 값이 비싼 만큼 병사는 드물게, 대신 센 놈들만 나온다. (동충하초처럼 보드를 안 거치고 기본 병사를 부르는 능력은 그대로 나온다.)<br>
     WEAPON 과 SHOP 은 <b>둘 다 끌 수는 없다</b> — 하나를 끄면 다른 쪽이 자동으로 켜진다.<br>
     칸 수는 고른 팀 중 물건이 가장 많은 팀에 맞춘다. 그래서 물건이 적은 팀에게는 빈 칸(—)이 생기는데, <b>그 칸은 그 팀 공만 튕겨 낸다</b>. 공을 헛되이 버리지 않고 다른 칸으로 굴러간다. 같은 칸이라도 물건이 있는 팀의 공은 그냥 들어간다. (12초 넘게 못 들어간 공은 그냥 떨어진다.)<br>
@@ -539,7 +539,23 @@ input.pdot:hover{border-color:var(--hi)}
   </div>
 
   <div class="opts arena" id="arenaOpts">
-    <h3>거리 설정</h3>
+    <h3>소리</h3>
+    <div class="row" style="margin-top:10px">
+      <label for="musSel">배경음악</label>
+      <select id="musSel" style="flex:1"></select>
+    </div>
+    <div class="row">
+      <label for="musVol">음량</label>
+      <input type="range" id="musVol" min="0" max="100" step="5" value="45">
+      <b id="musVolVal">45</b>
+    </div>
+    <div class="presets">
+      <button id="musTest">들어보기 / 멈추기</button>
+      <button id="musNext">다음 곡</button>
+    </div>
+    <div class="hint" id="musState" style="margin-top:8px"></div>
+
+    <h3 style="margin-top:20px">거리 설정</h3>
     <div class="row">
       <label for="lenRange">기지 간 거리</label>
       <input type="range" id="lenRange" min="1600" max="8000" step="200" value="2800">
@@ -723,6 +739,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>병사 고정</b> — 전투 화면에서 <b>병사를 누르면 그 자리에 선다</b> (발밑에 금빛 고리, 머리 위에 못 표시). 걷지도 밀려나지도 않고 제자리에서 싸운다. 한 번 더 누르거나 빈 곳을 누르면 풀리고, 다른 병사를 누르면 그쪽으로 옮겨 간다. 죽으면 저절로 풀린다. 돌진·내려찍기처럼 몸을 날리는 기술이 터지는 동안에는 잠깐 움직인다.<br>
     <b>반동</b> — 쏘는 순간 총구에서 연기와 섬광이 터지고, 총이면 탄피가 튀고, 포·로켓처럼 무거운 것은 발밑 흙먼지까지 인다. 쏜 사람(또는 전차·장갑차·수레)은 뒤로 밀렸다가 제자리로 돌아오고, 차체는 앞이 살짝 들린다.<br>
     <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에, 고대 이집트의 전차병은 말이 끄는 <b>나무 수레</b> 위에 올라탄 모습으로 나온다 (같은 이름이라도 현대 전차병은 전차다). 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
+    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절하며, 전투 화면 위 <b>◀ ♪ ▶</b> 로 곡을 넘기거나 끌 수 있고 <b>M</b> 키도 같은 일을 한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
     <b>온라인 PvP</b> — 고용 탭 안에 있다. <b>랜덤 매칭</b>은 닉네임을 적고 누르기만 하면 같은 시간에 누른 다른 사람과 자동으로 붙는다. 아는 사람과 하려면 <b>방 만들기 / 참가하기</b>로 코드를 두 번 주고받으면 된다.<br>
     방장이 왼쪽, 참가자가 오른쪽을 맡고 각자 자기 진영만 고른다. 판은 방장 쪽에서 돌아가므로 설정·시작·배속은 방장이 정한다. 닉네임은 전투 화면 이름표에 팀 이름과 같이 나온다.<br>
@@ -737,6 +754,11 @@ input.pdot:hover{border-color:var(--hi)}
     <div class="tm"><div class="tn" id="nmB">-</div><div class="hbar"><i id="hpB" style="width:100%"></i></div>
       <div class="sbar" id="sbB"><i style="width:0%"></i></div><div class="ts" id="stB">병사 0 · 베이스 0</div></div>
     <div class="grow"></div>
+    <div class="spd" id="musBar">
+      <button id="mPrev" title="이전 곡">◀</button>
+      <button id="mPlay" title="배경음악 켜기/끄기 (M)">♪ 음악 꺼짐</button>
+      <button id="mNext" title="다음 곡">▶</button>
+    </div>
     <div class="spd">
       <button data-s="0">일시정지</button>
       <button data-s="1" class="on">1x</button>
@@ -1195,7 +1217,7 @@ const G = {
   coin: [0, 0], incT: 0, aiT: [0, 0], earn: [0, 0],   // 고용 모드
   eras: [[], []], era: [0, 0], study: [0, 0],         // 진화 모드
   fslot: [], nslot: [], fval: [1, 1],                 // 수식 / 숫자 뽑기 보드
-  que: [[], []], qt: [0, 0],                          // 줄 서서 나오는 병사 (수식 전용)
+  que: [[], []], qt: [0, 0], qhold: [false, false],   // 줄 서서 나오는 병사 (수식 전용)
   cam: { x: 700, s: 1 },
   pin: null,                   // 자리에 고정해 둔 병사 (화면을 눌러 고른다)
   bridge: [],                  // 강 위 다리
@@ -1213,7 +1235,7 @@ let SPAWN_GAP = .2;                        // 수식 공이 갈라질 때 병사
 // 'board' = WEAPON/SHOP 보드에 들어갈 때 공이 수만큼 갈라진다 — 공마다 무기를 따로 고른다
 // 'eq'    = '=' 가 뜨자마자 갈라진다 — WEAPON 으로 갈지 SHOP 으로 갈지도 공마다 따로
 let SPLIT_AT = 'pick';
-const QUE_MAX = 400;                       // 줄이 끝없이 길어지지 않게
+let QUE_MAX = 600;                         // 줄 길이 상한 — 수식 상한에 맞춰 늘어난다
 let USE_FORM = false;                      // 수식 보드를 쓸지
 let FORM_OPS = ['+', '-', '*', '/'];       // 뽑기에 들어갈 연산 (= 는 늘 들어간다)
 let FORM_SLOTS = 5;                        // 수식 보드 칸 수
@@ -2110,23 +2132,33 @@ function ballVal(ball) {
   return clamp(Math.round((ball && ball.val) || 1), 1, FORM_MAX);
 }
 
+// 수가 정해진 공을 내보낸다 ('=' 를 맞았거나, 상한에 닿아 더 못 키우거나)
+function eqDone(team, ti, val, x, y, forced) {
+  const col = G.tcol[team][ti];
+  G.fval[team] = val;
+  // 고를 게 WEAPON 뿐이면 BALL DROP 을 건너뛴다.
+  if (REG.main.hidden) sendToBoard(team, ti, USE_WPN ? 'weapon' : 'shop', val, x, y);
+  else if (SPLIT_AT === 'eq' && val > 1) {           // 여기서 갈라지면 쓸 곳도 공마다 따로 고른다
+    let made = 0;
+    for (let k = 0; k < val; k++) if (newBall(team, ti, 'main')) made++;
+    popText(x, y, '= ' + val + ' → 공 ' + made + '개', col);
+  }
+  else newBall(team, ti, 'main', undefined, val);
+  popText(x, y, (forced ? '상한 ' : '') + '= ' + val, forced ? '#ffd76a' : col);
+}
+
 function formula(team, ti, idx, x, y, ball) {
   const sl = G.fslot[idx];
   if (!sl) return;
-  const col = G.tcol[team][ti];
   const val = (ball && ball.val) || 1;
   if (sl.op === '=') {                               // 수가 정해졌다 — 이제 쓸 곳을 고른다
-    G.fval[team] = val;
-    // 고를 게 WEAPON 뿐이면 BALL DROP 을 건너뛴다.
-    if (REG.main.hidden) sendToBoard(team, ti, USE_WPN ? 'weapon' : 'shop', val, x, y);
-    else if (SPLIT_AT === 'eq' && val > 1) {         // 여기서 갈라지면 쓸 곳도 공마다 따로 고른다
-      let made = 0;
-      for (let k = 0; k < val; k++) if (newBall(team, ti, 'main')) made++;
-      popText(x, y, '= ' + val + ' → 공 ' + made + '개', col);
-    }
-    else newBall(team, ti, 'main', undefined, val);
-    popText(x, y, '= ' + val, col);
+    eqDone(team, ti, val, x, y, false);
     reroll(idx);                                     // 등호 칸도 맞으면 다시 뽑힌다
+    return;
+  }
+  if (val >= FORM_MAX) {                             // 상한에 닿은 공은 더 못 키우니 바로 끝낸다
+    reroll(idx);
+    eqDone(team, ti, val, x, y, true);
     return;
   }
   // 연산만 정해지고, 숫자는 숫자 뽑기 보드에서 고른다
@@ -2144,15 +2176,19 @@ function numDraw(team, ti, idx, x, y, ball) {
   popText(x, y, OPSIGN[op] + n, '#7fd8ff');
   // 랜덤이고 고정이 아닐 때만 맞은 칸이 다시 뽑힌다 (1,2,3… 과 직접 넣은 값은 안 바뀐다)
   if (NUM_MODE === 'rand' && !NUM_FIX) G.nslot[idx] = rollNum(idx);
+  if (after >= FORM_MAX) { eqDone(team, ti, after, x, y, true); return; }  // 상한에 닿으면 바로 '='
   newBall(team, ti, 'form', undefined, after);       // 같은 공이 수만 바꿔 수식으로 돌아간다
 }
 
 /* ── 병사 대기열 ──
    수식 공 하나가 수십 명으로 갈라지면 한 프레임에 다 쏟아져서 뭉텅이로 보인다.
    진영마다 줄을 세워 SPAWN_GAP 간격으로 한 명씩 내보낸다. 간격이 0이면 그냥 바로 낸다. */
+const soldN = t => { let n = 0; for (const s of G.sold) if (s.team === t) n++; return n; };
 function queueSpawn(team, n, make) {
+  let live = SPAWN_GAP <= 0 ? soldN(team) : 0;
   for (let k = 0; k < n; k++) {
-    if (SPAWN_GAP <= 0) { make(); continue; }
+    // 간격이 0이면 바로 내보내되, 전장이 꽉 찼으면 버리지 않고 줄에 세운다
+    if (SPAWN_GAP <= 0 && live < MAX_SOLD) { make(); live++; continue; }
     if (G.que[team].length >= QUE_MAX) break;        // 줄이 너무 길면 더 안 받는다
     if (!G.que[team].length) G.qt[team] = 0;         // 줄이 비어 있었으면 첫 명은 바로
     G.que[team].push(make);
@@ -2161,11 +2197,15 @@ function queueSpawn(team, n, make) {
 function stepQueue(dt) {
   for (let t = 0; t < 2; t++) {
     const q = G.que[t];
+    G.qhold[t] = false;
     if (!q.length) continue;
     G.qt[t] -= dt;
-    let guard = 0;
+    let guard = 0, live = soldN(t);
     while (q.length && G.qt[t] <= 0 && guard++ < 200) {
-      q.shift()();
+      if (live >= MAX_SOLD) {                        // 전장이 꽉 찼다 — 자리가 날 때까지 줄에서 기다린다
+        G.qhold[t] = true; G.qt[t] = 0; break;
+      }
+      q.shift()(); live++;
       G.qt[t] += Math.max(.001, SPAWN_GAP);
     }
   }
@@ -5067,6 +5107,12 @@ function drawQueueHUD(W, H) {
     fx.strokeText(n, x, 30 + big * .92);
     fx.fillStyle = n ? G.col[t] : '#6d7a8a';
     fx.fillText(n, x, 30 + big * .92);
+    if (n && G.qhold[t]) {                           // 전장이 꽉 차서 기다리는 중
+      fx.font = '800 ' + Math.round(big * .26) + 'px system-ui';
+      fx.lineWidth = 3; fx.strokeStyle = 'rgba(0,0,0,.75)';
+      fx.strokeText('자리 나는 대로', x, 30 + big * 1.22);
+      fx.fillStyle = '#ffd76a'; fx.fillText('자리 나는 대로', x, 30 + big * 1.22);
+    }
     fx.globalAlpha = 1;
   }
 }
@@ -5866,6 +5912,7 @@ function startGame(asGuest) {
   SPAWN_GAP  = clamp(parseFloat(gapRange.value), 0, 1);
   SPLIT_AT   = SPLIT_AT_UI;
   FORM_MAX   = clamp(Math.floor(+fmaxNum.value) || 99, 2, 999);   // 공 하나가 될 수 있는 최대 병력
+  QUE_MAX    = Math.max(600, FORM_MAX * 3);                       // 상한만큼은 줄이 다 받아야 한다
   // 수식을 켜면 공은 수식에서 시작한다. BALL DROP 은 '=' 로 수가 정해진 뒤
   // 그 수를 어디에 쓸지 고르는 칸이 된다. SPLIT 은 빠진다.
   SLOTNAME = USE_FORM ? [] : ['SPLIT'];
@@ -5899,7 +5946,7 @@ function startGame(asGuest) {
   G.invin = [0, 1].map(t => G.roster[t].some(td => td.invincible));
   G.dealt = [0, 0]; G.kills = [0, 0];
   G.deliv.length = 0; G.zones.length = 0;
-  G.que = [[], []]; G.qt = [0, 0]; G.pin = null;
+  G.que = [[], []]; G.qt = [0, 0]; G.qhold = [false, false]; G.pin = null;
   buildBridges();
   SPAWN_EVERY = clamp(parseFloat(ivRange.value) || 7, 1, 20);
   SOLDIER_HP = clamp(parseInt(shpRange.value, 10) || 135, 30, 600);
@@ -5958,6 +6005,7 @@ function startGame(asGuest) {
 document.getElementById('startBtn').onclick = () => {
   if (NET.on && NET.role === 'guest') { netSt('시작은 방장이 누른다.'); return; }
   startGame();
+  if (typeof musStart === 'function') musStart(true);  // 배경음악 (끄기면 아무것도 안 한다)
 };
 document.getElementById('again').onclick = document.getElementById('again2').onclick = () => {
   document.getElementById('game').style.display = 'none';
@@ -7081,6 +7129,335 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
+/* ============================================================
+   배경음악 — 소리 파일 없이 그 자리에서 만들어 내는 음악.
+   트랙마다 박자·음계·코드 진행·악기가 다르고, 네 마디를 돌면서 이어진다.
+   ============================================================ */
+const SCALES = {
+  min:  [0, 2, 3, 5, 7, 8, 10],      // 단음계
+  dor:  [0, 2, 3, 5, 7, 9, 10],      // 도리안
+  phr:  [0, 1, 4, 5, 7, 8, 10],      // 프리지안 도미넌트
+  maj:  [0, 2, 4, 5, 7, 9, 11],      // 장음계
+  lyd:  [0, 2, 4, 6, 7, 9, 11],      // 리디안
+  pent: [0, 3, 5, 7, 10],            // 단5음
+  blu:  [0, 3, 5, 6, 7, 10]          // 블루스
+};
+// k 킥 · s 스네어(c 박수, r 림) · h 하이햇(o 오픈) · b 베이스 · l 멜로디 · p 코드
+// 숫자는 그 마디 코드에서 몇 번째 음인지 (0 근음, 2 3음, 4 5음, 7 옥타브)
+const MUSIC = [
+  { nm: '진군', bpm: 100, root: 45, sc: 'min', prog: [0, 0, 5, 4],
+    k: 'x--x----x--x----', s: '----x-------x-x-', h: 'x-x-x-x-x-x-x-x-', hg: .03,
+    b: '0---0---4---4---', bt: 'sawtooth', bcut: 620, bg: .15,
+    l: '----------------', p: 'long', pg: .045, pt: 'sawtooth', send: .08 },
+
+  { nm: '돌격', bpm: 152, root: 40, sc: 'min', prog: [0, 0, 3, 5],
+    k: 'x---x---x---x--x', s: '----x-------x---', h: 'xxxxxxxxxxxxxxxx', hg: .022,
+    b: '0-00-0-00-00-0-0', bt: 'sawtooth', bcut: 900, bg: .17,
+    l: '7---4---7---9---', lt: 'square', lg: .055, lo: 0,
+    p: 'stab', ps: 'x-------x-x-----', pg: .05, pt: 'sawtooth', send: .12 },
+
+  { nm: '고요한 전선', bpm: 68, root: 48, sc: 'dor', prog: [0, 3, 5, 3],
+    k: '----------------', s: '----------------', h: '----------------',
+    b: '0---------------', bt: 'sine', bcut: 400, bg: .18,
+    l: '----4-------7---', lt: 'triangle', lg: .085, lo: 1, lslow: 1,
+    p: 'long', pg: .07, pt: 'triangle', send: .32 },
+
+  { nm: '기계 심장', bpm: 128, root: 38, sc: 'min', prog: [0, 0, 6, 5],
+    k: 'x---x---x---x---', s: '----x-------x---', h: '--x---x---x---x-', hg: .028, ho: 1,
+    b: '0-0-3-0-0-0-5-0-', bt: 'square', bo: 0, bcut: 760, bq: 9, bsw: 2.4, bg: .13,
+    l: '----------------',
+    p: 'stab', ps: '----x-------x---', pg: .045, pt: 'sawtooth', send: .18 },
+
+  { nm: '중세 행진', bpm: 112, root: 50, sc: 'dor', prog: [0, 0, 6, 0],
+    k: 'x--x--x---x-x---', s: '--------r-------', h: 'x---x---x---x-x-', hg: .02,
+    b: '0-------0-------', bt: 'triangle', bcut: 520, bg: .14,
+    l: '0-2-4-2-0-4-2-0-', lt: 'triangle', lg: .075, lo: 1, lpk: 1,
+    p: 'long', pg: .03, pt: 'sine', send: .14 },
+
+  { nm: '모래폭풍', bpm: 120, root: 45, sc: 'phr', prog: [0, 0, 1, 0],
+    k: 'x--x--x---x-----', s: '----r---r---r-r-', h: 'x-xxx-xxx-xxx-xx', hg: .018,
+    b: '0-------0---0---', bt: 'sawtooth', bcut: 560, bg: .14,
+    l: '4-3-2-1-0---2-1-', lt: 'sawtooth', lg: .05, lo: 1, lcut: 1900,
+    p: 'long', pg: .028, pt: 'sawtooth', send: .2 },
+
+  { nm: '네온 질주', bpm: 118, root: 41, sc: 'min', prog: [0, 5, 3, 4],
+    k: 'x-------x-------', s: '--------x-------', h: '--x---x---x---x-', hg: .025, ho: 1,
+    b: '0-0-0-0-0-0-0-0-', bt: 'sawtooth', bcut: 700, bg: .15,
+    l: '0-2-4-7-4-2-4-0-', lt: 'square', lg: .05, lo: 1,
+    p: 'stab', ps: 'x-x-x-x-x-x-x-x-', pg: .035, pt: 'sawtooth', send: .22 },
+
+  { nm: '우주 정거장', bpm: 60, root: 43, sc: 'lyd', prog: [0, 4, 2, 4],
+    k: '----------------', s: '----------------', h: '----------------',
+    b: '0---------------', bt: 'sine', bcut: 300, bg: .17,
+    l: '--------7-----4-', lt: 'sine', lg: .1, lo: 2, lslow: 1,
+    p: 'long', pg: .07, pt: 'sine', send: .4 },
+
+  { nm: '초읽기', bpm: 138, root: 40, sc: 'phr', prog: [0, 0, 1, 1],
+    k: 'x-------x-------', s: '--------------c-', h: 'xxxxxxxxxxxxxxxx', hg: .016,
+    b: '0-0-0-0-0-0-0-0-', bt: 'square', bo: 0, bcut: 420, bg: .12,
+    l: '------------1---', lt: 'sawtooth', lg: .045, lo: 1,
+    p: 'stab', ps: '------------x---', pg: .05, pt: 'sawtooth', send: .16 },
+
+  { nm: '승전가', bpm: 96, root: 46, sc: 'maj', prog: [0, 4, 5, 4],
+    k: 'x---x---x---x---', s: '----x-------x-xx', h: 'x-x-x-x-x-x-x-x-', hg: .024,
+    b: '0---4---0---4---', bt: 'sawtooth', bcut: 640, bg: .15,
+    l: '0-2-4---4-2-0---', lt: 'sawtooth', lg: .06, lo: 1, lcut: 2200,
+    p: 'long', pg: .05, pt: 'sawtooth', send: .12 },
+
+  { nm: '늪지대', bpm: 76, root: 38, sc: 'min', prog: [0, 0, 3, 3],
+    k: 'x-------x-------', s: '--------x-------', h: '----x-------x---', hg: .02,
+    b: '0---0-2-0---0-4-', bt: 'sine', bo: 0, bcut: 380, bg: .2,
+    l: '----------------',
+    p: 'stab', ps: '--x---x---x---x-', pg: .045, pt: 'square', send: .34 },
+
+  { nm: '픽셀 행진', bpm: 148, root: 48, sc: 'maj', prog: [0, 0, 4, 5],
+    k: 'x---x---x---x---', s: '----x-------x---', h: 'x-x-x-x-x-x-x-x-', hg: .018,
+    b: '0-4-0-4-0-4-0-4-', bt: 'square', bcut: 1200, bg: .11,
+    l: '0-2-4-2-7-4-2-4-', lt: 'square', lg: .05, lo: 1, lpk: 1,
+    p: '', send: .1 },
+
+  { nm: '광란', bpm: 172, root: 36, sc: 'min', prog: [0, 0, 5, 3],
+    k: 'x-----x-----x---', s: '----x-------x---', h: 'x-xxx-xxx-xxx-xx', hg: .016,
+    b: '0-------0---0---', bt: 'sine', bo: 0, bcut: 260, bg: .22,
+    l: '----7---4---2---', lt: 'sawtooth', lg: .04, lo: 1,
+    p: 'stab', ps: 'x-------x-------', pg: .035, pt: 'sawtooth', send: .2 },
+
+  { nm: '황혼의 평원', bpm: 84, root: 45, sc: 'blu', prog: [0, 0, 3, 4],
+    k: 'x-----x---x-----', s: '----r-------r---', h: '--x---x---x---x-', hg: .016,
+    b: '0---2---4---5---', bt: 'triangle', bcut: 460, bg: .16,
+    l: '----4---2-0-----', lt: 'triangle', lg: .065, lo: 1, lpk: 1,
+    p: 'long', pg: .03, pt: 'sine', send: .24 }
+];
+
+let AC = null, MBUS = null, MDEL = null, NOISEB = null;
+let MUS_SEL = 'off';                 // 'off' | 'rand' | 트랙 번호
+let MUS_VOL = .45, MUS_I = -1, MUS_T = 0, MUS_STEP = 0, MUS_TIMER = null;
+
+const mfreq = m => 440 * Math.pow(2, (m - 69) / 12);
+function noteOf(tr, deg, oct) {
+  const sc = SCALES[tr.sc] || SCALES.min, n = sc.length;
+  const o = Math.floor(deg / n), d = ((deg % n) + n) % n;
+  return tr.root + sc[d] + 12 * (o + (oct || 0));
+}
+function audioOn() {                                  // 소리는 사람이 누른 뒤에만 켜진다
+  if (AC) { if (AC.state === 'suspended') AC.resume(); return AC; }
+  const C = window.AudioContext || window.webkitAudioContext;
+  if (!C) return null;
+  try { AC = new C(); } catch (e) { return null; }
+  MBUS = AC.createGain(); MBUS.gain.value = MUS_VOL;
+  const cp = AC.createDynamicsCompressor();
+  cp.threshold.value = -16; cp.knee.value = 24; cp.ratio.value = 5;
+  MBUS.connect(cp); cp.connect(AC.destination);
+  MDEL = AC.createDelay(1.2);                         // 메아리
+  const fb = AC.createGain(), wet = AC.createGain(), lp = AC.createBiquadFilter();
+  MDEL.delayTime.value = .33; fb.gain.value = .34; wet.gain.value = .55;
+  lp.type = 'lowpass'; lp.frequency.value = 2600;
+  MDEL.connect(lp); lp.connect(fb); fb.connect(MDEL); lp.connect(wet); wet.connect(MBUS);
+  const len = Math.floor(AC.sampleRate * 1.5);        // 잡음 한 덩이를 돌려 쓴다
+  NOISEB = AC.createBuffer(1, len, AC.sampleRate);
+  const d = NOISEB.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  return AC;
+}
+function mEnv(g, t, atk, dur, pk) {
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.linearRampToValueAtTime(pk, t + atk);
+  g.gain.exponentialRampToValueAtTime(.0005, t + atk + dur);
+}
+function mTone(t, f, dur, o) {
+  o = o || {};
+  const g = AC.createGain(), fl = AC.createBiquadFilter();
+  fl.type = 'lowpass'; fl.Q.value = o.q || .8;
+  fl.frequency.setValueAtTime(o.cut || 2200, t);
+  if (o.sweep) fl.frequency.exponentialRampToValueAtTime(Math.max(90, (o.cut || 2200) / o.sweep), t + dur);
+  mEnv(g, t, o.atk || .008, dur, o.gain || .12);
+  fl.connect(g); g.connect(MBUS);
+  if (o.send) { const s = AC.createGain(); s.gain.value = o.send; g.connect(s); s.connect(MDEL); }
+  const n = o.det ? 2 : 1;
+  for (let i = 0; i < n; i++) {
+    const osc = AC.createOscillator();
+    osc.type = o.type || 'sawtooth';
+    osc.frequency.setValueAtTime(f, t);
+    if (o.slide) osc.frequency.exponentialRampToValueAtTime(f * o.slide, t + dur);
+    if (i) osc.detune.value = o.det;
+    osc.connect(fl); osc.start(t); osc.stop(t + dur + (o.atk || .008) + .06);
+  }
+}
+function mNoise(t, dur, cut, gain, hi) {
+  const src = AC.createBufferSource(), fl = AC.createBiquadFilter(), g = AC.createGain();
+  src.buffer = NOISEB; src.playbackRate.value = .8 + Math.random() * .4;
+  fl.type = hi ? 'highpass' : 'bandpass'; fl.frequency.value = cut; fl.Q.value = hi ? .7 : 1.4;
+  mEnv(g, t, .002, dur, gain);
+  src.connect(fl); fl.connect(g); g.connect(MBUS);
+  src.start(t, Math.random()); src.stop(t + dur + .05);
+}
+function mKick(t) {
+  const osc = AC.createOscillator(), g = AC.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(140, t);
+  osc.frequency.exponentialRampToValueAtTime(42, t + .12);
+  mEnv(g, t, .003, .26, .5);
+  osc.connect(g); g.connect(MBUS); osc.start(t); osc.stop(t + .34);
+  mNoise(t, .02, 2200, .06, true);
+}
+function mSnare(t, g) { mNoise(t, .14, 1700, g || .14, false); mTone(t, 185, .09, { type: 'triangle', gain: .07, cut: 1200 }); }
+function mClap(t)     { for (let i = 0; i < 3; i++) mNoise(t + i * .012, .09, 1500, .09, false); }
+function mRim(t)      { mNoise(t, .035, 2600, .07, false); }
+function mHat(t, g, open) { mNoise(t, open ? .14 : .03, 8200, g, true); }
+
+function musStepPlay(tr, st, t) {
+  const i = st & 15, ch = tr.prog[(st >> 4) % tr.prog.length];
+  const gt = 60 / tr.bpm / 4;                         // 16분음표 길이
+  if (tr.k && tr.k[i] === 'x') mKick(t);
+  if (tr.s) {
+    const c = tr.s[i];
+    if (c === 'x') mSnare(t);
+    else if (c === 'c') mClap(t);
+    else if (c === 'r') mRim(t);
+  }
+  if (tr.h) {
+    const c = tr.h[i];
+    if (c === 'x') mHat(t, tr.hg || .02, false);
+    else if (c === 'o') mHat(t, (tr.hg || .02) * 1.6, true);
+  }
+  if (tr.b) {                                         // 베이스
+    const c = tr.b[i];
+    if (c !== undefined && c !== '-') {
+      mTone(t, mfreq(noteOf(tr, ch + (+c), tr.bo === undefined ? -1 : tr.bo)), gt * 1.7,
+            { type: tr.bt, cut: tr.bcut || 600, q: tr.bq || .8, sweep: tr.bsw, gain: tr.bg || .15 });
+    }
+  }
+  if (tr.l) {                                         // 멜로디
+    const c = tr.l[i];
+    if (c !== undefined && c !== '-') {
+      const dur = tr.lslow ? gt * 10 : gt * (tr.lpk ? 1.4 : 3);
+      mTone(t, mfreq(noteOf(tr, ch + (+c), tr.lo === undefined ? 1 : tr.lo)), dur,
+            { type: tr.lt, cut: tr.lcut || 2600, gain: tr.lg || .06,
+              atk: tr.lslow ? .5 : .01, send: tr.send, det: tr.lpk ? 0 : 7 });
+    }
+  }
+  if (tr.p === 'long' && i === 0) {                    // 길게 깔리는 화음
+    for (const d of [0, 2, 4]) {
+      mTone(t, mfreq(noteOf(tr, ch + d, 0)), gt * 15,
+            { type: tr.pt || 'sawtooth', cut: 1500, gain: tr.pg || .04, atk: gt * 2, det: 9, send: tr.send });
+    }
+  } else if (tr.p === 'stab' && tr.ps && tr.ps[i] === 'x') {
+    for (const d of [0, 2, 4]) {
+      mTone(t, mfreq(noteOf(tr, ch + d, 0)), gt * 1.3,
+            { type: tr.pt || 'sawtooth', cut: 1800, gain: tr.pg || .04, atk: .006, det: 11, send: tr.send });
+    }
+  }
+}
+function musTick() {
+  if (!AC || MUS_I < 0 || !MUSIC[MUS_I]) return;
+  const tr = MUSIC[MUS_I], gt = 60 / tr.bpm / 4, ahead = AC.currentTime + .2;
+  if (MUS_T < AC.currentTime) MUS_T = AC.currentTime + .05;   // 탭이 쉬다 온 경우
+  let guard = 0;
+  while (MUS_T < ahead && guard++ < 48) {
+    musStepPlay(tr, MUS_STEP, MUS_T);
+    MUS_T += gt;
+    MUS_STEP = (MUS_STEP + 1) % (16 * tr.prog.length);
+  }
+}
+function musPlay(i) {
+  if (!audioOn()) return;
+  MUS_I = clamp(i, 0, MUSIC.length - 1);
+  MUS_STEP = 0; MUS_T = AC.currentTime + .08;
+  if (!MUS_TIMER) MUS_TIMER = setInterval(musTick, 25);
+  MBUS.gain.cancelScheduledValues(AC.currentTime);
+  MBUS.gain.setValueAtTime(0, AC.currentTime);
+  MBUS.gain.linearRampToValueAtTime(MUS_VOL, AC.currentTime + .6);
+  musLabel();
+}
+function musStop() {
+  MUS_I = -1;
+  if (MUS_TIMER) { clearInterval(MUS_TIMER); MUS_TIMER = null; }
+  if (AC && MBUS) {
+    MBUS.gain.cancelScheduledValues(AC.currentTime);
+    MBUS.gain.setValueAtTime(MBUS.gain.value, AC.currentTime);
+    MBUS.gain.linearRampToValueAtTime(0, AC.currentTime + .25);
+  }
+  musLabel();
+}
+// 설정대로 음악을 건다. fresh 면 새 판이라 무작위를 다시 뽑는다.
+function musStart(fresh) {
+  if (MUS_SEL === 'off') { musStop(); return; }
+  if (MUS_SEL === 'rand') {
+    if (MUS_I >= 0 && !fresh) return;                  // 이미 나오고 있으면 그대로 둔다
+    let i = Math.floor(Math.random() * MUSIC.length);
+    if (MUSIC.length > 1 && i === MUS_I) i = (i + 1) % MUSIC.length;
+    musPlay(i);
+    return;
+  }
+  if (MUS_I === +MUS_SEL) return;                      // 같은 곡이면 끊지 않는다
+  musPlay(+MUS_SEL);
+}
+function musSkip(d) {
+  if (MUS_I < 0) { musToggle(); return; }
+  musPick((MUS_I + d + MUSIC.length) % MUSIC.length);
+}
+function musPick(i) {                                  // 곡을 집어서 설정에도 반영한다
+  if (MUS_SEL !== 'rand') {
+    MUS_SEL = String(i);
+    const sel = document.getElementById('musSel');
+    if (sel) sel.value = MUS_SEL;
+  }
+  musPlay(i);
+}
+function musToggle() {                                 // ♪ 단추 · M 키
+  if (MUS_I >= 0) { musStop(); return; }
+  if (MUS_SEL === 'off') {                             // 꺼 둔 상태에서 켜면 아무 곡이나
+    MUS_SEL = 'rand';
+    const sel = document.getElementById('musSel');
+    if (sel) sel.value = 'rand';
+  }
+  musStart(true);
+}
+function musLabel() {
+  const b = document.getElementById('mPlay');
+  if (b) b.textContent = MUS_I >= 0 ? '♪ ' + MUSIC[MUS_I].nm : '♪ 음악 꺼짐';
+  const st = document.getElementById('musState');
+  if (st) st.textContent = MUS_I >= 0 ? '지금 나오는 곡 — ' + MUSIC[MUS_I].nm + ' (◀ ▶ 로 넘기고 M 으로 끈다)'
+                                      : (MUS_SEL === 'off' ? '음악 없이 한다.' : '판을 시작하면 나온다.');
+}
+
+/* ── 음악 설정 ── */
+(function musUI() {
+  const sel = document.getElementById('musSel');
+  sel.innerHTML = '<option value="off">끄기</option><option value="rand">무작위</option>' +
+    MUSIC.map((m, i) => '<option value="' + i + '">' + m.nm + '</option>').join('');
+  sel.value = 'off';
+  sel.onchange = () => {
+    MUS_SEL = sel.value;
+    if (MUS_SEL === 'off') musStop();
+    else musStart(true);                               // 고르는 즉시 들려준다
+  };
+  const vol = document.getElementById('musVol');
+  vol.oninput = () => {
+    MUS_VOL = clamp(+vol.value, 0, 100) / 100;
+    document.getElementById('musVolVal').textContent = vol.value;
+    if (AC && MBUS && MUS_I >= 0) MBUS.gain.setTargetAtTime(MUS_VOL, AC.currentTime, .05);
+  };
+  document.getElementById('musTest').onclick = musToggle;
+  document.getElementById('musNext').onclick = () => musSkip(1);
+  const pv = document.getElementById('mPlay');
+  if (pv) {
+    pv.onclick = musToggle;
+    document.getElementById('mPrev').onclick = () => musSkip(-1);
+    document.getElementById('mNext').onclick = () => musSkip(1);
+  }
+  addEventListener('keydown', e => {                   // M 으로 끄고 켜기
+    if ((e.key === 'm' || e.key === 'M') && !/^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName || '')) musToggle();
+  });
+  document.addEventListener('visibilitychange', () => {   // 다른 탭에 가 있으면 쉰다
+    if (!AC) return;
+    if (document.hidden) AC.suspend();
+    else if (MUS_I >= 0) AC.resume();
+  });
+  musLabel();
+})();
+
 </script>
 </body>
 </html>
