@@ -573,7 +573,7 @@ input.pdot:hover{border-color:var(--hi)}
     </div>
     <div class="row">
       <label for="riverW">강 폭</label>
-      <input type="range" id="riverW" min="50" max="240" step="10" value="110">
+      <input type="range" id="riverW" min="50" max="700" step="10" value="110">
       <b id="riverWVal">110</b>
     </div>
     <div class="row">
@@ -619,6 +619,11 @@ input.pdot:hover{border-color:var(--hi)}
     <div class="row">
       <label for="brTgl">강에 다리</label>
       <button class="mini on" id="brTgl" style="flex:1;padding:7px">강마다 하나씩 놓는다</button>
+    </div>
+    <div class="row">
+      <label for="brLen">다리 길이</label>
+      <input type="range" id="brLen" min="0" max="400" step="10" value="22">
+      <b id="brLenVal">강 + 양쪽 22</b>
     </div>
     <div class="row">
       <label for="brCap">다리 정원</label>
@@ -683,8 +688,10 @@ input.pdot:hover{border-color:var(--hi)}
     <b style="color:#4caf5a">숲</b> — 나무가 빽빽해 느려지지만 받는 피해가 25% 줄고, 숲 밖에서는 240 이상 떨어지면 안 보인다. 직사 투사체는 나무에 맞고 박힌다 (곡사는 통과).<br>
     <b style="color:#b08a55">언덕</b> — 올라서면 높은 곳에서 내려다본다. 원거리 사거리 +25%, 받는 피해 −10%, 오르느라 조금 느려진다.<br>
     <b style="color:#8a9a4a">늪</b> — 발이 빠져 크게 느려진다. 그 외의 효과는 없다.<br>
-    <b style="color:#c8a070">다리</b> — 강 위를 그냥 걸어서 건넌다 (느려지지도, 깊은 강에 다치지도 않고, 원거리도 쏜다). 다만 <b>한꺼번에 정원보다 많이 올라서면 무너진다</b> — 위에 있던 병사는 물에 떨어지고 조금 다친다. <b>다시 놓이기</b>를 0으로 두면 한 번 무너진 다리는 영영 돌아오지 않는다. 정원의 70%가 넘으면 다리가 삐걱이며 남은 자리가 숫자로 뜬다.<br>
-    <b style="color:#c8a070">다리 놓기</b> — 자동 배치에서는 <b>강에 다리</b>를 켜 두면 강마다 하나씩 저절로 놓인다. 직접 놓으려면 붓에서 <b>다리</b>를 고르고 아래 그림의 <b>강을 누르면</b> 그 강을 가로지르는 다리가 걸린다 (양끝이 뭍에 22씩 걸친다). <b>놓인 다리를 다시 누르면 걷힌다</b> — 아래 강은 그대로 남는다. 강이 아닌 곳에는 문질러서 원하는 길이로 놓을 수 있다.<br>
+    <b style="color:#c8a070">다리</b> — 강 위를 그냥 걸어서 건넌다 (느려지지도, 깊은 강에 다치지도 않고, 원거리도 쏜다). 다만 <b>한꺼번에 정원보다 많이 올라서면 무너진다</b> — 위에 있던 병사는 물에 떨어지고 조금 다친다. <b>다시 놓이기</b>를 0으로 두면 한 번 무너진 다리는 영영 돌아오지 않는다. 정원의 70%가 넘으면 다리가 삐걱이며 남은 자리가 숫자로 뜬다 (다리마다 따로 센다).<br>
+    <b style="color:#c8a070">다리 놓기</b> — 자동 배치에서는 <b>강에 다리</b>를 켜 두면 강마다 하나씩 저절로 놓인다. 직접 놓으려면 붓에서 <b>다리</b>를 고르고 아래 그림의 <b>강을 누르면</b> 그 강을 가로지르는 다리가 걸린다. <b>놓인 다리를 다시 누르면 걷힌다</b> — 아래 강은 그대로 남는다. 더 긴 다리는 뭍에서부터 문질러 그으면 그 구간만큼 놓인다 (강 여러 개를 한 번에 건너질러도 된다).<br>
+    <b style="color:#c8a070">다리 길이</b> — 강 양끝에서 뭍으로 얼마나 더 뻗는지다 (0~400). 길게 둘수록 긴 다리가 놓이고, <b>강 폭</b>을 700까지 넓히면 그만큼 긴 다리가 필요해진다.<br>
+    <b style="color:#c8a070">정원은 길이를 탄다</b> — 적어 둔 정원은 <b>길이 150짜리 다리</b> 기준이고, 실제로 버티는 인원은 길이의 0.7제곱으로 늘어난다 (기준 6명이면 75 길이는 4명, 150은 6명, 300은 10명, 600은 16명). 길수록 더 많이 올라설 수 있지만 길이에 비하면 약하다. 편집 그림에서 다리마다 <b>정원과 길이</b>가 적혀 나온다.<br>
     <b>언덕 높이</b>는 언덕이 얼마나 솟는지다 (0~200, 기본 62). <b>왼쪽/오른쪽 지대</b>는 각 기지가 올라선 땅의 높이다 (0~220, 기본 평지) — 발밑은 평평하고 안쪽으로 비탈이 진다. <b>양쪽을 다르게</b> 줄 수 있는데, 높은 쪽 기지 포탑이 더 멀리 쏘니 그만큼 유리해진다 (버튼으로 둘 다 평지/90/160, 또는 오른쪽을 왼쪽에 맞출 수 있다). 지대 자체에는 언덕 같은 전투 보정이 붙지 않는다. 둘 다 그린 지형을 지우지 않고 바로 미리보기에 반영된다.<br>
     <b>그림 크기</b> — 보통 / 크게 / 아주 크게로 편집 그림을 키운다. <b>전체 화면</b>을 누르면 창 전체에 펼쳐져 붓질이 훨씬 수월하다 (Esc 로 닫힌다).<br>
     <b>지형 템플릿</b> — 지금 설정(길이·사거리·강 깊이·개수·높이·직접 그린 지형까지)을 이름 붙여 저장해 두고 언제든 그대로 불러온다. 이 브라우저에 저장되니 창을 닫았다 열어도 남는다.<br>
@@ -1328,11 +1335,16 @@ const anyElev = () => (BASE_EL[0] || 0) > 0 || (BASE_EL[1] || 0) > 0;
    강 위에 놓인 나무 다리. 한꺼번에 많이 올라서면 무너지고,
    정해진 시간이 지나면 다시 놓인다 (0초면 영영 안 놓인다). */
 const DECK_H = 30;                 // 다리 상판 높이
-let BRIDGE_CAP = 6;                // 몇 명까지 버티는지
+let BRIDGE_CAP = 6;                // 길이 150짜리 다리가 몇 명까지 버티는지
+let BRIDGE_EXT = 22;               // 강 양끝에서 뭍으로 더 뻗는 길이
+const CAP_REF = 150;               // 정원의 기준이 되는 길이
+// 긴 다리는 더 많이 버티지만, 길이에 비하면 약하다 (0.7제곱)
+const capFor = w => clamp(Math.round(BRIDGE_CAP * Math.pow(Math.max(40, w) / CAP_REF, .7)), 1, 99);
 let BRIDGE_BACK = 12;              // 다시 놓이는 데 걸리는 시간(초). 0이면 안 놓인다
 function buildBridges() {
   G.bridge = TERR.filter(z => z.k === 'bridge')
-                 .map(z => ({ a: z.a, b: z.b, on: true, t: 0, n: 0, shake: 0 }));
+                 .map(z => ({ a: z.a, b: z.b, on: true, t: 0, n: 0, shake: 0,
+                              cap: capFor(z.b - z.a) }));
 }
 // 그 자리에 성한 다리가 있나 (보통 0~3개라 그냥 훑는다)
 function bridgeAt(x) {
@@ -1351,12 +1363,13 @@ function stepBridges(dt) {
   }
   for (const br of B) {
     if (br.on) {
-      if (br.n > BRIDGE_CAP) {                            // 정원을 넘으면 무너진다
+      if (br.n > br.cap) {                                // 정원을 넘으면 무너진다
         br.on = false; br.t = BRIDGE_BACK;
         const mid = (br.a + br.b) / 2;
         G.nums.push({ x: mid, y: GROUND - DECK_H - 40, vx: 0, vy: -26,
                       v: '다리 붕괴!', col: '#e0a060', big: true, life: 1.8 });
-        for (let i = 0; i < 26; i++)                      // 부서진 판자
+        const nd = clamp(Math.round((br.b - br.a) / 7), 20, 90);
+        for (let i = 0; i < nd; i++)                      // 부서진 판자
           G.part.push({ x: rnd(br.a, br.b), y: GROUND - DECK_H + rnd(-6, 6),
                         vx: rnd(-160, 160), vy: rnd(-260, -30), life: rnd(.6, 1.2),
                         col: i % 3 ? '#9a7a52' : '#6d5433', sz: rnd(2, 4.6) });
@@ -1367,7 +1380,7 @@ function stepBridges(dt) {
           s.ground = false; s.vy = Math.max(s.vy, 40); s.vx += rnd(-40, 40);
           damage(s, 6 * Math.max(1, s.size), 0, 0);
         }
-      } else if (br.n > BRIDGE_CAP * .7) br.shake = .3;   // 꽉 차면 삐걱거린다
+      } else if (br.n > br.cap * .7) br.shake = .3;      // 꽉 차면 삐걱거린다
     } else if (BRIDGE_BACK > 0) {
       br.t -= dt;
       if (br.t <= 0) {                                    // 다시 놓인다
@@ -1730,10 +1743,10 @@ function drawBridges(front) {
       fx.beginPath(); fx.moveTo(a + 2, dy - 15); fx.lineTo(b - 2, dy - 15); fx.stroke();
       fx.lineWidth = 2;
       for (let x = a + 8; x < b - 4; x += 21) { fx.beginPath(); fx.moveTo(x, dy - 15); fx.lineTo(x, dy); fx.stroke(); }
-      if (br.n > BRIDGE_CAP * .7) {                     // 정원이 다 차면 경고
-        fx.fillStyle = br.n > BRIDGE_CAP ? '#ff6a4a' : '#ffd76a';
+      if (br.n > br.cap * .7) {                         // 정원이 다 차면 경고
+        fx.fillStyle = br.n > br.cap ? '#ff6a4a' : '#ffd76a';
         fx.font = '800 12px system-ui'; fx.textAlign = 'center';
-        fx.fillText(br.n + ' / ' + BRIDGE_CAP, (a + b) / 2, dy - 24);
+        fx.fillText(br.n + ' / ' + br.cap, (a + b) / 2, dy - 24);
       }
     }
   }
@@ -5938,7 +5951,7 @@ function startGame(asGuest) {
     netSend({ t: 'go', a: sel[0][0], b: sel[1][0], ca: colA.value, cb: colB.value,
               coin: COIN_START, every: COIN_EVERY, w: KILL_W,
               ww: WORLD_W, rm: RANGE_MUL, dp: RIVER_DEEP ? 1 : 0, cm: CMD ? 1 : 0,
-              hh: HILL_H, be: BASE_EL[0], be2: BASE_EL[1], bc: BRIDGE_CAP, bb: BRIDGE_BACK,
+              hh: HILL_H, be: BASE_EL[0], be2: BASE_EL[1], bc: BRIDGE_CAP, bb: BRIDGE_BACK, bx: BRIDGE_EXT,
               tr: TERR.map(z => [z.k, z.a, z.b]) });
   }
 }
@@ -6448,6 +6461,7 @@ function netStartAsGuest(m) {
   RIVER_DEEP = !!m.dp; CMD = !!m.cm;
   HILL_H = clamp(+m.hh || 0, 0, 200);
   BRIDGE_CAP = clamp(+m.bc || 6, 1, 30); BRIDGE_BACK = clamp(+m.bb || 0, 0, 60);
+  BRIDGE_EXT = clamp(+m.bx || 0, 0, 400);
   BASE_EL = [clamp(+m.be || 0, 0, 220), clamp(+(m.be2 === undefined ? m.be : m.be2) || 0, 0, 220)];
   TERR = (m.tr || []).filter(a => TK[a[0]]).map(a => ({ k: a[0], a: +a[1], b: +a[2] }));
   sel[0] = [m.a]; sel[1] = [m.b];
@@ -6605,6 +6619,8 @@ const hillN = document.getElementById('hillN'), swampN = document.getElementById
 const riverW = document.getElementById('riverW'), deepTgl = document.getElementById('deepTgl');
 const hillH = document.getElementById('hillH'), baseEl = document.getElementById('baseEl');
 const brCap = document.getElementById('brCap'), brBack = document.getElementById('brBack');
+const brLen = document.getElementById('brLen');
+const brExt = () => clamp(parseInt(brLen.value, 10), 0, 400);
 const brTgl = document.getElementById('brTgl');
 const baseElR = document.getElementById('baseElR');
 const terrPrev = document.getElementById('terrPrev');
@@ -6615,6 +6631,7 @@ function readArena() {                                  // 방장 / 혼자 할 �
   RIVER_DEEP = deepTgl.classList.contains('on');
   HILL_H  = clamp(parseInt(hillH.value, 10) || 0, 0, 200);
   BRIDGE_CAP  = clamp(parseInt(brCap.value, 10) || 6, 1, 30);
+  BRIDGE_EXT  = clamp(parseInt(brLen.value, 10), 0, 400);
   BRIDGE_BACK = clamp(parseInt(brBack.value, 10), 0, 60);
   BASE_EL = [clamp(parseInt(baseEl.value, 10) || 0, 0, 220),
              clamp(parseInt(baseElR.value, 10) || 0, 0, 220)];
@@ -6673,6 +6690,10 @@ function drawTerrPreview() {
     for (let t = a + 10; t < b - 8; t += 26) x.fillRect(t, dy + 4, 2.4, 16);
     x.strokeStyle = '#6d5433'; x.lineWidth = 1.6;
     x.beginPath(); x.moveTo(a + 2, dy - 7); x.lineTo(b - 2, dy - 7); x.stroke();
+    const cp = clamp(Math.round((+brCap.value || 6) * Math.pow(Math.max(40, z.b - z.a) / 150, .7)), 1, 99);
+    x.fillStyle = '#e8c89a'; x.font = '700 12px system-ui'; x.textAlign = 'center';
+    x.fillText(cp + '명 · ' + Math.round(z.b - z.a), (a + b) / 2, dy - 12);
+    x.textAlign = 'left';
   }
   for (const [bx, col] of [[240, '#3b82f6'], [L - 240, '#ef4444']]) {
     const top = gy0 - plat(bx) * vk;
@@ -6685,7 +6706,7 @@ function drawTerrPreview() {
   if (BR.tool === 'bridge' && BR.hover != null) {           // 다리 — 누르면 어느 강에 놓이는지
     const h = zs.find(z => (z.k === 'bridge' || z.k === 'river') && BR.hover >= z.a && BR.hover <= z.b);
     if (h) {
-      const pad = h.k === 'river' ? 22 : 0;
+      const pad = h.k === 'river' ? brExt() : 0;
       const a = 20 + (h.a - pad) * k, b = 20 + (h.b + pad) * k;
       x.fillStyle = h.k === 'river' ? 'rgba(154,122,82,.45)' : 'rgba(255,120,120,.3)';
       x.fillRect(a, 34, b - a, gy0 - 30 + (H - gy0 - 8));
@@ -6718,7 +6739,8 @@ function syncArena() {
     document.getElementById(id + 'Val').textContent = document.getElementById(id).value + '개';
   document.getElementById('riverWVal').textContent = riverW.value;
   document.getElementById('hillHVal').textContent = hillH.value;
-  document.getElementById('brCapVal').textContent = brCap.value + '명';
+  document.getElementById('brCapVal').textContent = brCap.value + '명 (길이 150 기준)';
+  document.getElementById('brLenVal').textContent = +brLen.value ? '강 + 양쪽 ' + brLen.value : '강에 딱 맞게';
   document.getElementById('brBackVal').textContent = +brBack.value ? brBack.value + '초' : '안 놓임';
   brTgl.textContent = brTgl.classList.contains('on') ? '강마다 하나씩 놓는다' : '놓지 않는다';
   document.getElementById('baseElVal').textContent = +baseEl.value ? baseEl.value : '평지';
@@ -6733,7 +6755,7 @@ let CUSTOM = null, CUSTOM_L = 2800;
 const toAuto = () => { CUSTOM = null; syncArena(); };
 lenRange.oninput = syncArena; rngRange.oninput = syncArena;
 hillH.oninput = syncArena; baseEl.oninput = syncArena; baseElR.oninput = syncArena;
-brCap.oninput = syncArena; brBack.oninput = syncArena;
+brCap.oninput = syncArena; brBack.oninput = syncArena; brLen.oninput = syncArena;
 brTgl.onclick = () => {
   brTgl.classList.toggle('on');
   if (CUSTOM) {                                            // 그린 지형에도 바로 놓거나 걷어낸다
@@ -6798,7 +6820,7 @@ function withBridges(zs) {
   const out = zs.slice();
   for (const z of zs) {
     if (z.k !== 'river') continue;
-    const w = Math.max(90, z.b - z.a + 44), mid = (z.a + z.b) / 2;
+    const w = z.b - z.a + brExt() * 2, mid = (z.a + z.b) / 2;
     if (out.some(q => q.k === 'bridge' && q.a < mid + w / 2 && q.b > mid - w / 2)) continue;
     out.push({ k: 'bridge', a: Math.round(mid - w / 2), b: Math.round(mid + w / 2) });
   }
@@ -6839,7 +6861,7 @@ function bridgeInstall(x) {
   const br = bridgeAtX(x);
   if (br) { applyBrush('nobridge', br.a - 2, br.b + 2, L); syncArena(); return true; }
   const rv = riverAtX(x);
-  if (rv) { applyBrush('bridge', rv.a - 22, rv.b + 22, L); syncArena(); return true; }
+  if (rv) { const e = brExt(); applyBrush('bridge', rv.a - e, rv.b + e, L); syncArena(); return true; }
   return false;
 }
 const brX = e => {
@@ -6935,7 +6957,7 @@ function tplSnapshot() {
   return { len: +lenRange.value, rng: +rngRange.value, riverW: +riverW.value, deep: RIVER_DEEP_UI,
            n: arenaCounts(), seed: TSEED, hillH: +hillH.value,
            baseEl: +baseEl.value, baseElR: +baseElR.value,
-           brCap: +brCap.value, brBack: +brBack.value, brOn: brTgl.classList.contains('on'),
+           brCap: +brCap.value, brBack: +brBack.value, brLen: +brLen.value, brOn: brTgl.classList.contains('on'),
            custom: CUSTOM ? CUSTOM.map(z => ({ k: z.k, a: z.a, b: z.b })) : null, cl: CUSTOM_L };
 }
 function tplApply(t) {
@@ -6946,6 +6968,7 @@ function tplApply(t) {
   baseElR.value = t.baseElR === undefined ? (t.baseEl || 0) : t.baseElR;   // 예전 템플릿은 양쪽 같게
   brCap.value = t.brCap === undefined ? 6 : t.brCap;
   brBack.value = t.brBack === undefined ? 12 : t.brBack;
+  brLen.value = t.brLen === undefined ? 22 : t.brLen;
   brTgl.classList.toggle('on', t.brOn === undefined ? true : !!t.brOn);
   const n = t.n || {};
   riverN.value = n.river || 0; forestN.value = n.forest || 0;
