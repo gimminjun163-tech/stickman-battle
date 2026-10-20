@@ -173,6 +173,41 @@ input.pdot:hover{border-color:var(--hi)}
 #terrBig .slot{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
 #terrBig.on #terrPrev{height:100%;width:100%;margin:0}
 #terrPrev.paint{cursor:crosshair;border-color:var(--hi)}
+#myaBox{position:fixed;inset:0;z-index:70;background:rgba(8,11,16,.95);display:none;
+  flex-direction:column;gap:10px;padding:16px}
+#myaBox.on{display:flex}
+#myaBox .myaTop{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#myaBox .myaBody{flex:1;display:flex;gap:12px;min-height:0}
+#myaBox .myaSide{width:290px;flex:0 0 290px;overflow:auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:12px;padding:12px}
+#myaBox .myaMain{flex:1;overflow:auto;background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:14px}
+#myaBox h4{margin:14px 0 6px;font-size:12.5px;color:var(--hi)}
+#myaBox h4 i{font-style:normal;color:var(--dim);font-weight:400;font-size:11px}
+#myaBox .myaUnits{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+#myaBox .myaU{display:flex;align-items:center;gap:6px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:8px;padding:6px 8px;cursor:pointer;font-size:12px}
+#myaBox .myaU.on{border-color:var(--hi);background:#2a2618}
+#myaBox .myaU b{flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#myaBox .myaU em{font-style:normal;color:var(--dim);font-size:10.5px}
+#myaBox .myaU .x{color:#e06a4a;font-weight:700;padding:0 2px}
+#myaBox .myaGrid{display:grid;grid-template-columns:minmax(260px,1fr) 340px;gap:14px}
+#myaBox #myaPrev{max-width:340px}
+#myaBox .row label{min-width:74px}
+#myaBox .row{margin:7px 0}
+#myaBox .myaPaint{background:#10161e;border:1px solid var(--line);border-radius:10px;
+  cursor:crosshair;touch-action:none;width:100%;max-width:620px;display:block}
+#myaBox textarea{width:100%;height:150px;background:#10161e;color:#c8d2de;border:1px solid var(--line);
+  border-radius:10px;padding:10px;font:12px ui-monospace,monospace;resize:vertical}
+#myaBox .myaShareBox{display:none;flex-direction:column;gap:8px;background:var(--panel);
+  border:1px solid var(--line);border-radius:12px;padding:12px}
+#myaBox .myaShareBox.on{display:flex}
+#myaBox .sw{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0}
+#myaBox .sw button{padding:6px 9px;font-size:12px;border-radius:7px;border:1px solid var(--line);
+  background:var(--panel2);color:#c8d2de;cursor:pointer}
+#myaBox .sw button.on{border-color:var(--hi);background:#2a2618;color:#f0c46a}
+#myaOpen{width:100%;margin-top:8px}
+
 .cmdbox{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
 .cmdbox h5{font-size:11.5px;color:var(--dim);margin-bottom:7px;font-weight:700}
 .cbtns{display:grid;grid-template-columns:1fr 1fr;gap:5px}
@@ -207,6 +242,8 @@ input.pdot:hover{border-color:var(--hi)}
     <button class="tab" data-mode="evo">진화</button>
     <button class="tab" data-mode="cmd">지휘</button>
   </div>
+
+  <button class="mini" id="myaOpen" style="padding:9px">나만의 군대 만들기 · 불러오기</button>
 
   <div class="picks">
     <div class="side">
@@ -664,6 +701,16 @@ input.pdot:hover{border-color:var(--hi)}
       <button data-br="bridge">다리</button>
       <button data-br="erase">지우개</button>
     </div>
+    <div class="presets" style="margin-top:6px">
+      <button data-br="up">땅 올리기</button>
+      <button data-br="dig">땅 파기</button>
+      <button data-br="flat">땅 고르기</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <label for="gpThick">땅 두께</label>
+      <input type="range" id="gpThick" min="10" max="220" step="10" value="70">
+      <b id="gpThickVal">70</b>
+    </div>
     <div class="row" style="margin-top:12px">
       <label for="brushSz">붓 크기</label>
       <input type="range" id="brushSz" min="20" max="400" step="10" value="100">
@@ -711,6 +758,8 @@ input.pdot:hover{border-color:var(--hi)}
     <b>언덕 높이</b>는 언덕이 얼마나 솟는지다 (0~200, 기본 62). <b>왼쪽/오른쪽 지대</b>는 각 기지가 올라선 땅의 높이다 (0~220, 기본 평지) — 발밑은 평평하고 안쪽으로 비탈이 진다. <b>양쪽을 다르게</b> 줄 수 있는데, 높은 쪽 기지 포탑이 더 멀리 쏘니 그만큼 유리해진다 (버튼으로 둘 다 평지/90/160, 또는 오른쪽을 왼쪽에 맞출 수 있다). 지대 자체에는 언덕 같은 전투 보정이 붙지 않는다. 둘 다 그린 지형을 지우지 않고 바로 미리보기에 반영된다.<br>
     <b>그림 크기</b> — 보통 / 크게 / 아주 크게로 편집 그림을 키운다. <b>전체 화면</b>을 누르면 창 전체에 펼쳐져 붓질이 훨씬 수월하다 (Esc 로 닫힌다).<br>
     <b>지형 템플릿</b> — 지금 설정(길이·사거리·강 깊이·개수·높이·직접 그린 지형까지)을 이름 붙여 저장해 두고 언제든 그대로 불러온다. 이 브라우저에 저장되니 창을 닫았다 열어도 남는다.<br>
+    <b style="color:#8fe0a0">땅 붓</b> — 지형 편집에 <b>땅 올리기 · 땅 파기 · 땅 고르기</b> 세 자루가 있다. 말 그대로 붓이라, 그림 위를 문지르면 문지른 만큼 땅이 솟거나 <b>옴폭 파인다</b>. 가운데가 가장 깊고 가장자리로 갈수록 완만해서, 몇 번 왔다 갔다 하면 매끈한 둔덕이나 웅덩이가 된다. <b>붓 크기</b>가 폭이고 <b>땅 두께</b>(10~220)가 다다를 높이·깊이다 — 올리기는 그만큼 솟고, 파기는 그만큼 파이며, 한 번에 다 되지 않고 문지를수록 그 높이에 가까워진다. <b>땅 고르기</b>는 문지른 자리를 도로 평평하게 만든다 (지우개도 땅을 같이 고른다). 좌우 대칭도 그대로 적용된다.<br>
+    판 땅은 언덕·기지 지대 위에 <b>더해진다</b>. 병사는 비탈을 따라 오르내리고, 깊이 파인 자리는 들어갔다 나와야 해서 길목이 된다. 그린 땅은 지형 템플릿에 같이 저장되고 온라인에서도 참가자에게 그대로 간다.<br>
     <b>지형 편집</b> — 붓(강·숲·언덕·늪)을 고르고 아래 그림 위를 문지르면 그 구간이 칠해진다. 지우개는 지형과 그 위의 다리를 함께 지운다. 다리는 지형을 덮지 않고 그 위에 얹히므로, 다리를 놓아도 아래 강은 그대로다. 처음 칠하면 지금의 자동 배치가 바탕이 되어 그 위에 덧그려지고, 이후로는 직접 그린 지형이 쓰인다. 기지 근처(양끝)는 칠할 수 없다. 프리셋·개수·섞기를 누르면 자동 배치로 돌아간다.<br>
     <b>사거리 배율</b>은 모든 무기에 똑같이 곱해진다. 키우면 멀리서 쏘는 포격전이, 줄이면 난전이 된다. 기지 간 거리가 길수록 첫 교전까지 시간이 걸린다.</div>
   </div>
@@ -739,13 +788,61 @@ input.pdot:hover{border-color:var(--hi)}
     <b>병사 고정</b> — 전투 화면에서 <b>병사를 누르면 그 자리에 선다</b> (발밑에 금빛 고리, 머리 위에 못 표시). 걷지도 밀려나지도 않고 제자리에서 싸운다. 한 번 더 누르거나 빈 곳을 누르면 풀리고, 다른 병사를 누르면 그쪽으로 옮겨 간다. 죽으면 저절로 풀린다. 돌진·내려찍기처럼 몸을 날리는 기술이 터지는 동안에는 잠깐 움직인다.<br>
     <b>반동</b> — 쏘는 순간 총구에서 연기와 섬광이 터지고, 총이면 탄피가 튀고, 포·로켓처럼 무거운 것은 발밑 흙먼지까지 인다. 쏜 사람(또는 전차·장갑차·수레)은 뒤로 밀렸다가 제자리로 돌아오고, 차체는 앞이 살짝 들린다.<br>
     <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에, 고대 이집트의 전차병은 말이 끄는 <b>나무 수레</b> 위에 올라탄 모습으로 나온다 (같은 이름이라도 현대 전차병은 전차다). 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
-    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절하며, 전투 화면 위 <b>◀ ♪ ▶</b> 로 곡을 넘기거나 끌 수 있고 <b>M</b> 키도 같은 일을 한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br>
+    <b style="color:#7ad7ff">나만의 군대</b> — 위쪽 <b>나만의 군대 만들기 · 불러오기</b> 를 누르면 내 군대를 직접 짠다. <b>WEAPON 5칸 · SHOP 5칸</b>까지 만들 수 있고, 칸마다 이름 · 근접/원거리 · <b>공격력 · 공격 간격 · 사거리 · 체력 · 크기 · 이동 속도</b>(원거리는 탄 속도와 폭발 범위까지) · SHOP은 필요한 값을 정한다. 초당 피해와 고용 값은 그때그때 계산돼 나온다 — 기본 무기들 사이에서 몇 번째쯤 센지로 값이 매겨지므로 고용 대전에서도 공정하다.<br>
+    <b>무기 그리기</b> — 아래 모눈판에 <b>직접 그린 그대로</b> 무기가 된다. 노란 점(●)이 손이고 오른쪽이 공격 방향이다. 색 12가지 · 굵기 1~16 · <b>면 채우기</b>(획을 닫아 덩어리로 칠한다) · 되돌리기 · 모두 지우기를 쓴다. 그린 무기는 손에 들린 모습으로 나오고, <b>원거리면 그 모양 그대로 날아간다</b>.<br>
+    <b>캐릭터 그림</b> — 칸마다 그림 파일을 올리면 졸라맨 대신 그 그림이 병사가 된다 (128px 로 줄여 저장). 발밑에 진영 색 고리가 돌고 체력바가 머리 위에 뜬다. 안 올리면 고른 <b>몸 모양</b>(졸라맨 · 갑옷 · 로봇 · 악마 · 점액 · 곤충 · 야수 · 해골 · 날개 · 버섯 · 요리사 · 융성망)으로 나온다.<br>
+    <b>저장과 공유</b> — 만든 군대는 이 브라우저에 저장돼 팀 목록에 <b>✎</b> 로 뜨고, 기본 팀과 똑같이 골라 싸운다 (여러 개 만들어 두고 고를 수 있다). <b>공유</b>를 누르면 글자 코드가 나오는데 복사해서 메신저로 보내면 되고, 받은 사람은 그 코드를 붙여 넣고 <b>코드로 가져오기</b>를 누르면 그대로 들어온다. <b>파일로 저장 / 파일에서 가져오기</b>도 된다. 온라인 대전에서는 방장이 만든 군대가 참가자에게 자동으로 전달된다.<br>
+    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br>
+    <b>자동</b> — 전투 상황을 보고 곡이 알아서 갈아탄다. <b>고요</b>(아직 병사가 적다) → <b>진군</b>(부대가 모인다) → <b>교전</b>(26명 이상 붙거나 처치가 잦아진다) → <b>격전</b>(한쪽 베이스가 45% 아래이거나 초당 1명 넘게 죽는다) → <b>막판</b>(베이스 18% 아래) → <b>승리</b>(승전가) 순으로 올라가고, 단계마다 어울리는 곡 몇 개 중 하나가 걸린다. 긴장이 올라갈 때는 8초 만에 바뀌지만 가라앉을 때는 22초를 기다려서, 상황이 출렁여도 곡이 들락거리지 않는다. 지금 단계는 <b>♪ 광란 · 격전</b> 처럼 곡 이름 옆에 뜬다.<br>
+    <b>전투 중에 바꾸기</b> — 위쪽 <b>♪</b> 를 누르면 끄기 · 자동 · 무작위 · 14곡이 한 판에 펼쳐지고, 누르는 즉시 바뀐다. 직접 고르면 그 곡이 계속 나오고(자동이 더는 끼어들지 않는다), 다시 <b>자동</b>을 고르면 상황에 맞춰 돌아간다. <b>◀ ▶</b> 로는 이전/다음 곡, <b>M</b> 키로는 끄고 켠다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
     <b>온라인 PvP</b> — 고용 탭 안에 있다. <b>랜덤 매칭</b>은 닉네임을 적고 누르기만 하면 같은 시간에 누른 다른 사람과 자동으로 붙는다. 아는 사람과 하려면 <b>방 만들기 / 참가하기</b>로 코드를 두 번 주고받으면 된다.<br>
     방장이 왼쪽, 참가자가 오른쪽을 맡고 각자 자기 진영만 고른다. 판은 방장 쪽에서 돌아가므로 설정·시작·배속은 방장이 정한다. 닉네임은 전투 화면 이름표에 팀 이름과 같이 나온다.<br>
     랜덤 매칭은 서로를 찾는 동안만 공개 중계 서버를 거치고, 붙은 뒤에는 둘이 직접 주고받는다. 중계가 막혀 있으면 <b>중계 서버 바꾸기</b>로 다른 주소를 넣거나 코드 방식을 쓰면 된다.
   </div>
 </div></div>
+
+<div id="myaBox">
+  <div class="myaTop">
+    <b style="font-size:16px;color:var(--hi)">나만의 군대</b>
+    <select id="myaList" style="min-width:180px"></select>
+    <button class="mini" id="myaNew">새로 만들기</button>
+    <button class="mini" id="myaDup">복제</button>
+    <button class="mini" id="myaDel">삭제</button>
+    <button class="mini" id="myaShare">공유</button>
+    <span style="flex:1"></span>
+    <span class="hint" id="myaState" style="margin:0"></span>
+    <button class="ghost" id="myaClose">닫기</button>
+  </div>
+  <div class="myaBody">
+    <div class="myaSide">
+      <div class="row"><label for="myaName">군대 이름</label><input id="myaName" type="text" maxlength="14" style="flex:1"></div>
+      <div class="row"><label for="myaCol">기본 색</label><input id="myaCol" type="color" value="#7ad7ff" style="flex:1;height:30px"></div>
+      <div class="row"><label for="myaStyle">몸 모양</label><select id="myaStyle" style="flex:1"></select></div>
+      <h4>WEAPON <i>— 공이 떨어지는 기본 무기 칸</i></h4>
+      <div id="myaWList" class="myaUnits"></div>
+      <button class="mini" id="myaWAdd">+ 무기 추가</button>
+      <h4>SHOP <i>— 값을 채워야 나오는 병사</i></h4>
+      <div id="myaSList" class="myaUnits"></div>
+      <button class="mini" id="myaSAdd">+ 상점 병사 추가</button>
+    </div>
+    <div class="myaMain" id="myaMain"></div>
+  </div>
+  <div class="myaShareBox" id="myaShareBox">
+    <div class="myaTop">
+      <b>공유</b>
+      <button class="mini" id="myaExpCopy">코드 복사</button>
+      <button class="mini" id="myaExpFile">파일로 저장</button>
+      <button class="mini" id="myaImpCode">코드로 가져오기</button>
+      <button class="mini" id="myaImpFile">파일에서 가져오기</button>
+      <span style="flex:1"></span>
+      <button class="ghost" id="myaShareClose">닫기</button>
+    </div>
+    <textarea id="myaCode" spellcheck="false" placeholder="여기에 공유 코드가 나온다. 남이 준 코드를 붙여 넣고 '코드로 가져오기' 를 누르면 그 군대가 들어온다."></textarea>
+    <div class="hint" id="myaShareSt">코드는 글자 뭉치라 메신저로도 보낼 수 있다. 캐릭터 그림을 많이 올리면 코드가 길어진다.</div>
+    <input type="file" id="myaFile" accept="application/json,.json" style="display:none">
+  </div>
+</div>
 
 <div id="game">
   <div id="bar">
@@ -1193,6 +1290,8 @@ TEAMS.find(t => t.name === '사이언스버섯포자').spore = true;
 TEAMS.find(t => t.name === '사이언스버섯포자').special =
   { name: '사이언스 버섯', cost: 100, w: 'nuke', hp: 9, dmg: 3, size: 2.4 };
 
+const BUILTIN_N = TEAMS.length;            // 여기까지가 기본 팀, 뒤는 '나만의 군대'
+
 const FORMULAS = ['E = mc²', 'F = ma', 'PV = nRT', 'E = hν', 'λ = h/p', 'ΔS ≥ 0',
                   '∇·E = ρ/ε₀', 'Eₖ = ½mv²', 'a² + b² = c²', 'c = 3×10⁸ m/s',
                   '½ life = ln2/λ', 'σ = F/A'];
@@ -1338,6 +1437,8 @@ function bakeTerrain() {
   }
   if (anyElev())                                     // 기지 지대는 지형 위에 덧쌓는다
     for (let i = 0; i < n; i++) HCELL[i] = Math.max(HCELL[i], baseElev(i * TCS));
+  if (GPAINT)                                        // 붓으로 그린 땅은 그 위에 더하고 뺀다
+    for (let i = 0; i < n; i++) HCELL[i] = clamp(HCELL[i] + gpAt(i * TCS), -170, 420);
 }
 // 기지가 올라선 지대 — 발밑은 평평하고 안쪽으로 비탈이 진다. 양쪽 높이를 따로 준다.
 function baseElev(x) {
@@ -1413,6 +1514,29 @@ function stepBridges(dt) {
     }
   }
 }
+/* ── 땅 붓 ──
+   붓으로 직접 올리고 판 땅 높이. GPS 간격으로 높이를 적어 두고 사이는 이어 그린다.
+   음수면 옴폭 파인 자리가 된다. */
+const GPS = 20;
+let GPAINT = null;
+const gpNew = L => new Array(Math.ceil(L / GPS) + 2).fill(0);
+function gpAt(x) {
+  if (!GPAINT) return 0;
+  const f = x / GPS, i = Math.floor(f);
+  if (i < 0 || i + 1 >= GPAINT.length) return 0;
+  return GPAINT[i] + (GPAINT[i + 1] - GPAINT[i]) * (f - i);
+}
+function gpResize(L0, L1) {                          // 길이를 바꾸면 그린 땅도 같이 늘어난다
+  if (!GPAINT || !L0 || L0 === L1) return;
+  const old = GPAINT, k = L0 / L1;
+  GPAINT = gpNew(L1);
+  for (let i = 0; i < GPAINT.length; i++) {
+    const f = i * GPS * k / GPS, j = Math.floor(f);
+    GPAINT[i] = j >= 0 && j + 1 < old.length ? old[j] + (old[j + 1] - old[j]) * (f - j) : 0;
+  }
+}
+const gpAny = () => !!GPAINT && GPAINT.some(v => v > .5 || v < -.5);
+
 const terrCode = x => { const i = (x / TCS) | 0; return i >= 0 && i < TCELL.length ? TCELL[i] : 0; };
 function groundH(x) {
   const f = x / TCS, i = Math.floor(f);
@@ -1729,6 +1853,38 @@ function drawBasePlat(x0, x1) {
     }
   }
 }
+// 붓으로 그린 땅 — 솟은 곳은 흙으로 채우고, 파인 곳은 도로 파낸다
+function drawGPaint(L, R) {
+  if (!GPAINT) return;
+  const st = 8, a = Math.max(-140, Math.floor(L / st) * st), b = Math.min(WORLD_W + 140, Math.ceil(R / st) * st);
+  if (b <= a) return;
+  const sy = x => GROUND - groundH(x);               // 실제 땅 높이 (언덕·지대까지 더해진 값)
+  let dig = false, up = false;
+  for (let x = a; x <= b; x += st) { const g = gpAt(x); if (g < -.5) dig = true; else if (g > .5) up = true; }
+  if (dig) {                                         // 파인 자리 — 흙을 걷어 낸다
+    const gr = fx.createLinearGradient(0, GROUND, 0, GROUND + 190);
+    gr.addColorStop(0, '#26313d'); gr.addColorStop(1, '#1d2731');
+    fx.beginPath(); fx.moveTo(a, GROUND);
+    for (let x = a; x <= b; x += st) fx.lineTo(x, Math.max(GROUND, sy(x)));
+    fx.lineTo(b, GROUND); fx.closePath(); fx.fillStyle = gr; fx.fill();
+  }
+  if (up) {                                          // 솟은 자리 — 흙을 쌓는다
+    fx.beginPath(); fx.moveTo(a, GROUND);
+    for (let x = a; x <= b; x += st) fx.lineTo(x, Math.min(GROUND, sy(x)));
+    fx.lineTo(b, GROUND); fx.closePath(); fx.fillStyle = '#3a4a44'; fx.fill();
+  }
+  fx.beginPath();                                    // 땅 표면 선
+  fx.moveTo(a, sy(a));
+  for (let x = a; x <= b; x += st) fx.lineTo(x, sy(x));
+  fx.strokeStyle = 'rgba(0,0,0,.26)'; fx.lineWidth = 5; fx.stroke();
+  fx.strokeStyle = 'rgba(190,210,200,.22)'; fx.lineWidth = 1.6; fx.stroke();
+  fx.fillStyle = 'rgba(255,255,255,.05)';            // 흙결
+  for (let x = Math.floor(a / 120) * 120; x < b; x += 120) {
+    const y = sy(x);
+    if (Math.abs(y - GROUND) > 3) fx.fillRect(x, y + 16, 46, 3);
+  }
+}
+
 // 다리 — 나무 상판에 기둥. 꽉 차면 삐걱이며 흔들리고, 무너지면 뼈대만 남는다.
 function drawBridges(front) {
   if (!G.bridge.length) return;
@@ -2338,6 +2494,8 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX, price) {
   let n = 0; for (const s of G.sold) if (s.team === team) n++;
   if (n >= MAX_SOLD) return;
   const T = G.roster[team][ti], b = BASE[team];
+  if (w.chp) hpMul *= w.chp;                        // 직접 만든 무기에 붙은 체력·크기
+  if (w.csz) size *= w.csz;
   if (T.buff) { hpMul *= T.buff.hp; dmgMul *= T.buff.dmg; }
   dmgMul *= (G.pow[team] && G.pow[team][ti]) || 1;   // 팀별 전투력
   const sm = (G.rspd[team] && G.rspd[team][ti]) || 1; // 팀별 돌진 속도
@@ -3273,6 +3431,8 @@ function wshape(ctx, w, S) {
     dot(x0, y0, r * k, c1); dot(x0 + 1, y0 - r * .4, r * .55 * k, c2);
   };
 
+  if (w.art) { artDraw(ctx, w.art, L, w.col); return; }   // 직접 그린 무기
+
   switch (lookOf(w)) {
     /* ── 총기 ── */
     case 'pistol':
@@ -3665,9 +3825,11 @@ function teamVeh(s) {
   return (t && t[s.label]) || null;
 }
 // '@' 로 시작하면 사람이 위에 타는 것, 아니면 통째로 갈아 끼우는 것
-const vehOf  = s => { const tv = teamVeh(s); if (tv) return tv[0] === '@' ? null : tv;
+const vehOf  = s => { if (s.td && s.td.mine !== undefined) return null;   // 직접 만든 군대는 그대로
+                      const tv = teamVeh(s); if (tv) return tv[0] === '@' ? null : tv;
                       return VEH[s.label] || VEH[s.w.name] || null; };
-const beastOf = s => { const tv = teamVeh(s); if (tv && tv[0] === '@') return tv.slice(1);
+const beastOf = s => { if (s.td && s.td.mine !== undefined) return null;
+                       const tv = teamVeh(s); if (tv && tv[0] === '@') return tv.slice(1);
                        return BEAST[s.label] || BEAST[s.w.name] || null; };
 const compOf = s => COMPANION[s.label] || COMPANION[s.w.name] || null;
 const shade = (c, k) => {                                   // 같은 색의 어두운/밝은 버전
@@ -4023,6 +4185,10 @@ function drawSoldier(ctx, s) {
     ctx.restore();
     return;
   }
+  if (s.w.cimg) {                                // 올린 캐릭터 그림으로 나온다
+    const im = imgOf(s.w.cimg);
+    if (im) { drawCustomChar(ctx, s, im); ctx.restore(); return; }
+  }
   const beast = beastOf(s);
   if (beast === 'mammoth') { drawMammoth(ctx, s); ctx.translate(0, -MAMMOTH_H * S); }
   else if (beast === 'chariot') { drawChariot(ctx, s); ctx.translate(0, -CHARIOT_H * S); }
@@ -4300,6 +4466,10 @@ const PLOOK = {
 };
 function drawProj(p) {
   const w = p.w, c = w.col, k = PLOOK[w.id] || w.shape;
+  if (w.art) {                                      // 직접 그린 무기는 그 모양이 날아간다
+    fx.save(); fx.scale(.5, .5); artDraw(fx, w.art, 1.1, c); fx.restore();
+    return;
+  }
   // 꼬리 — 그라데이션은 매 프레임 만들면 비싸서 삼각형 둘로 대신한다
   const tail = (len, wid, col1) => {
     fx.fillStyle = col1;
@@ -4856,6 +5026,7 @@ function drawField() {
   fx.fillStyle = 'rgba(0,0,0,.22)'; fx.fillRect(-200, GROUND, WORLD_W + 400, 5);
   fx.fillStyle = 'rgba(255,255,255,.06)';
   for (let x = 0; x < WORLD_W; x += 120) fx.fillRect(x, GROUND + 16, 46, 3);
+  drawGPaint(G.cam.x - W / (2 * s) - 140, G.cam.x + W / (2 * s) + 140);
   drawBasePlat(G.cam.x - W / (2 * s) - 120, G.cam.x + W / (2 * s) + 120);
   drawTerrainBack(G.cam.x - W / (2 * s) - 120, G.cam.x + W / (2 * s) + 120);
   drawBridges(false);
@@ -5422,7 +5593,8 @@ function buildGrid(side) {
   TEAMS.forEach((t, i) => {
     const d = document.createElement('div');
     d.className = 'tcard';
-    d.innerHTML = '<b>' + t.name + '</b><i>' + (t.shop[3] ? t.shop[3].name : '표적') + '</i>';
+    d.innerHTML = '<b>' + (t.mine !== undefined ? '✎ ' : '') + t.name + '</b><i>' +
+                  (t.mine !== undefined ? '내가 만든 군대' : t.shop[3] ? t.shop[3].name : '표적') + '</i>';
     d.onclick = e => {                       // 클릭 = 하나 추가, Shift+클릭 = 하나 빼기
       if (NET.on && si !== (NET.role === 'host' ? 0 : 1)) {   // 상대 진영은 못 건드린다
         netSt('상대 진영은 상대가 고른다.'); return;
@@ -5999,7 +6171,9 @@ function startGame(asGuest) {
               coin: COIN_START, every: COIN_EVERY, w: KILL_W,
               ww: WORLD_W, rm: RANGE_MUL, dp: RIVER_DEEP ? 1 : 0, cm: CMD ? 1 : 0,
               hh: HILL_H, be: BASE_EL[0], be2: BASE_EL[1], bc: BRIDGE_CAP, bb: BRIDGE_BACK, bx: BRIDGE_EXT,
-              tr: TERR.map(z => [z.k, z.a, z.b]) });
+              tr: TERR.map(z => [z.k, z.a, z.b]),
+              gp: GPAINT ? GPAINT.map(v => Math.round(v)) : null,
+              cta: myaOfTeam(sel[0][0]), ctb: myaOfTeam(sel[1][0]) });
   }
 }
 document.getElementById('startBtn').onclick = () => {
@@ -6512,6 +6686,9 @@ function netStartAsGuest(m) {
   BRIDGE_EXT = clamp(+m.bx || 0, 0, 400);
   BASE_EL = [clamp(+m.be || 0, 0, 220), clamp(+(m.be2 === undefined ? m.be : m.be2) || 0, 0, 220)];
   TERR = (m.tr || []).filter(a => TK[a[0]]).map(a => ({ k: a[0], a: +a[1], b: +a[2] }));
+  GPAINT = m.gp && m.gp.length ? m.gp.map(v => +v || 0) : null;
+  if (m.cta) m.a.i = myaTemp(m.cta);                 // 방장이 직접 만든 군대도 그대로 받는다
+  if (m.ctb) m.b.i = myaTemp(m.ctb);
   sel[0] = [m.a]; sel[1] = [m.b];
   colA.value = m.ca; colB.value = m.cb;
   COIN_START = m.coin; COIN_EVERY = m.every; KILL_W = m.w;
@@ -6689,13 +6866,18 @@ function drawTerrPreview() {
   const L = clamp(parseInt(lenRange.value, 10) || 2800, 1600, 8000);
   const zs = currentTerr(L);
   const c = terrPrev, x = c.getContext('2d'), W = c.width, H = c.height, k = (W - 40) / L;
-  const gy0 = H - Math.min(H * .28, 150);              // 크게 열면 바닥을 더 내려 높이를 넓게 본다
+  let gpDeep = 0;                                     // 파인 땅이 있으면 바닥선을 올려 자리를 만든다
+  if (GPAINT) for (const v of GPAINT) if (-v > gpDeep) gpDeep = -v;
+  const gy0 = H - (gpDeep > 20 ? Math.min(H * .46, 240) : Math.min(H * .28, 150));
   x.clearRect(0, 0, W, H);
   x.fillStyle = '#16202c'; x.fillRect(0, 0, W, H);
   x.fillStyle = '#3a4a44'; x.fillRect(20, gy0, W - 40, H - gy0 - 8);
   // 높이는 실제 비율대로 — 언덕 높이와 기지 지대를 눈으로 확인하며 조절한다
   const hh = +hillH.value, beL = +baseEl.value, beR = +baseElR.value, be = Math.max(beL, beR);
-  const vk = Math.min(1, (gy0 - 40) / Math.max(90, Math.max(hh, be) * 1.25));
+  let gpHi = 0, gpLo = 0;                             // 붓으로 그린 땅의 높낮이
+  if (GPAINT) for (const v of GPAINT) { if (v > gpHi) gpHi = v; if (v < gpLo) gpLo = v; }
+  const vk = Math.min(1, (gy0 - 40) / Math.max(90, Math.max(hh, be, gpHi) * 1.25),
+                         (H - gy0 - 14) / Math.max(60, -gpLo * 1.2));
   const plat = px => {                                 // 미리보기용 기지 지대 (게임과 같은 모양)
     const bl = 240, br = L - 240;
     const flat = Math.min(130, (br - bl) * .22), ramp = Math.min(210, (br - bl) * .3);
@@ -6711,6 +6893,22 @@ function drawTerrPreview() {
     x.beginPath(); x.moveTo(20, H - 8);
     for (let px = 0; px <= L; px += L / 240) x.lineTo(20 + px * k, gy0 - plat(px) * vk);
     x.lineTo(20 + L * k, H - 8); x.closePath(); x.fill();
+  }
+  if (GPAINT) {                                      // 붓으로 그린 땅
+    const sy = px => gy0 - (gpAt(px) + plat(px)) * vk;
+    x.beginPath(); x.moveTo(20, gy0);
+    for (let px = 0; px <= L; px += Math.max(4, L / 420)) x.lineTo(20 + px * k, sy(px));
+    x.lineTo(20 + L * k, gy0); x.lineTo(20 + L * k, H - 8); x.lineTo(20, H - 8); x.closePath();
+    x.fillStyle = '#44584f'; x.fill();               // 땅 단면
+    x.beginPath();                                   // 파낸 자리는 배경색으로 도로 판다
+    x.moveTo(20, gy0);
+    for (let px = 0; px <= L; px += Math.max(4, L / 420)) x.lineTo(20 + px * k, Math.max(gy0, sy(px)));
+    x.lineTo(20 + L * k, gy0); x.closePath();
+    x.fillStyle = '#16202c'; x.fill();
+    x.beginPath();                                   // 표면 선
+    x.moveTo(20, sy(0));
+    for (let px = 0; px <= L; px += Math.max(4, L / 420)) x.lineTo(20 + px * k, sy(px));
+    x.strokeStyle = '#8fae9c'; x.lineWidth = 2; x.stroke();
   }
   for (const z of zs) {
     const a = 20 + z.a * k, b = 20 + z.b * k;
@@ -6749,6 +6947,9 @@ function drawTerrPreview() {
   }
   x.fillStyle = 'rgba(255,255,255,.45)'; x.font = '700 15px system-ui'; x.textAlign = 'left';
   x.fillText(BR.tool === 'bridge' ? '다리 — 강을 누르면 놓이고, 다리를 누르면 걷힌다 (빈 땅은 문질러 놓는다)'
+           : BR.tool === 'up' ? '땅 올리기 — 문지를수록 두께만큼 솟는다'
+           : BR.tool === 'dig' ? '땅 파기 — 문지를수록 두께만큼 옴폭 파인다'
+           : BR.tool === 'flat' ? '땅 고르기 — 문지른 자리가 평평해진다'
            : BR.tool ? '붓으로 칠하는 중 — 눌러서 문지르세요'
            : '미리보기 (왼쪽 ■ 기지 ↔ 오른쪽 ■ 기지)', 24, 22);
   if (BR.tool === 'bridge' && BR.hover != null) {           // 다리 — 누르면 어느 강에 놓이는지
@@ -6764,6 +6965,18 @@ function drawTerrPreview() {
       x.fillText(h.k === 'river' ? '눌러서 다리를 놓는다' : '눌러서 다리를 걷어낸다', (a + b) / 2, 54);
       x.textAlign = 'left';
     }
+  } else if (BR.tool in GTOOL && BR.hover != null) {       // 땅 붓 — 만들어질 모양 그대로
+    const r = Math.max(GPS * 1.2, BR.size / 2), cx = BR.hover;
+    const tg = GTOOL[BR.tool] * (+gpThick.value || 70);
+    x.beginPath();
+    for (let px = cx - r; px <= cx + r; px += Math.max(2, r / 60)) {
+      const f = Math.cos(Math.abs(px - cx) / r * Math.PI / 2), y = gy0 - tg * f * f * vk;
+      if (px <= cx - r) x.moveTo(20 + px * k, y); else x.lineTo(20 + px * k, y);
+    }
+    x.strokeStyle = BR.tool === 'dig' ? '#e08a6a' : BR.tool === 'up' ? '#8fe0a0' : '#9ab0c4';
+    x.lineWidth = 2.4; x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.08)';
+    x.fillRect(20 + (cx - r) * k, 34, r * 2 * k, H - 42);
   } else if (BR.tool && BR.hover != null) {                // 붓 모양
     const r = BR.size / 2 * k, cx = 20 + BR.hover * k;
     x.fillStyle = BR.tool === 'erase' ? 'rgba(255,255,255,.12)' : TCOL[BR.tool] + '55';
@@ -6777,10 +6990,14 @@ function syncArena() {
   if (CUSTOM && CUSTOM_L !== L1) {                       // 길이를 바꾸면 그린 지형도 비율대로 늘어난다
     CUSTOM = CUSTOM.map(z => ({ k: z.k, a: Math.round(z.a * L1 / CUSTOM_L), b: Math.round(z.b * L1 / CUSTOM_L) }));
   }
+  if (GPAINT && CUSTOM_L !== L1) gpResize(CUSTOM_L, L1);
   CUSTOM_L = L1;
   const bs = document.getElementById('brState');
-  if (bs) bs.innerHTML = CUSTOM ? '<b style="color:var(--hi)">직접 그린 지형 사용 중</b> — 구간 ' + CUSTOM.length + '개'
-                                : '자동 배치 사용 중 — 붓을 고르고 아래 그림을 문질러 칠하면 직접 편집으로 바뀐다.';
+  if (bs) {
+    const gtxt = gpAny() ? ' · <b style="color:#8fe0a0">땅 붓</b> 적용 중' : '';
+    bs.innerHTML = CUSTOM ? '<b style="color:var(--hi)">직접 그린 지형 사용 중</b> — 구간 ' + CUSTOM.length + '개' + gtxt
+                          : '자동 배치 사용 중 — 붓을 고르고 아래 그림을 문질러 칠하면 직접 편집으로 바뀐다.' + gtxt;
+  }
   lenVal.textContent = (+lenRange.value - 480).toLocaleString();
   rngVal.textContent = (+rngRange.value).toFixed(2) + '배';
   for (const id of ['riverN', 'forestN', 'hillN', 'swampN'])
@@ -6800,7 +7017,7 @@ function syncArena() {
 let RIVER_DEEP_UI = false;
 deepTgl.onclick = () => { RIVER_DEEP_UI = !RIVER_DEEP_UI; syncArena(); };
 let CUSTOM = null, CUSTOM_L = 2800;
-const toAuto = () => { CUSTOM = null; syncArena(); };
+const toAuto = () => { CUSTOM = null; GPAINT = null; syncArena(); };
 lenRange.oninput = syncArena; rngRange.oninput = syncArena;
 hillH.oninput = syncArena; baseEl.oninput = syncArena; baseElR.oninput = syncArena;
 brCap.oninput = syncArena; brBack.oninput = syncArena; brLen.oninput = syncArena;
@@ -6916,10 +7133,41 @@ const brX = e => {
   const r = terrPrev.getBoundingClientRect(), L = +lenRange.value;
   return ((e.clientX - r.left) / r.width * terrPrev.width - 20) / ((terrPrev.width - 40) / L);
 };
+// 땅 붓 — 지나간 자리를 조금씩 목표 높이로 끌어당긴다 (가운데가 가장 깊다)
+function gpStroke(x0, x1, dir, rate) {
+  const L = +lenRange.value;
+  if (!GPAINT || GPAINT.length !== Math.ceil(L / GPS) + 2) GPAINT = gpNew(L);
+  const r = Math.max(GPS * 1.2, BR.size / 2), tgt = dir * (+gpThick.value || 70);
+  const lo = 300, hi = L - 300;
+  const one = cx => {
+    const i0 = Math.max(0, Math.floor((cx - r) / GPS)), i1 = Math.min(GPAINT.length - 1, Math.ceil((cx + r) / GPS));
+    for (let i = i0; i <= i1; i++) {
+      const x = i * GPS;
+      if (x < lo || x > hi) continue;
+      const d = Math.abs(x - cx) / r;
+      if (d > 1) continue;
+      const f = Math.cos(d * Math.PI / 2), fall = f * f;    // 가운데가 깊고 가장자리는 완만하다
+      GPAINT[i] = clamp(GPAINT[i] + (tgt - GPAINT[i]) * fall * (rate || .22), -160, 260);
+    }
+  };
+  const n = Math.max(1, Math.ceil(Math.abs(x1 - x0) / (GPS * .6)));
+  for (let k = 0; k <= n; k++) {
+    const cx = x0 + (x1 - x0) * k / n;
+    one(cx);
+    if (BR.sym) one(L - cx);
+  }
+}
+const GTOOL = { up: 1, dig: -1, flat: 0 };
 function brStroke(a, b) {
   const L = +lenRange.value, r = BR.size / 2;
+  if (BR.tool in GTOOL) {                              // 땅 붓은 높이만 건드린다
+    gpStroke(Math.min(a, b), Math.max(a, b), GTOOL[BR.tool], BR.tool === 'flat' ? .3 : .22);
+    syncArena();
+    return;
+  }
   if (!CUSTOM) { CUSTOM = currentTerr(L); CUSTOM_L = L; }
   applyBrush(BR.tool, Math.min(a, b) - r, Math.max(a, b) + r, L);
+  if (BR.tool === 'erase' && GPAINT) gpStroke(Math.min(a, b), Math.max(a, b), 0, .35);  // 지우개는 땅도 고른다
   syncArena();
 }
 terrPrev.addEventListener('pointerdown', e => {
@@ -6944,12 +7192,14 @@ document.querySelectorAll('[data-br]').forEach(b => b.onclick = () => {
   terrPrev.classList.toggle('paint', !!BR.tool);
   drawTerrPreview();
 });
+const gpThick = document.getElementById('gpThick');
+gpThick.oninput = () => { document.getElementById('gpThickVal').textContent = gpThick.value; };
 const brushSz = document.getElementById('brushSz');
 brushSz.oninput = () => { BR.size = +brushSz.value; document.getElementById('brushSzVal').textContent = brushSz.value; };
 const symTgl = document.getElementById('symTgl');
 symTgl.onclick = () => { BR.sym = !BR.sym; symTgl.classList.toggle('on', BR.sym);
   symTgl.textContent = BR.sym ? '좌우 대칭으로 그린다' : '대칭 없이 그린다 (한쪽만 유리할 수 있음)'; };
-document.getElementById('brClear').onclick = () => { CUSTOM = []; CUSTOM_L = +lenRange.value; syncArena(); };
+document.getElementById('brClear').onclick = () => { CUSTOM = []; GPAINT = null; CUSTOM_L = +lenRange.value; syncArena(); };
 document.getElementById('brAuto').onclick = toAuto;
 
 /* ── 그림 크기 · 전체 화면 ──
@@ -7006,7 +7256,8 @@ function tplSnapshot() {
            n: arenaCounts(), seed: TSEED, hillH: +hillH.value,
            baseEl: +baseEl.value, baseElR: +baseElR.value,
            brCap: +brCap.value, brBack: +brBack.value, brLen: +brLen.value, brOn: brTgl.classList.contains('on'),
-           custom: CUSTOM ? CUSTOM.map(z => ({ k: z.k, a: z.a, b: z.b })) : null, cl: CUSTOM_L };
+           custom: CUSTOM ? CUSTOM.map(z => ({ k: z.k, a: z.a, b: z.b })) : null, cl: CUSTOM_L,
+           gp: GPAINT ? GPAINT.map(v => Math.round(v)) : null };
 }
 function tplApply(t) {
   lenRange.value = t.len || 2800; rngRange.value = t.rng || 1;
@@ -7023,6 +7274,7 @@ function tplApply(t) {
   hillN.value = n.hill || 0; swampN.value = n.swamp || 0;
   TSEED = t.seed || TSEED;
   CUSTOM = t.custom ? t.custom.map(z => ({ k: z.k, a: z.a, b: z.b })) : null;
+  GPAINT = t.gp && t.gp.length ? t.gp.map(v => +v || 0) : null;
   CUSTOM_L = t.cl || t.len || 2800;
   syncArena();
 }
@@ -7129,6 +7381,521 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
+/* ============================================================
+   나만의 군대 — 무기 모양을 직접 그리고, 캐릭터 그림을 올리고,
+   공격력·공격 간격·체력·크기까지 정해서 저장하고 공유한다.
+   ============================================================ */
+const MYA_KEY = 'plinko.myarmy.v1';
+const MYA_STYLE = [['stick', '졸라맨'], ['armor', '갑옷'], ['robot', '로봇'], ['demon', '악마'],
+                   ['blob', '점액'], ['insect', '곤충'], ['beast', '야수'], ['skeleton', '해골'],
+                   ['winged', '날개'], ['mushroom', '버섯'], ['chef', '요리사'], ['ys', '융성망']];
+let MYA = [], MYA_I = 0, MYA_K = 'w', MYA_U = 0, MYA_MEM = false;
+
+const myaUnit = (nm, ty, cost) => ({
+  nm, ty, dmg: ty === 'r' ? 10 : 14, rng: ty === 'r' ? 300 : 34, cd: ty === 'r' ? 1 : .8,
+  hp: 1, sz: 1, mv: 1, ps: 520, aoe: 0, cost: cost || 6, col: '#dfe6ee', art: [], img: null
+});
+const myaDef = () => ({ v: 1, nm: '나만의 군대', col: '#7ad7ff', style: 'stick',
+  wep: [myaUnit('내 검', 'm'), myaUnit('내 활', 'r')],
+  shop: [myaUnit('내 용사', 'm', 8)] });
+
+function myaLoad() {
+  try { MYA = JSON.parse(localStorage.getItem(MYA_KEY) || '[]') || []; }
+  catch (e) { MYA = []; MYA_MEM = true; }
+  if (!Array.isArray(MYA)) MYA = [];
+  MYA = MYA.filter(a => a && a.wep && a.shop).slice(0, 24);
+}
+function myaStore() {
+  try { localStorage.setItem(MYA_KEY, JSON.stringify(MYA)); MYA_MEM = false; }
+  catch (e) { MYA_MEM = true; }
+}
+const myaNow = () => MYA[MYA_I] || null;
+const myaUnits = a => (MYA_K === 'w' ? a.wep : a.shop);
+const myaCur = () => { const a = myaNow(); if (!a) return null; const l = myaUnits(a); return l[Math.min(MYA_U, l.length - 1)] || null; };
+
+/* ── 엔진에 등록 ── */
+function myaWep(id, u, a, shop) {
+  const ranged = u.ty === 'r';
+  WEAPONS[id] = { id, name: u.nm || '무기', type: ranged ? 'r' : 'm',
+    dmg: clamp(+u.dmg || 1, 1, 900), range: clamp(+u.rng || 30, 16, 1200),
+    cd: clamp(+u.cd || .8, .1, 8), shape: ranged ? 'bullet' : 'blade',
+    col: u.col || a.col, ps: clamp(+u.ps || 520, 120, 1600), arc: false,
+    aoe: clamp(+u.aoe || 0, 0, 400), kn: 1, cry: null, sp: null, immune: null, dash: 0,
+    mv: clamp(+u.mv || 1, .3, 2.2), kills: 0, bdmg: 0, mount: 0,
+    art: (u.art && u.art.length) ? u.art : null, cimg: u.img || null,
+    chp: shop ? 1 : clamp(+u.hp || 1, .2, 20), csz: shop ? 1 : clamp(+u.sz || 1, .4, 3.4),
+    anim: ranged ? 'shoot' : 'slash', mine: true };
+  WRANK[id] = myaRank(WEAPONS[id]);                        // 고용 값 매기기용
+  return id;
+}
+// 기본 무기들 사이에서 몇 번째쯤 센지로 값을 매긴다 (직접 만든 무기가 헐값이 되지 않게)
+let WPOW_REF = null;
+function myaRank(w) {
+  if (!WPOW_REF) {
+    WPOW_REF = { m: [], r: [] };
+    for (const k in WEAPONS) {
+      const x = WEAPONS[k];
+      if (x.mine) continue;
+      WPOW_REF[x.type === 'm' ? 'm' : 'r'].push(wPower(x));
+    }
+    WPOW_REF.m.sort((a, b) => a - b); WPOW_REF.r.sort((a, b) => a - b);
+  }
+  const arr = WPOW_REF[w.type === 'm' ? 'm' : 'r'], p = wPower(w);
+  let i = 0;
+  while (i < arr.length && arr[i] < p) i++;
+  return arr.length > 1 ? clamp(i / (arr.length - 1), 0, 1) : .5;
+}
+function myaReg() {
+  TEAMS.length = BUILTIN_N;
+  MYA.forEach((a, ai) => {
+    const basics = (a.wep || []).map((u, i) => myaWep('my' + ai + 'w' + i, u, a, false));
+    const shop = (a.shop || []).map((u, i) => ({
+      name: u.nm || ('상점 ' + (i + 1)), cost: clamp(Math.round(+u.cost || 6), 1, 40),
+      w: myaWep('my' + ai + 's' + i, u, a, true), hp: clamp(+u.hp || 1, .2, 20),
+      dmg: 1, size: clamp(+u.sz || 1, .4, 3.4) }));
+    TEAMS.push({ name: a.nm || '나만의 군대', col: a.col, style: a.style || 'stick',
+                 base: 'keep', basics, shop, mine: ai });
+  });
+  for (const si of [0, 1]) sel[si] = sel[si].filter(e => e.i < TEAMS.length);
+}
+// 그 자리에서만 쓰는 임시 등록 (온라인으로 받은 군대)
+let MYA_TMP = 0;
+function myaTemp(def) {
+  const a = myaClean(def), p = 'net' + (MYA_TMP++) + '_';
+  const basics = a.wep.map((u, i) => myaWep(p + 'w' + i, u, a, false));
+  const shop = a.shop.map((u, i) => ({ name: u.nm, cost: clamp(Math.round(u.cost), 1, 40),
+    w: myaWep(p + 's' + i, u, a, true), hp: u.hp, dmg: 1, size: u.sz }));
+  TEAMS.push({ name: a.nm, col: a.col, style: a.style, base: 'keep', basics, shop, mine: -1 });
+  return TEAMS.length - 1;
+}
+// 고른 팀이 직접 만든 군대면 그 정의를 돌려준다 (온라인으로 같이 보낸다)
+function myaOfTeam(e) {
+  const t = e && TEAMS[e.i];
+  return t && t.mine !== undefined && t.mine >= 0 && MYA[t.mine] ? MYA[t.mine] : null;
+}
+function myaSync(store) {
+  if (store !== false) myaStore();
+  myaReg(); buildGrid('A'); buildGrid('B');
+  myaFill();
+}
+
+/* ── 그리기 ── */
+function artDraw(ctx, art, L, col) {                       // 손 위치가 (22,50) 인 100칸 그림
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const st of art) {
+    const p = st.p || [];
+    if (p.length < 2) continue;
+    const c = st.c || col;
+    ctx.strokeStyle = c; ctx.fillStyle = c;
+    ctx.lineWidth = Math.max(.4, (st.w || 3) * .32 * L);
+    ctx.beginPath();
+    for (let i = 0; i < p.length; i += 2) {
+      const X = (p[i] - 22) * .44 * L, Y = (p[i + 1] - 50) * .32 * L;
+      if (i) ctx.lineTo(X, Y); else ctx.moveTo(X, Y);
+    }
+    if (st.f) { ctx.closePath(); ctx.fill(); } else ctx.stroke();
+  }
+  ctx.restore();
+}
+const IMGC = {};
+function imgOf(src) {
+  if (!src) return null;
+  let e = IMGC[src];
+  if (!e) { e = IMGC[src] = { ok: false, im: new Image() }; e.im.onload = () => { e.ok = true; }; e.im.src = src; }
+  return e.ok ? e.im : null;
+}
+// 올린 그림으로 그리는 병사 — 몸 대신 그림, 손에는 무기, 발밑에 진영 색 고리
+function drawCustomChar(ctx, s, im) {
+  const S = s.size, x = s.x, y = s.y, f = s.face;
+  const h = 64 * S, w = h * clamp(im.width / Math.max(1, im.height), .25, 2.4);
+  ctx.fillStyle = s.col; ctx.globalAlpha = .4;              // 발밑 진영 고리
+  ctx.beginPath(); ctx.ellipse(x, y - 1, w * .42, 4.5 * S, 0, 0, 6.3); ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.save();
+  ctx.translate(x, y); ctx.scale(f, 1);
+  if (s.hurt > 0) ctx.globalAlpha = .55;
+  ctx.drawImage(im, -w / 2, -h, w, h);
+  ctx.globalAlpha = 1;
+  ctx.save();                                               // 무기
+  ctx.translate(w * .3, -h * .52);
+  const sw = s.swing > 0 ? Math.sin(s.swing * Math.PI) : 0;
+  ctx.rotate((s.w.type === 'm' ? -.5 + sw * 1.5 : -.05) + (s.rec || 0) * .18);
+  wshape(ctx, s.w, S);
+  ctx.restore();
+  ctx.restore();
+  if (s.hp < s.max && !LOD) {
+    const bw = 30 * S, by = y - h - 9 * S;
+    ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(x - bw / 2, by, bw, 4 * S);
+    ctx.fillStyle = s.hp / s.max > .4 ? '#6fd36f' : '#e06a4a';
+    ctx.fillRect(x - bw / 2, by, bw * (s.hp / s.max), 4 * S);
+  }
+}
+
+/* ── 공유 ── */
+function b64enc(o) {
+  const u = new TextEncoder().encode(JSON.stringify(o));
+  let b = '';
+  for (let i = 0; i < u.length; i += 4096) b += String.fromCharCode.apply(null, u.subarray(i, i + 4096));
+  return btoa(b);
+}
+function b64dec(t) {
+  const b = atob(t.replace(/\s+/g, ''));
+  const u = new Uint8Array(b.length);
+  for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+  return JSON.parse(new TextDecoder().decode(u));
+}
+function myaClean(a) {                                     // 받아 온 군대를 안전하게 다듬는다
+  const u = (x, cost) => ({
+    nm: String(x.nm || '무기').slice(0, 14), ty: x.ty === 'r' ? 'r' : 'm',
+    dmg: clamp(+x.dmg || 10, 1, 900), rng: clamp(+x.rng || 30, 16, 1200),
+    cd: clamp(+x.cd || .8, .1, 8), hp: clamp(+x.hp || 1, .2, 20),
+    sz: clamp(+x.sz || 1, .4, 3.4), mv: clamp(+x.mv || 1, .3, 2.2),
+    ps: clamp(+x.ps || 520, 120, 1600), aoe: clamp(+x.aoe || 0, 0, 400),
+    cost: clamp(Math.round(+x.cost || cost || 6), 1, 40),
+    col: /^#[0-9a-f]{6}$/i.test(x.col || '') ? x.col : '#dfe6ee',
+    art: Array.isArray(x.art) ? x.art.slice(0, 120).map(st => ({
+      c: /^#[0-9a-f]{6}$/i.test(st.c || '') ? st.c : '#dfe6ee',
+      w: clamp(+st.w || 3, .5, 16), f: !!st.f,
+      p: (Array.isArray(st.p) ? st.p : []).slice(0, 400).map(v => clamp(+v || 0, -20, 120))
+    })) : [],
+    img: typeof x.img === 'string' && /^data:image\/(png|jpeg|webp);base64,/.test(x.img) && x.img.length < 400000 ? x.img : null
+  });
+  return { v: 1, nm: String(a.nm || '받은 군대').slice(0, 14),
+    col: /^#[0-9a-f]{6}$/i.test(a.col || '') ? a.col : '#7ad7ff',
+    style: MYA_STYLE.some(s => s[0] === a.style) ? a.style : 'stick',
+    wep: (Array.isArray(a.wep) ? a.wep : []).slice(0, 5).map(x => u(x)),
+    shop: (Array.isArray(a.shop) ? a.shop : []).slice(0, 5).map(x => u(x, 8)) };
+}
+
+/* ── 만들기 화면 ── */
+const myaBox = () => document.getElementById('myaBox');
+function myaOpen(on) {
+  myaBox().classList.toggle('on', on);
+  if (on) { if (!MYA.length) { MYA.push(myaDef()); MYA_I = 0; } myaSync(); }
+}
+function myaFill() {
+  const box = myaBox();
+  if (!box || !box.classList.contains('on')) return;
+  const sel2 = document.getElementById('myaList');
+  MYA_I = clamp(MYA_I, 0, Math.max(0, MYA.length - 1));
+  sel2.innerHTML = MYA.map((a, i) => '<option value="' + i + '">' + (a.nm || '군대') + '</option>').join('');
+  sel2.value = String(MYA_I);
+  const a = myaNow();
+  document.getElementById('myaState').innerHTML = !a ? '' :
+    '무기 ' + a.wep.length + '개 · 상점 ' + a.shop.length + '개' +
+    (MYA_MEM ? ' — <b style="color:#e0a060">이 브라우저에 저장이 막혀 있다</b>' : ' · 저장됨');
+  if (!a) { document.getElementById('myaMain').innerHTML = ''; return; }
+  document.getElementById('myaName').value = a.nm;
+  document.getElementById('myaCol').value = a.col;
+  const st = document.getElementById('myaStyle');
+  st.innerHTML = MYA_STYLE.map(s => '<option value="' + s[0] + '">' + s[1] + '</option>').join('');
+  st.value = a.style;
+  for (const k of ['w', 's']) {
+    const list = k === 'w' ? a.wep : a.shop;
+    document.getElementById(k === 'w' ? 'myaWList' : 'myaSList').innerHTML =
+      list.map((u, i) => '<div class="myaU' + (MYA_K === k && MYA_U === i ? ' on' : '') + '" data-k="' + k + '" data-i="' + i + '">' +
+        '<b>' + (u.nm || '이름 없음') + '</b><em>' + (u.ty === 'r' ? '원거리' : '근접') + ' ' + Math.round(u.dmg) +
+        (k === 's' ? ' · 값 ' + u.cost : '') + '</em>' +
+        (u.img ? '<em title="그림 올림">🖼</em>' : '') + '<span class="x" data-x="1">✕</span></div>').join('');
+  }
+  box.querySelectorAll('.myaU').forEach(d => {
+    d.onclick = e => {
+      const k = d.dataset.k, i = +d.dataset.i;
+      if (e.target.dataset.x) {                       // ✕ 지우기
+        const l = k === 'w' ? a.wep : a.shop;
+        if (l.length <= 1) { myaMsg('적어도 하나는 있어야 한다'); return; }
+        l.splice(i, 1); MYA_U = 0; myaSync(); return;
+      }
+      MYA_K = k; MYA_U = i; myaSync(false); myaStore();
+    };
+  });
+  myaEditor();
+}
+function myaMsg(t) { const e = document.getElementById('myaState'); if (e) e.innerHTML = '<b style="color:#e0a060">' + t + '</b>'; }
+
+const MYA_COL = ['#dfe6ee', '#9aa6b4', '#b9c2cc', '#8a6a44', '#e05a4a', '#f0943a', '#f0c46a',
+                 '#6fd36f', '#5ad8e0', '#5a8cf0', '#b07ae0', '#20252c'];
+let MYA_PC = '#dfe6ee', MYA_PW = 4, MYA_PF = false;
+
+function myaEditor() {
+  const a = myaNow(), u = myaCur(), m = document.getElementById('myaMain');
+  if (!a || !u) { m.innerHTML = ''; return; }
+  const shop = MYA_K === 's';
+  const rg = (id, lb, v, mn, mx, stp, suf) =>
+    '<div class="row"><label for="' + id + '">' + lb + '</label>' +
+    '<input type="range" id="' + id + '" min="' + mn + '" max="' + mx + '" step="' + stp + '" value="' + v + '">' +
+    '<b id="' + id + 'V">' + v + (suf || '') + '</b></div>';
+  m.innerHTML =
+    '<div class="myaTop"><b style="color:var(--hi)">' + (shop ? 'SHOP' : 'WEAPON') + ' 병사</b>' +
+      '<input type="text" id="myaUN" maxlength="14" value="' + (u.nm || '').replace(/"/g, '') + '" style="flex:1;min-width:120px">' +
+      '<button class="mini' + (u.ty === 'm' ? ' on' : '') + '" id="myaTM">근접</button>' +
+      '<button class="mini' + (u.ty === 'r' ? ' on' : '') + '" id="myaTR">원거리</button>' +
+      '<label for="myaUC" style="color:var(--dim);font-size:12px">무기 색</label>' +
+      '<input type="color" id="myaUC" value="' + u.col + '" style="width:44px;height:28px"></div>' +
+    '<div class="myaGrid" style="margin-top:10px">' +
+      '<div>' +
+        (shop ? rg('myaCost', '필요한 값', u.cost, 1, 40, 1, '개') : '') +
+        rg('myaDmg', '공격력', u.dmg, 1, 400, 1, '') +
+        rg('myaCd', '공격 간격', u.cd, .1, 5, .05, '초') +
+        rg('myaRng', '사거리', u.rng, 16, 900, 2, '') +
+        rg('myaHp', '체력', u.hp, .2, 12, .1, '배') +
+        rg('myaSz', '크기', u.sz, .4, 3, .05, '배') +
+        rg('myaMv', '이동 속도', u.mv, .3, 2, .05, '배') +
+        (u.ty === 'r' ? rg('myaPs', '탄 속도', u.ps, 120, 1500, 20, '') +
+                        rg('myaAoe', '폭발 범위', u.aoe, 0, 300, 10, '') : '') +
+        '<div class="hint" id="myaCalc" style="margin-top:8px"></div>' +
+      '</div>' +
+      '<div>' +
+        '<b style="font-size:12.5px;color:var(--hi)">미리보기</b>' +
+        '<canvas id="myaPrev" width="300" height="220" style="width:100%;background:#16202c;border:1px solid var(--line);border-radius:10px;margin-top:6px"></canvas>' +
+        '<b style="font-size:12.5px;color:var(--hi);display:block;margin-top:10px">캐릭터 그림</b>' +
+        '<div class="sw"><button id="myaImg">그림 올리기</button><button id="myaImgX">그림 빼기</button>' +
+          '<span class="hint" style="margin:0">' + (u.img ? '올린 그림을 쓰는 중' : '안 올리면 기본 몸으로 나온다') + '</span></div>' +
+      '</div>' +
+    '</div>' +
+    '<b style="font-size:12.5px;color:var(--hi);display:block;margin-top:12px">무기 그리기 — 손 위치(●)에서 오른쪽이 공격 방향</b>' +
+    '<div class="sw">' + MYA_COL.map(c => '<button data-pc="' + c + '" style="width:26px;height:26px;background:' + c + '"></button>').join('') +
+      '<label for="myaPW" style="color:var(--dim);font-size:12px">굵기</label>' +
+      '<input type="range" id="myaPW" min="1" max="16" step="1" value="' + MYA_PW + '" style="width:110px">' +
+      '<button id="myaPF" class="' + (MYA_PF ? 'on' : '') + '">면 채우기</button>' +
+      '<button id="myaPU">되돌리기</button><button id="myaPX">모두 지우기</button>' +
+      '<span class="hint" style="margin:0" id="myaPN"></span></div>' +
+    '<canvas id="myaPaint" class="myaPaint" width="420" height="300" style="margin-top:6px"></canvas>' +
+    '<input type="file" id="myaImgF" accept="image/*" style="display:none">';
+
+  const bind = (id, key, fix) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.oninput = () => {
+      u[key] = +el.value;
+      document.getElementById(id + 'V').textContent = (fix ? (+el.value).toFixed(2) : el.value) +
+        (id === 'myaCd' ? '초' : id === 'myaHp' || id === 'myaSz' || id === 'myaMv' ? '배' : id === 'myaCost' ? '개' : '');
+      myaTouch();
+    };
+  };
+  bind('myaDmg', 'dmg'); bind('myaCd', 'cd', 1); bind('myaRng', 'rng'); bind('myaHp', 'hp', 1);
+  bind('myaSz', 'sz', 1); bind('myaMv', 'mv', 1); bind('myaPs', 'ps'); bind('myaAoe', 'aoe'); bind('myaCost', 'cost');
+  document.getElementById('myaUN').oninput = e => { u.nm = e.target.value.slice(0, 14); myaTouch(1); };
+  document.getElementById('myaUC').oninput = e => { u.col = e.target.value; myaTouch(); };
+  document.getElementById('myaTM').onclick = () => { u.ty = 'm'; myaTouch(1); };
+  document.getElementById('myaTR').onclick = () => { u.ty = 'r'; myaTouch(1); };
+  document.getElementById('myaPW').oninput = e => { MYA_PW = +e.target.value; };
+  document.getElementById('myaPF').onclick = e => { MYA_PF = !MYA_PF; e.target.classList.toggle('on', MYA_PF); };
+  document.getElementById('myaPU').onclick = () => { u.art.pop(); myaTouch(); };
+  document.getElementById('myaPX').onclick = () => { u.art.length = 0; myaTouch(); };
+  m.querySelectorAll('[data-pc]').forEach(b => b.onclick = () => { MYA_PC = b.dataset.pc; });
+  const fin = document.getElementById('myaImgF');
+  document.getElementById('myaImg').onclick = () => fin.click();
+  document.getElementById('myaImgX').onclick = () => { u.img = null; myaTouch(1); };
+  fin.onchange = () => { if (fin.files && fin.files[0]) myaReadImg(fin.files[0], u); };
+  myaPaintInit();
+  myaAfter();
+}
+// 값만 바뀐 경우 — 화면을 다시 짓지 않고 그림과 숫자만 고친다
+function myaTouch(rebuild) {
+  myaStore(); myaReg();
+  if (rebuild) { myaFill(); buildGrid('A'); buildGrid('B'); return; }
+  myaAfter();
+}
+function myaAfter() {
+  const a = myaNow(), u = myaCur();
+  if (!a || !u) return;
+  const w = WEAPONS[myaWep('myaPrevW', u, a, MYA_K === 's')];
+  const dps = (w.dmg / w.cd).toFixed(1);
+  const c = document.getElementById('myaCalc');
+  if (c) c.innerHTML = '초당 피해 <b>' + dps + '</b> · ' + (u.ty === 'r' ? '원거리' : '근접') +
+    ' · 체력 <b>' + (SOLDIER_HP * u.hp).toFixed(0) + '</b> · 고용값 <b>' +
+    (MYA_K === 's' ? Math.max(3, Math.round(u.cost * (u.ty === 'r' ? 1.3 : 1))) : wPrice(w)) + '</b> 코인';
+  const pn = document.getElementById('myaPN');
+  if (pn) pn.textContent = '선 ' + u.art.length + '개';
+  myaDrawPaint(); myaDrawPrev();
+}
+function myaReadImg(file, u) {
+  if (file.size > 8e6) { myaMsg('그림이 너무 크다 (8MB 이하)'); return; }
+  const fr = new FileReader();
+  fr.onload = () => {
+    const im = new Image();
+    im.onload = () => {                                  // 128px 로 줄여서 저장한다
+      const k = Math.min(1, 128 / Math.max(im.width, im.height));
+      const cv = document.createElement('canvas');
+      cv.width = Math.max(1, Math.round(im.width * k)); cv.height = Math.max(1, Math.round(im.height * k));
+      cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      u.img = cv.toDataURL('image/png');
+      myaTouch(1);
+    };
+    im.onerror = () => myaMsg('그림을 읽지 못했다');
+    im.src = fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+
+/* ── 무기 그리기 판 ── */
+const PX = 4.2, PY = 3.0;                                // 그림 한 칸 = 화면 몇 px
+let myaDrawing = null;
+function myaPaintInit() {
+  const c = document.getElementById('myaPaint');
+  if (!c) return;
+  const pt = e => {
+    const r = c.getBoundingClientRect();
+    return [clamp((e.clientX - r.left) / r.width * c.width / PX, -10, 110),
+            clamp((e.clientY - r.top) / r.height * c.height / PY, -10, 110)];
+  };
+  c.onpointerdown = e => {
+    const u = myaCur(); if (!u) return;
+    e.preventDefault(); c.setPointerCapture(e.pointerId);
+    myaDrawing = { c: MYA_PC, w: MYA_PW, f: MYA_PF, p: pt(e) };
+    myaDrawPaint();
+  };
+  c.onpointermove = e => {
+    if (!myaDrawing) return;
+    const p = pt(e), n = myaDrawing.p;
+    if (Math.abs(p[0] - n[n.length - 2]) + Math.abs(p[1] - n[n.length - 1]) > 1.2) {
+      n.push(p[0], p[1]); myaDrawPaint();
+    }
+  };
+  const up = () => {
+    if (!myaDrawing) return;
+    const u = myaCur();
+    if (u && myaDrawing.p.length >= 2) {
+      if (myaDrawing.p.length === 2) { myaDrawing.p.push(myaDrawing.p[0] + .6, myaDrawing.p[1]); }
+      u.art.push({ c: myaDrawing.c, w: myaDrawing.w, f: myaDrawing.f,
+                   p: myaDrawing.p.map(v => Math.round(v * 10) / 10) });
+      if (u.art.length > 120) u.art.shift();
+    }
+    myaDrawing = null; myaTouch();
+  };
+  c.onpointerup = up; c.onpointercancel = up;
+}
+function myaDrawPaint() {
+  const c = document.getElementById('myaPaint'); if (!c) return;
+  const x = c.getContext('2d'), W = c.width, H = c.height;
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  x.fillStyle = '#10161e'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(255,255,255,.055)'; x.lineWidth = 1;     // 모눈
+  for (let i = 0; i <= 100; i += 10) {
+    x.beginPath(); x.moveTo(i * PX, 0); x.lineTo(i * PX, H); x.stroke();
+    x.beginPath(); x.moveTo(0, i * PY); x.lineTo(W, i * PY); x.stroke();
+  }
+  x.strokeStyle = 'rgba(255,255,255,.14)';
+  x.beginPath(); x.moveTo(0, 50 * PY); x.lineTo(W, 50 * PY); x.stroke();
+  const u = myaCur();
+  if (u) {
+    const list = myaDrawing ? u.art.concat([myaDrawing]) : u.art;
+    x.save(); x.translate(22 * PX, 50 * PY); x.scale(PX / .44, PY / .32);
+    artDraw(x, list, 1, u.col);
+    x.restore();
+  }
+  x.fillStyle = '#f0c46a';                                        // 손
+  x.beginPath(); x.arc(22 * PX, 50 * PY, 5, 0, 6.3); x.fill();
+  x.strokeStyle = 'rgba(240,196,106,.5)'; x.lineWidth = 2;        // 공격 방향
+  x.beginPath(); x.moveTo(22 * PX, 94 * PY); x.lineTo(70 * PX, 94 * PY); x.stroke();
+  x.beginPath(); x.moveTo(70 * PX, 94 * PY); x.lineTo(64 * PX, 91 * PY); x.lineTo(64 * PX, 97 * PY); x.closePath();
+  x.fillStyle = 'rgba(240,196,106,.5)'; x.fill();
+  x.fillStyle = 'rgba(255,255,255,.35)'; x.font = '700 11px system-ui';
+  x.fillText('손', 22 * PX + 8, 50 * PY - 7); x.fillText('공격 방향 →', 24 * PX, 91 * PY);
+}
+function myaDrawPrev() {
+  const c = document.getElementById('myaPrev'); if (!c) return;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#16202c'; ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = '#3a4a44'; ctx.fillRect(0, c.height - 26, c.width, 26);
+  const a = myaNow(), u = myaCur(); if (!a || !u) return;
+  const w = WEAPONS[myaWep('myaPrevW', u, a, MYA_K === 's')];
+  const fake = { team: 0, ti: 0, td: { col: a.col, name: a.nm }, w, label: u.nm, style: a.style,
+    col: a.col, x: c.width * .44, y: c.height - 26, size: clamp(1.9 * u.sz, .6, 2.6),
+    hp: 7, max: 10, face: 1, moving: false, ph: 0, swing: .3, rec: 0, hurt: 0,
+    vx: 0, vy: 0, ground: true, cool: 0, think: 0, tgt: null, size0: 1 };
+  const old = LOD; LOD = false;
+  try { drawSoldier(ctx, fake); } catch (e) { }
+  LOD = old;
+}
+
+/* ── 저장 · 공유 ── */
+function myaShareOpen(on) {
+  const b = document.getElementById('myaShareBox');
+  b.classList.toggle('on', on);
+  if (on && myaNow()) document.getElementById('myaCode').value = b64enc(myaNow());
+}
+(function myaUI() {
+  myaLoad(); myaReg();
+  document.getElementById('myaOpen').onclick = () => myaOpen(true);
+  document.getElementById('myaClose').onclick = () => { myaOpen(false); myaShareOpen(false); };
+  document.getElementById('myaList').onchange = e => { MYA_I = +e.target.value; MYA_K = 'w'; MYA_U = 0; myaSync(false); };
+  document.getElementById('myaNew').onclick = () => { MYA.push(myaDef()); MYA_I = MYA.length - 1; MYA_K = 'w'; MYA_U = 0; myaSync(); };
+  document.getElementById('myaDup').onclick = () => {
+    const a = myaNow(); if (!a) return;
+    const cp = myaClean(JSON.parse(JSON.stringify(a))); cp.nm = (a.nm + ' 복제').slice(0, 14);
+    MYA.push(cp); MYA_I = MYA.length - 1; myaSync();
+  };
+  document.getElementById('myaDel').onclick = () => {
+    if (!MYA.length) return;
+    MYA.splice(MYA_I, 1); MYA_I = Math.max(0, MYA_I - 1);
+    if (!MYA.length) MYA.push(myaDef());
+    MYA_K = 'w'; MYA_U = 0; myaSync();
+  };
+  document.getElementById('myaName').oninput = e => { const a = myaNow(); if (a) { a.nm = e.target.value.slice(0, 14); myaTouch(); myaListName(); } };
+  document.getElementById('myaCol').oninput = e => { const a = myaNow(); if (a) { a.col = e.target.value; myaTouch(); } };
+  document.getElementById('myaStyle').onchange = e => { const a = myaNow(); if (a) { a.style = e.target.value; myaTouch(); } };
+  document.getElementById('myaWAdd').onclick = () => {
+    const a = myaNow(); if (!a || a.wep.length >= 5) { myaMsg('무기는 5개까지'); return; }
+    a.wep.push(myaUnit('무기 ' + (a.wep.length + 1), 'm')); MYA_K = 'w'; MYA_U = a.wep.length - 1; myaSync();
+  };
+  document.getElementById('myaSAdd').onclick = () => {
+    const a = myaNow(); if (!a || a.shop.length >= 5) { myaMsg('상점은 5개까지'); return; }
+    a.shop.push(myaUnit('상점 ' + (a.shop.length + 1), 'm', 8)); MYA_K = 's'; MYA_U = a.shop.length - 1; myaSync();
+  };
+  document.getElementById('myaShare').onclick = () => myaShareOpen(!document.getElementById('myaShareBox').classList.contains('on'));
+  document.getElementById('myaShareClose').onclick = () => myaShareOpen(false);
+  const code = document.getElementById('myaCode'), sst = document.getElementById('myaShareSt');
+  document.getElementById('myaExpCopy').onclick = () => {
+    if (!myaNow()) return;
+    code.value = b64enc(myaNow()); code.select();
+    const done = () => { sst.innerHTML = '<b style="color:#6fd36f">코드를 복사했다</b> — 붙여 넣어 보내면 된다. (' + code.value.length.toLocaleString() + '자)'; };
+    if (navigator.clipboard) navigator.clipboard.writeText(code.value).then(done, () => { document.execCommand('copy'); done(); });
+    else { document.execCommand('copy'); done(); }
+  };
+  document.getElementById('myaExpFile').onclick = () => {
+    const a = myaNow(); if (!a) return;
+    const bl = new Blob([JSON.stringify(a, null, 1)], { type: 'application/json' });
+    const el = document.createElement('a');
+    el.href = URL.createObjectURL(bl); el.download = (a.nm || 'army') + '.json';
+    el.click(); setTimeout(() => URL.revokeObjectURL(el.href), 4000);
+    sst.innerHTML = '<b style="color:#6fd36f">파일로 저장했다</b> — 그 파일을 주면 상대가 그대로 불러온다.';
+  };
+  const take = raw => {
+    let o;
+    try { o = typeof raw === 'string' && raw.trim()[0] === '{' ? JSON.parse(raw) : b64dec(raw); }
+    catch (e) { sst.innerHTML = '<b style="color:#e06a4a">코드를 읽지 못했다</b> — 글자가 빠지지 않았는지 보세요.'; return; }
+    const list = Array.isArray(o) ? o : [o];
+    let n = 0;
+    for (const it of list) {
+      if (!it || !it.wep) continue;
+      if (MYA.length >= 24) break;
+      MYA.push(myaClean(it)); n++;
+    }
+    if (!n) { sst.innerHTML = '<b style="color:#e06a4a">군대가 들어 있지 않다</b>'; return; }
+    MYA_I = MYA.length - 1; MYA_K = 'w'; MYA_U = 0; myaSync();
+    sst.innerHTML = '<b style="color:#6fd36f">' + n + '개를 가져왔다</b> — 목록 맨 아래에 들어갔다.';
+  };
+  document.getElementById('myaImpCode').onclick = () => take(code.value.trim());
+  const fin = document.getElementById('myaFile');
+  document.getElementById('myaImpFile').onclick = () => fin.click();
+  fin.onchange = () => {
+    if (!fin.files || !fin.files[0]) return;
+    const fr = new FileReader();
+    fr.onload = () => take(String(fr.result).trim());
+    fr.readAsText(fin.files[0]);
+    fin.value = '';
+  };
+  addEventListener('keydown', e => { if (e.key === 'Escape' && myaBox().classList.contains('on')) { myaShareOpen(false); myaOpen(false); } });
+  buildGrid('A'); buildGrid('B');
+})();
+function myaListName() {
+  const s2 = document.getElementById('myaList'), a = myaNow();
+  if (s2 && a && s2.options[MYA_I]) s2.options[MYA_I].textContent = a.nm || '군대';
+}
 
 /* ============================================================
    배경음악 — 소리 파일 없이 그 자리에서 만들어 내는 음악.
@@ -7353,6 +8120,7 @@ function musTick() {
   if (!AC || MUS_I < 0 || !MUSIC[MUS_I]) return;
   const tr = MUSIC[MUS_I], gt = 60 / tr.bpm / 4, ahead = AC.currentTime + .2;
   if (MUS_T < AC.currentTime) MUS_T = AC.currentTime + .05;   // 탭이 쉬다 온 경우
+  if (MUS_SEL === 'auto' && AC.currentTime - MA.last > 1) musAuto(false);
   let guard = 0;
   while (MUS_T < ahead && guard++ < 48) {
     musStepPlay(tr, MUS_STEP, MUS_T);
@@ -7380,9 +8148,54 @@ function musStop() {
   }
   musLabel();
 }
+/* ── 자동 모드 — 전투 상황을 보고 곡을 갈아탄다 ──
+   고요 → 진군 → 교전 → 격전 → 막판 → 승리. 올라갈 때는 빨리, 내려올 때는 느긋하게. */
+const MOOD_POOL = { calm: [2, 7, 13, 10], march: [0, 4, 5, 11], fight: [1, 6, 3, 11],
+                    fierce: [12, 1, 3], last: [8, 12], win: [9] };
+const MOOD_NM = { calm: '고요', march: '진군', fight: '교전', fierce: '격전', last: '막판', win: '승리' };
+const MOOD_LV = { calm: 0, march: 1, fight: 2, fierce: 3, last: 4, win: 5 };
+const MA = { mood: '', k: 0, t: 0, kps: 0, since: -99, last: -99 };
+
+function musMoodNow() {
+  const gm = document.getElementById('game');
+  if (!gm || gm.style.display === 'none') return 'calm';   // 아직 판이 안 열렸다
+  if (G.over) return 'win';
+  const low = Math.min(BASE[0].hp / BASE[0].max, BASE[1].hp / BASE[1].max);
+  const n = G.sold.length;
+  if (low < .18) return 'last';                            // 베이스가 거의 무너졌다
+  if (low < .45 || MA.kps > 1.1) return 'fierce';
+  if (n >= 26 || MA.kps > .3) return 'fight';
+  if (n >= 5 || G.t > 18) return 'march';
+  return 'calm';
+}
+function musAuto(force) {
+  const now = AC ? AC.currentTime : 0;
+  const k = (G.kills[0] || 0) + (G.kills[1] || 0);
+  const dt = Math.max(.4, now - MA.t);
+  MA.kps = MA.kps * .65 + Math.max(0, k - MA.k) / dt * .35;  // 처치 속도 (초당)
+  MA.k = k; MA.t = now; MA.last = now;
+  const m = musMoodNow(), up = (MOOD_LV[m] || 0) > (MOOD_LV[MA.mood] || 0);
+  if (!force) {
+    if (m === MA.mood) return;
+    if (m === 'win') { /* 승리는 바로 */ }
+    else if (up) { if (now - MA.since < 8) return; }         // 올라갈 땐 8초만 참는다
+    else if (now - MA.since < 22) return;                    // 가라앉을 땐 느긋하게
+  }
+  MA.mood = m; MA.since = now;
+  const pool = MOOD_POOL[m] || MOOD_POOL.march;
+  let j = Math.floor(Math.random() * pool.length);
+  if (pool.length > 1 && pool[j] === MUS_I) j = (j + 1) % pool.length;
+  musPlay(pool[j]);
+}
+
 // 설정대로 음악을 건다. fresh 면 새 판이라 무작위를 다시 뽑는다.
 function musStart(fresh) {
   if (MUS_SEL === 'off') { musStop(); return; }
+  if (MUS_SEL === 'auto') {                                 // 상황 보고 알아서
+    if (fresh) { MA.mood = ''; MA.k = 0; MA.kps = 0; MA.since = -99; }
+    if (fresh || MUS_I < 0) musAuto(true);
+    return;
+  }
   if (MUS_SEL === 'rand') {
     if (MUS_I >= 0 && !fresh) return;                  // 이미 나오고 있으면 그대로 둔다
     let i = Math.floor(Math.random() * MUSIC.length);
@@ -7398,41 +8211,80 @@ function musSkip(d) {
   musPick((MUS_I + d + MUSIC.length) % MUSIC.length);
 }
 function musPick(i) {                                  // 곡을 집어서 설정에도 반영한다
-  if (MUS_SEL !== 'rand') {
+  if (MUS_SEL !== 'rand' && MUS_SEL !== 'auto') {
     MUS_SEL = String(i);
     const sel = document.getElementById('musSel');
     if (sel) sel.value = MUS_SEL;
   }
   musPlay(i);
 }
+// 목록에서 하나를 고른다 (설정 화면 · 전투 중 둘 다 이걸 쓴다)
+function musChoose(v) {
+  MUS_SEL = v;
+  const sel = document.getElementById('musSel');
+  if (sel) sel.value = v;
+  if (v === 'off') musStop();
+  else musStart(true);
+  musLabel();
+}
+/* ── 전투 중 곡 고르기 — ♪ 를 누르면 목록이 열린다 ── */
+function musPanel() {
+  const old = document.getElementById('musList');
+  if (old) { old.remove(); return; }
+  const p = document.createElement('div');
+  p.id = 'musList';
+  p.style.cssText = 'position:fixed;z-index:60;background:#141c26;border:1px solid #2a3647;border-radius:10px;' +
+    'padding:8px;display:grid;grid-template-columns:repeat(4,minmax(92px,1fr));gap:6px;box-shadow:0 12px 34px rgba(0,0,0,.55)';
+  const items = [['off', '끄기'], ['auto', '자동'], ['rand', '무작위']]
+    .concat(MUSIC.map((m, i) => [String(i), m.nm]));
+  for (const it of items) {
+    const b = document.createElement('button');
+    b.textContent = it[1];
+    const on = MUS_SEL === it[0] || (MUS_SEL === 'auto' && it[0] === 'auto');
+    b.style.cssText = 'padding:7px 8px;font:700 12px system-ui;border-radius:7px;cursor:pointer;' +
+      'border:1px solid ' + (on ? '#f0c46a' : '#2a3647') + ';' +
+      (on ? 'background:#f0c46a;color:#16202c' : 'background:#1b2634;color:#c8d2de');
+    b.onclick = e => { e.stopPropagation(); musChoose(it[0]); p.remove(); };
+    p.appendChild(b);
+  }
+  document.body.appendChild(p);
+  const r = document.getElementById('mPlay').getBoundingClientRect();
+  p.style.left = Math.max(8, Math.min(innerWidth - p.offsetWidth - 8, r.left - 60)) + 'px';
+  p.style.top = Math.min(innerHeight - p.offsetHeight - 8, r.bottom + 6) + 'px';
+  const close = e => {
+    if (p.contains(e.target)) return;
+    p.remove(); removeEventListener('pointerdown', close, true);
+  };
+  setTimeout(() => addEventListener('pointerdown', close, true), 0);
+}
 function musToggle() {                                 // ♪ 단추 · M 키
   if (MUS_I >= 0) { musStop(); return; }
-  if (MUS_SEL === 'off') {                             // 꺼 둔 상태에서 켜면 아무 곡이나
-    MUS_SEL = 'rand';
+  if (MUS_SEL === 'off') {                             // 꺼 둔 상태에서 켜면 상황에 맞춰
+    MUS_SEL = 'auto';
     const sel = document.getElementById('musSel');
-    if (sel) sel.value = 'rand';
+    if (sel) sel.value = 'auto';
   }
   musStart(true);
 }
 function musLabel() {
+  const auto = MUS_SEL === 'auto' && MA.mood ? ' · ' + MOOD_NM[MA.mood] : '';
   const b = document.getElementById('mPlay');
-  if (b) b.textContent = MUS_I >= 0 ? '♪ ' + MUSIC[MUS_I].nm : '♪ 음악 꺼짐';
+  if (b) b.textContent = MUS_I >= 0 ? '♪ ' + MUSIC[MUS_I].nm + auto : '♪ 음악 꺼짐';
   const st = document.getElementById('musState');
-  if (st) st.textContent = MUS_I >= 0 ? '지금 나오는 곡 — ' + MUSIC[MUS_I].nm + ' (◀ ▶ 로 넘기고 M 으로 끈다)'
-                                      : (MUS_SEL === 'off' ? '음악 없이 한다.' : '판을 시작하면 나온다.');
+  if (st) st.textContent = MUS_I >= 0
+    ? '지금 나오는 곡 — ' + MUSIC[MUS_I].nm + auto +
+      (MUS_SEL === 'auto' ? ' (상황이 바뀌면 알아서 갈아탄다)' : '') + ' · 전투 중에는 ♪ 를 눌러 바꾼다'
+    : (MUS_SEL === 'off' ? '음악 없이 한다.' : '판을 시작하면 나온다.');
 }
 
 /* ── 음악 설정 ── */
 (function musUI() {
   const sel = document.getElementById('musSel');
-  sel.innerHTML = '<option value="off">끄기</option><option value="rand">무작위</option>' +
+  sel.innerHTML = '<option value="off">끄기</option>' +
+    '<option value="auto">자동 (전투 상황에 맞춰)</option><option value="rand">무작위</option>' +
     MUSIC.map((m, i) => '<option value="' + i + '">' + m.nm + '</option>').join('');
   sel.value = 'off';
-  sel.onchange = () => {
-    MUS_SEL = sel.value;
-    if (MUS_SEL === 'off') musStop();
-    else musStart(true);                               // 고르는 즉시 들려준다
-  };
+  sel.onchange = () => musChoose(sel.value);           // 고르는 즉시 들려준다
   const vol = document.getElementById('musVol');
   vol.oninput = () => {
     MUS_VOL = clamp(+vol.value, 0, 100) / 100;
@@ -7443,7 +8295,7 @@ function musLabel() {
   document.getElementById('musNext').onclick = () => musSkip(1);
   const pv = document.getElementById('mPlay');
   if (pv) {
-    pv.onclick = musToggle;
+    pv.onclick = musPanel;                             // 전투 중 곡 고르기
     document.getElementById('mPrev').onclick = () => musSkip(-1);
     document.getElementById('mNext').onclick = () => musSkip(1);
   }
