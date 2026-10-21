@@ -201,6 +201,17 @@ input.pdot:hover{border-color:var(--hi)}
   border-radius:10px;padding:10px;font:12px ui-monospace,monospace;resize:vertical}
 #myaBox .myaShareBox{display:none;flex-direction:column;gap:8px;background:var(--panel);
   border:1px solid var(--line);border-radius:12px;padding:12px}
+#myaBox .myaGal{display:none;flex:1;flex-direction:column;gap:8px;min-height:0;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+#myaBox .myaGal.on{display:flex}
+#myaBox .shrList{flex:1;overflow:auto;display:flex;flex-direction:column;gap:7px}
+#myaBox .shrRow{display:flex;align-items:center;gap:10px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:10px;padding:5px 10px}
+#myaBox .shrRow canvas{background:#10161e;border-radius:8px;flex:0 0 58px;width:58px;height:58px}
+#myaBox .shrRow .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#myaBox .shrRow .nm{font-weight:700;font-size:13px}
+#myaBox .shrRow .sub{color:var(--dim);font-size:11px;margin-top:2px}
+#myaBox .shrRow .gro{flex:1;min-width:0;overflow:hidden}
 #myaBox .myaShareBox.on{display:flex}
 #myaBox .sw{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0}
 #myaBox .sw button{padding:6px 9px;font-size:12px;border-radius:7px;border:1px solid var(--line);
@@ -789,8 +800,17 @@ input.pdot:hover{border-color:var(--hi)}
     <b>반동</b> — 쏘는 순간 총구에서 연기와 섬광이 터지고, 총이면 탄피가 튀고, 포·로켓처럼 무거운 것은 발밑 흙먼지까지 인다. 쏜 사람(또는 전차·장갑차·수레)은 뒤로 밀렸다가 제자리로 돌아오고, 차체는 앞이 살짝 들린다.<br>
     <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에, 고대 이집트의 전차병은 말이 끄는 <b>나무 수레</b> 위에 올라탄 모습으로 나온다 (같은 이름이라도 현대 전차병은 전차다). 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
     <b style="color:#7ad7ff">나만의 군대</b> — 위쪽 <b>나만의 군대 만들기 · 불러오기</b> 를 누르면 내 군대를 직접 짠다. <b>WEAPON 5칸 · SHOP 5칸</b>까지 만들 수 있고, 칸마다 이름 · 근접/원거리 · <b>공격력 · 공격 간격 · 사거리 · 체력 · 크기 · 이동 속도</b>(원거리는 탄 속도와 폭발 범위까지) · SHOP은 필요한 값을 정한다. 초당 피해와 고용 값은 그때그때 계산돼 나온다 — 기본 무기들 사이에서 몇 번째쯤 센지로 값이 매겨지므로 고용 대전에서도 공정하다.<br>
-    <b>무기 그리기</b> — 아래 모눈판에 <b>직접 그린 그대로</b> 무기가 된다. 노란 점(●)이 손이고 오른쪽이 공격 방향이다. 색 12가지 · 굵기 1~16 · <b>면 채우기</b>(획을 닫아 덩어리로 칠한다) · 되돌리기 · 모두 지우기를 쓴다. 그린 무기는 손에 들린 모습으로 나오고, <b>원거리면 그 모양 그대로 날아간다</b>.<br>
+    <b>무기 그리기</b> — 아래 모눈판에 <b>직접 그린 그대로</b> 무기가 된다. 노란 점(●)이 손이고 오른쪽이 공격 방향이다. 색 12가지 · 굵기 1~16 · <b>면 채우기</b>(획을 닫아 덩어리로 칠한다) · 되돌리기 · 모두 지우기를 쓴다. 그린 무기는 손에 들린 모습으로 나온다.<br>
+    <b>탄알 그리기</b> — 그림판 위 <b>탄알 그림</b> 을 누르면 날아가는 것만 따로 그린다. 가운데 <b>✛</b> 가 탄알 한가운데고 오른쪽이 날아가는 방향이다. <b>안 그리면 지금처럼 무기 모양 그대로 날아간다.</b> 미리보기 오른쪽에 날아가는 모습이 같이 나온다.<br>
+    <b>때리는 동작</b> — 근접은 <b>베기 · 내려찍기 · 찌르기 · 지르기 · 발차기 · 던지기</b> 중에 고른다. 휘두르는 팔 모양과 지나간 자취가 그에 맞게 달라지고, 발차기를 고르면 무기 없이 발이 뻗어 나간다. 원거리는 <b>쏘기 · 던지기</b> 중에 고른다.<br>
+    <b>중심 옮기기</b> — 무기·탄알 그림판에서 <b>중심 옮기기</b> 를 켜고 누르면 손에 잡히는 자리(●)나 탄알 한가운데(✛)가 그 자리로 간다. 중심이 곧 도는 축이라, 자루 끝을 잡으면 크게 휘둘리고 가운데를 잡으면 짧게 돈다.<br>
+    <b style="color:#7ad7ff">휘두르는 모션 직접 그리기</b> — 그림판 위 <b>휘두르는 모션</b>(원거리는 <b>쏘는 모션</b>)을 누르면 몸이 그려진 판이 나온다. 거기에 <b>무기가 지나갈 길을 그으면 그대로 휘두른다</b> — 초록 점이 시작, 빨간 점이 끝이고, 길 위에 무기가 세 군데 얹혀 미리 보인다. 무기는 길의 진행 방향을 따라 돌고, <b>날 각도</b>(-180°~180°)로 날이 향하는 쪽을 더 틀 수 있다. 안 그리면 위에서 고른 동작대로 움직이고, <b>모션 지우기</b>로 언제든 되돌린다. 오른쪽 미리보기에서 실제로 휘두르는 모습이 계속 반복된다.<br>
+    <b>발사 위치</b> — 원거리는 모션 판에서 <b>발사 위치</b> 를 켜고 누르면 그 자리(✛)에서 탄이 나간다. 총구를 길게 뺀 총, 머리 위에서 쏘는 포처럼 아무 데나 둘 수 있다 (기본은 가슴 높이 앞쪽).<br>
+    <b>궤도</b> — 원거리의 탄이 날아가는 길을 <b>직선 · 포물선 · 높이 던지기 · 물결</b> 중에 고른다. 포물선과 높이 던지기는 중력을 받아 떨어지고(높이 던지기가 더 높이 뜬다), 물결은 위아래로 일렁이며 날아간다.<br>
     <b>캐릭터 그림</b> — 칸마다 그림 파일을 올리면 졸라맨 대신 그 그림이 병사가 된다 (128px 로 줄여 저장). 발밑에 진영 색 고리가 돌고 체력바가 머리 위에 뜬다. 안 올리면 고른 <b>몸 모양</b>(졸라맨 · 갑옷 · 로봇 · 악마 · 점액 · 곤충 · 야수 · 해골 · 날개 · 버섯 · 요리사 · 융성망)으로 나온다.<br>
+    <b style="color:#7ad7ff">공유된 팀</b> — <b>나만의 군대</b> 창 위쪽의 <b>공유된 팀</b> 탭을 누르면 <b>남들이 올려 둔 팀</b>이 쭉 나온다. 한 쪽에 <b>10개</b>씩 보이고 <b>‹ 이전 / 다음 ›</b> 으로 넘기며, 검색칸에 <b>팀 이름 · 올린이 · 무기 이름</b> 아무거나 치면 바로 걸러진다. 줄마다 작은 미리보기와 무기·상점 목록이 보이고, <b>불러오기</b>를 누르면 그 팀이 <b>내 팀 목록(✎)에 생겨서 바로 쓸 수 있다</b>.<br>
+    올릴 때는 <b>공유</b> → <b>모두에게 공유</b> 를 누른다 (올린이 이름도 같이 적는다). 같은 군대를 다시 올리면 덮어쓰고, <b>공유 내리기</b>로 거둘 수 있다. 올린 팀은 목록에 <b>(내가 올림)</b> 으로 표시된다. 캐릭터 그림까지 통째로 올라가지만 88KB를 넘으면 거절되니, 그럴 땐 그림을 빼고 올리면 된다.<br>
+    공유는 온라인 매칭과 같은 <b>중계 서버</b>를 쓴다. 중계가 막힌 곳에서는 목록이 비어 보이는데, 그때는 온라인 탭에서 중계 서버를 바꾸거나 아래의 <b>코드 · 파일</b> 방식으로 주고받으면 된다.<br>
     <b>저장과 공유</b> — 만든 군대는 이 브라우저에 저장돼 팀 목록에 <b>✎</b> 로 뜨고, 기본 팀과 똑같이 골라 싸운다 (여러 개 만들어 두고 고를 수 있다). <b>공유</b>를 누르면 글자 코드가 나오는데 복사해서 메신저로 보내면 되고, 받은 사람은 그 코드를 붙여 넣고 <b>코드로 가져오기</b>를 누르면 그대로 들어온다. <b>파일로 저장 / 파일에서 가져오기</b>도 된다. 온라인 대전에서는 방장이 만든 군대가 참가자에게 자동으로 전달된다.<br>
     <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br>
     <b>자동</b> — 전투 상황을 보고 곡이 알아서 갈아탄다. <b>고요</b>(아직 병사가 적다) → <b>진군</b>(부대가 모인다) → <b>교전</b>(26명 이상 붙거나 처치가 잦아진다) → <b>격전</b>(한쪽 베이스가 45% 아래이거나 초당 1명 넘게 죽는다) → <b>막판</b>(베이스 18% 아래) → <b>승리</b>(승전가) 순으로 올라가고, 단계마다 어울리는 곡 몇 개 중 하나가 걸린다. 긴장이 올라갈 때는 8초 만에 바뀌지만 가라앉을 때는 22초를 기다려서, 상황이 출렁여도 곡이 들락거리지 않는다. 지금 단계는 <b>♪ 광란 · 격전</b> 처럼 곡 이름 옆에 뜬다.<br>
@@ -805,6 +825,8 @@ input.pdot:hover{border-color:var(--hi)}
 <div id="myaBox">
   <div class="myaTop">
     <b style="font-size:16px;color:var(--hi)">나만의 군대</b>
+    <button class="mini on" id="myaTabMake">만들기</button>
+    <button class="mini" id="myaTabShr">공유된 팀</button>
     <select id="myaList" style="min-width:180px"></select>
     <button class="mini" id="myaNew">새로 만들기</button>
     <button class="mini" id="myaDup">복제</button>
@@ -828,6 +850,20 @@ input.pdot:hover{border-color:var(--hi)}
     </div>
     <div class="myaMain" id="myaMain"></div>
   </div>
+  <div class="myaGal" id="myaGal">
+    <div class="myaTop">
+      <b style="color:var(--hi)">공유된 팀</b>
+      <input type="text" id="shrQ" placeholder="이름 · 올린이 · 무기로 찾기" style="flex:1;min-width:160px">
+      <button class="mini" id="shrRe">새로 고치기</button>
+      <span class="hint" style="margin:0" id="shrSt">연결하는 중…</span>
+    </div>
+    <div id="shrList" class="shrList"></div>
+    <div class="myaTop" style="justify-content:center">
+      <button class="mini" id="shrPrev">‹ 이전</button>
+      <b id="shrPage" style="min-width:90px;text-align:center">-</b>
+      <button class="mini" id="shrNext">다음 ›</button>
+    </div>
+  </div>
   <div class="myaShareBox" id="myaShareBox">
     <div class="myaTop">
       <b>공유</b>
@@ -835,6 +871,10 @@ input.pdot:hover{border-color:var(--hi)}
       <button class="mini" id="myaExpFile">파일로 저장</button>
       <button class="mini" id="myaImpCode">코드로 가져오기</button>
       <button class="mini" id="myaImpFile">파일에서 가져오기</button>
+      <button class="mini" id="myaPub">모두에게 공유</button>
+      <button class="mini" id="myaUnpub">공유 내리기</button>
+      <label for="myaBy" style="color:var(--dim);font-size:12px">올린이</label>
+      <input type="text" id="myaBy" maxlength="12" placeholder="이름" style="width:110px">
       <span style="flex:1"></span>
       <button class="ghost" id="myaShareClose">닫기</button>
     </div>
@@ -1853,6 +1893,15 @@ function drawBasePlat(x0, x1) {
     }
   }
 }
+// 직접 그린 휘두르기 길 위의 한 점 (t: 0 시작 → 1 끝)
+function swPath(a, t) {
+  const n = a.length >> 1;
+  if (n < 2) return [a[0] || 14, a[1] || 13, 0];
+  const f = clamp(t, 0, 1) * (n - 1), i = Math.min(n - 2, Math.floor(f)), k = f - i;
+  const x0 = a[i * 2], y0 = a[i * 2 + 1], x1 = a[i * 2 + 2], y1 = a[i * 2 + 3];
+  return [x0 + (x1 - x0) * k, y0 + (y1 - y0) * k, Math.atan2(y1 - y0, x1 - x0)];
+}
+
 // 붓으로 그린 땅 — 솟은 곳은 흙으로 채우고, 파인 곳은 도로 파낸다
 function drawGPaint(L, R) {
   if (!GPAINT) return;
@@ -2781,11 +2830,14 @@ function fire(sx, sy, w, tx, ty, team, ti, dmgMul) {
   let dx = tx - sx, dy = ty - sy;
   const d = Math.max(20, Math.hypot(dx, dy));
   let vx = dx / d * w.ps, vy = dy / d * w.ps;
-  if (w.arc) vy -= d * .62;
+  const tj = w.tj || (w.arc ? 'arc' : 'line');      // 직선 · 포물선 · 높은 포물선 · 물결
+  if (tj === 'arc') vy -= d * .62;
+  else if (tj === 'lob') vy -= d * 1.05;
   // 기술이 쌓이면 폭탄류가 점점 강해진다
   const tm = (G.sciSide[team] && w.shape === 'bomb') ? 1 + Math.min(2.5, techOf(team) / 120) : 1;
   G.proj.push({ x: sx, y: sy, vx, vy, w, team, ti, dmg: w.dmg * dmgMul * tm,
-                aoe: w.aoe * (1 + (tm - 1) * .55), arc: w.arc,
+                aoe: w.aoe * (1 + (tm - 1) * .55), arc: tj === 'arc' || tj === 'lob',
+                wv: tj === 'wave' ? w.ps * .55 : 0, vy0: vy, wph: 0,
                 life: 4, from: terrCode(sx), ang: Math.atan2(vy, vx) });
 }
 
@@ -2992,7 +3044,8 @@ function stepBattle(dt) {
           say(s, pick[0], '#b8f070');
         } else if (s.w.cry) say(s, s.w.cry, '#9ae8ff');
         if (fw) {
-          fire(s.x + dir * 12 * s.size, s.y - 34 * s.size, fw, tx, ty, s.team, s.ti, s.dmg * G.rage);
+          const mz = fw.mz || [12, 34];             // 총구 — 직접 정할 수 있다
+          fire(s.x + dir * mz[0] * s.size, s.y - mz[1] * s.size, fw, tx, ty, s.team, s.ti, s.dmg * G.rage);
           recoilFx(s, fw, dir);
         }
       }
@@ -3082,6 +3135,7 @@ function stepBattle(dt) {
   for (let i = G.proj.length - 1; i >= 0; i--) {
     const p = G.proj[i];
     if (p.arc) p.vy += GRAV_W * .85 * dt;
+    else if (p.wv) { p.wph += dt * 11; p.vy = p.vy0 + Math.cos(p.wph) * p.wv; }   // 물결 궤도
     p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
     p.ang = Math.atan2(p.vy, p.vx);
     if (TERR.length && !p.arc && p.from !== 2 && p.y > GROUND - 80 && terrCode(p.x) === 2 &&
@@ -3431,7 +3485,7 @@ function wshape(ctx, w, S) {
     dot(x0, y0, r * k, c1); dot(x0 + 1, y0 - r * .4, r * .55 * k, c2);
   };
 
-  if (w.art) { artDraw(ctx, w.art, L, w.col); return; }   // 직접 그린 무기
+  if (w.art) { artDraw(ctx, w.art, L, w.col, w.hx, w.hy); return; }   // 직접 그린 무기
 
   switch (lookOf(w)) {
     /* ── 총기 ── */
@@ -4367,6 +4421,11 @@ function drawSoldier(ctx, s) {
     case 'flip':   ax = 14 + 7 * sg;  ay = 13 - 9 * sg;  rot = -0.35 + sg * 6.3; break;
     case 'kick':   ax = 9 - 7 * sg;   ay = 14 + 3 * sg;  rot = -0.7; ex = 8 - 4 * sg; hold = false; break;
   }
+  if (s.w.swp) {                                   // 직접 그린 휘두르기 — 그린 길을 그대로 따라간다
+    const P = swPath(s.w.swp, 1 - sg);
+    ax = P[0]; ay = P[1]; rot = P[2] + (s.w.swr || 0);
+    ex = 4 + Math.max(0, ax) * .3; hold = true;
+  }
   const hx = x + f * ax * S, hy = neckY - bob + ay * S;
   ctx.strokeStyle = body; ctx.lineWidth = 4 * S;
   ctx.beginPath(); ctx.moveTo(x, neckY - bob + 3 * S);
@@ -4466,8 +4525,12 @@ const PLOOK = {
 };
 function drawProj(p) {
   const w = p.w, c = w.col, k = PLOOK[w.id] || w.shape;
-  if (w.art) {                                      // 직접 그린 무기는 그 모양이 날아간다
-    fx.save(); fx.scale(.5, .5); artDraw(fx, w.art, 1.1, c); fx.restore();
+  if (w.bart) {                                     // 탄알을 따로 그렸으면 그 모양으로
+    fx.save(); artDraw(fx, w.bart, .62, c, w.bx === undefined ? 50 : w.bx, w.by); fx.restore();
+    return;
+  }
+  if (w.art) {                                      // 안 그렸으면 무기 모양 그대로 날아간다
+    fx.save(); fx.scale(.5, .5); artDraw(fx, w.art, 1.1, c, w.hx, w.hy); fx.restore();
     return;
   }
   // 꼬리 — 그라데이션은 매 프레임 만들면 비싸서 삼각형 둘로 대신한다
@@ -6228,7 +6291,7 @@ function mqttConnect(url, onMsg, onUp, onErr) {
   const api = {
     ok: false, done: false,                          // done = 우리가 일부러 끊은 것
     sub(topic) { send(0x82, [pid >> 8, pid++ & 255, ...enc(topic), 0]); },
-    pub(topic, payload) { send(0x30, [...enc(topic), ...new TextEncoder().encode(payload)]); },
+    pub(topic, payload, retain) { send(retain ? 0x31 : 0x30, [...enc(topic), ...new TextEncoder().encode(payload)]); },
     close() { api.done = true; try { clearInterval(ping); ws.close(); } catch (e) {} }
   };
 
@@ -7392,9 +7455,17 @@ const MYA_STYLE = [['stick', '졸라맨'], ['armor', '갑옷'], ['robot', '로�
                    ['winged', '날개'], ['mushroom', '버섯'], ['chef', '요리사'], ['ys', '융성망']];
 let MYA = [], MYA_I = 0, MYA_K = 'w', MYA_U = 0, MYA_MEM = false;
 
+const MYA_ANIM = { m: [['slash', '베기'], ['smash', '내려찍기'], ['thrust', '찌르기'],
+                       ['punch', '지르기'], ['kick', '발차기'], ['throw', '던지기']],
+                   r: [['shoot', '쏘기'], ['throw', '던지기']] };
 const myaUnit = (nm, ty, cost) => ({
   nm, ty, dmg: ty === 'r' ? 10 : 14, rng: ty === 'r' ? 300 : 34, cd: ty === 'r' ? 1 : .8,
-  hp: 1, sz: 1, mv: 1, ps: 520, aoe: 0, cost: cost || 6, col: '#dfe6ee', art: [], img: null
+  hp: 1, sz: 1, mv: 1, ps: 520, aoe: 0, cost: cost || 6, col: '#dfe6ee',
+  an: '', art: [], bart: [], img: null,
+  hx: 22, hy: 50,            // 무기 그림의 중심(손잡이)
+  bx: 50, by: 50,            // 탄알 그림의 중심
+  swp: [], swr: 0,           // 직접 그린 휘두르기 길 · 날 각도
+  mz: null, tj: 'line'       // 발사 위치 · 궤도
 });
 const myaDef = () => ({ v: 1, nm: '나만의 군대', col: '#7ad7ff', style: 'stick',
   wep: [myaUnit('내 검', 'm'), myaUnit('내 활', 'r')],
@@ -7425,9 +7496,16 @@ function myaWep(id, u, a, shop) {
     col: u.col || a.col, ps: clamp(+u.ps || 520, 120, 1600), arc: false,
     aoe: clamp(+u.aoe || 0, 0, 400), kn: 1, cry: null, sp: null, immune: null, dash: 0,
     mv: clamp(+u.mv || 1, .3, 2.2), kills: 0, bdmg: 0, mount: 0,
-    art: (u.art && u.art.length) ? u.art : null, cimg: u.img || null,
+    art: (u.art && u.art.length) ? u.art : null,
+    bart: (u.bart && u.bart.length) ? u.bart : null, cimg: u.img || null,
+    hx: u.hx === undefined ? 22 : clamp(+u.hx, -10, 110), hy: u.hy === undefined ? 50 : clamp(+u.hy, -10, 110),
+    bx: u.bx === undefined ? 50 : clamp(+u.bx, -10, 110), by: u.by === undefined ? 50 : clamp(+u.by, -10, 110),
+    swp: (u.swp && u.swp.length >= 4) ? u.swp : null, swr: (+u.swr || 0) * Math.PI / 180,
+    mz: (u.mz && u.mz.length === 2) ? [clamp(+u.mz[0], -40, 90), clamp(+u.mz[1], -20, 110)] : null,
+    tj: /^(line|arc|lob|wave)$/.test(u.tj || '') ? u.tj : 'line',
     chp: shop ? 1 : clamp(+u.hp || 1, .2, 20), csz: shop ? 1 : clamp(+u.sz || 1, .4, 3.4),
-    anim: ranged ? 'shoot' : 'slash', mine: true };
+    anim: (MYA_ANIM[ranged ? 'r' : 'm'].some(a => a[0] === u.an) ? u.an : (ranged ? 'shoot' : 'slash')),
+    mine: true };
   WRANK[id] = myaRank(WEAPONS[id]);                        // 고용 값 매기기용
   return id;
 }
@@ -7483,7 +7561,7 @@ function myaSync(store) {
 }
 
 /* ── 그리기 ── */
-function artDraw(ctx, art, L, col) {                       // 손 위치가 (22,50) 인 100칸 그림
+function artDraw(ctx, art, L, col, ox, oy) {               // 기준점이 (22,50) 인 100칸 그림
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   for (const st of art) {
     const p = st.p || [];
@@ -7493,7 +7571,8 @@ function artDraw(ctx, art, L, col) {                       // 손 위치가 (22,
     ctx.lineWidth = Math.max(.4, (st.w || 3) * .32 * L);
     ctx.beginPath();
     for (let i = 0; i < p.length; i += 2) {
-      const X = (p[i] - 22) * .44 * L, Y = (p[i + 1] - 50) * .32 * L;
+      const X = (p[i] - (ox === undefined ? 22 : ox)) * .44 * L,
+            Y = (p[i + 1] - (oy === undefined ? 50 : oy)) * .32 * L;
       if (i) ctx.lineTo(X, Y); else ctx.moveTo(X, Y);
     }
     if (st.f) { ctx.closePath(); ctx.fill(); } else ctx.stroke();
@@ -7556,6 +7635,18 @@ function myaClean(a) {                                     // 받아 온 군대�
     ps: clamp(+x.ps || 520, 120, 1600), aoe: clamp(+x.aoe || 0, 0, 400),
     cost: clamp(Math.round(+x.cost || cost || 6), 1, 40),
     col: /^#[0-9a-f]{6}$/i.test(x.col || '') ? x.col : '#dfe6ee',
+    an: typeof x.an === 'string' && /^(slash|smash|thrust|punch|kick|throw|shoot)$/.test(x.an) ? x.an : '',
+    hx: clamp(+x.hx === +x.hx ? +x.hx : 22, -10, 110), hy: clamp(+x.hy === +x.hy ? +x.hy : 50, -10, 110),
+    bx: clamp(+x.bx === +x.bx ? +x.bx : 50, -10, 110), by: clamp(+x.by === +x.by ? +x.by : 50, -10, 110),
+    swp: Array.isArray(x.swp) ? x.swp.slice(0, 64).map(v => clamp(+v || 0, -60, 120)) : [],
+    swr: clamp(+x.swr || 0, -180, 180),
+    mz: Array.isArray(x.mz) && x.mz.length === 2 ? [clamp(+x.mz[0] || 0, -40, 90), clamp(+x.mz[1] || 0, -20, 110)] : null,
+    tj: /^(line|arc|lob|wave)$/.test(x.tj || '') ? x.tj : 'line',
+    bart: Array.isArray(x.bart) ? x.bart.slice(0, 120).map(st => ({
+      c: /^#[0-9a-f]{6}$/i.test(st.c || '') ? st.c : '#dfe6ee',
+      w: clamp(+st.w || 3, .5, 16), f: !!st.f,
+      p: (Array.isArray(st.p) ? st.p : []).slice(0, 400).map(v => clamp(+v || 0, -20, 120))
+    })) : [],
     art: Array.isArray(x.art) ? x.art.slice(0, 120).map(st => ({
       c: /^#[0-9a-f]{6}$/i.test(st.c || '') ? st.c : '#dfe6ee',
       w: clamp(+st.w || 3, .5, 16), f: !!st.f,
@@ -7574,7 +7665,12 @@ function myaClean(a) {                                     // 받아 온 군대�
 const myaBox = () => document.getElementById('myaBox');
 function myaOpen(on) {
   myaBox().classList.toggle('on', on);
-  if (on) { if (!MYA.length) { MYA.push(myaDef()); MYA_I = 0; } myaSync(); }
+  if (!on) { shrClose(); myaTab('make'); }
+  if (on) {
+    if (!MYA.length) { MYA.push(myaDef()); MYA_I = 0; }
+    myaSync();
+    if (!MYA_RAF) { MYA_AT = 0; MYA_RAF = requestAnimationFrame(myaAnim); }
+  }
 }
 function myaFill() {
   const box = myaBox();
@@ -7626,7 +7722,15 @@ function myaMsg(t) { const e = document.getElementById('myaState'); if (e) e.inn
 
 const MYA_COL = ['#dfe6ee', '#9aa6b4', '#b9c2cc', '#8a6a44', '#e05a4a', '#f0943a', '#f0c46a',
                  '#6fd36f', '#5ad8e0', '#5a8cf0', '#b07ae0', '#20252c'];
-let MYA_PC = '#dfe6ee', MYA_PW = 4, MYA_PF = false;
+let MYA_PC = '#dfe6ee', MYA_PW = 4, MYA_PF = false, MYA_PT = 'art', MYA_TOOL = 'draw';
+const MYA_CUR_AN = u => u.an || (u.ty === 'r' ? 'shoot' : 'slash');
+function myaArt() {                                   // 지금 그리고 있는 쪽 (무기 / 탄알)
+  const u = myaCur();
+  if (!u) return [];
+  if (MYA_PT === 'bart') { if (!u.bart) u.bart = []; return u.bart; }
+  if (!u.art) u.art = [];
+  return u.art;
+}
 
 function myaEditor() {
   const a = myaNow(), u = myaCur(), m = document.getElementById('myaMain');
@@ -7664,13 +7768,47 @@ function myaEditor() {
           '<span class="hint" style="margin:0">' + (u.img ? '올린 그림을 쓰는 중' : '안 올리면 기본 몸으로 나온다') + '</span></div>' +
       '</div>' +
     '</div>' +
-    '<b style="font-size:12.5px;color:var(--hi);display:block;margin-top:12px">무기 그리기 — 손 위치(●)에서 오른쪽이 공격 방향</b>' +
-    '<div class="sw">' + MYA_COL.map(c => '<button data-pc="' + c + '" style="width:26px;height:26px;background:' + c + '"></button>').join('') +
-      '<label for="myaPW" style="color:var(--dim);font-size:12px">굵기</label>' +
-      '<input type="range" id="myaPW" min="1" max="16" step="1" value="' + MYA_PW + '" style="width:110px">' +
-      '<button id="myaPF" class="' + (MYA_PF ? 'on' : '') + '">면 채우기</button>' +
-      '<button id="myaPU">되돌리기</button><button id="myaPX">모두 지우기</button>' +
-      '<span class="hint" style="margin:0" id="myaPN"></span></div>' +
+    '<div class="sw" style="margin-top:4px"><b style="font-size:12.5px;color:var(--hi)">' +
+      (u.ty === 'r' ? '쏘는 동작' : '때리는 동작') + '</b>' +
+      MYA_ANIM[u.ty === 'r' ? 'r' : 'm'].map(an =>
+        '<button data-an="' + an[0] + '" class="' + ((u.an || (u.ty === 'r' ? 'shoot' : 'slash')) === an[0] ? 'on' : '') + '">' +
+        an[1] + '</button>').join('') +
+      '<span class="hint" style="margin:0">' +
+      (MYA_CUR_AN(u) === 'kick' ? '발로 찬다 — 무기는 안 보인다' : '휘두르는 모양이 달라진다') + '</span></div>' +
+    '<div class="sw" style="margin-top:10px">' +
+      '<button data-pt="art" class="' + (MYA_PT === 'art' ? 'on' : '') + '">무기 그림</button>' +
+      '<button data-pt="bart" class="' + (MYA_PT === 'bart' ? 'on' : '') + '">탄알 그림' +
+        (u.bart && u.bart.length ? ' ●' : '') + '</button>' +
+      '<button data-pt="swp" class="' + (MYA_PT === 'swp' ? 'on' : '') + '">' +
+        (u.ty === 'r' ? '쏘는 모션' : '휘두르는 모션') + (u.swp && u.swp.length >= 4 ? ' ●' : '') + '</button>' +
+      '<span class="hint" style="margin:0">' +
+      (MYA_PT === 'bart' ? '안 그리면 무기 모양 그대로 날아간다 (✛ 가 탄알 한가운데)'
+       : MYA_PT === 'swp' ? '무기가 지나갈 길을 그대로 긋는다 — 안 그리면 위에서 고른 동작대로'
+       : '●가 손에 잡히는 자리 (중심)') + '</span></div>' +
+    (MYA_PT === 'swp'
+      ? '<div class="sw">' +
+          '<button data-tl="draw" class="' + (MYA_TOOL === 'draw' ? 'on' : '') + '">모션 그리기</button>' +
+          (u.ty === 'r' ? '<button data-tl="muzzle" class="' + (MYA_TOOL === 'muzzle' ? 'on' : '') + '">발사 위치</button>' : '') +
+          '<button id="myaSWX">모션 지우기</button>' +
+          '<label for="myaSWR" style="color:var(--dim);font-size:12px">날 각도</label>' +
+          '<input type="range" id="myaSWR" min="-180" max="180" step="5" value="' + (u.swr || 0) + '" style="width:120px">' +
+          '<b id="myaSWRV">' + (u.swr || 0) + '°</b>' +
+          '<span class="hint" style="margin:0" id="myaPN"></span></div>' +
+        (u.ty === 'r'
+          ? '<div class="sw"><b style="font-size:12.5px;color:var(--hi)">궤도</b>' +
+            [['line', '직선'], ['arc', '포물선'], ['lob', '높이 던지기'], ['wave', '물결']].map(t =>
+              '<button data-tj="' + t[0] + '" class="' + ((u.tj || 'line') === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') +
+            '<span class="hint" style="margin:0">쏜 것이 날아가는 길</span></div>'
+          : '')
+      : '<div class="sw">' + MYA_COL.map(c => '<button data-pc="' + c + '" style="width:26px;height:26px;background:' + c + '"></button>').join('') +
+        '<label for="myaPW" style="color:var(--dim);font-size:12px">굵기</label>' +
+        '<input type="range" id="myaPW" min="1" max="16" step="1" value="' + MYA_PW + '" style="width:110px">' +
+        '<button id="myaPF" class="' + (MYA_PF ? 'on' : '') + '">면 채우기</button>' +
+        '<button data-tl="draw" class="' + (MYA_TOOL === 'draw' ? 'on' : '') + '">그리기</button>' +
+        '<button data-tl="pivot" class="' + (MYA_TOOL === 'pivot' ? 'on' : '') + '">중심 옮기기</button>' +
+        '<button id="myaPU">되돌리기</button><button id="myaPX">모두 지우기</button>' +
+        '<span class="hint" style="margin:0" id="myaPN"></span></div>') +
+    '<b style="font-size:12.5px;color:var(--hi);display:block;margin-top:8px" id="myaPT"></b>' +
     '<canvas id="myaPaint" class="myaPaint" width="420" height="300" style="margin-top:6px"></canvas>' +
     '<input type="file" id="myaImgF" accept="image/*" style="display:none">';
 
@@ -7693,11 +7831,20 @@ function myaEditor() {
   document.getElementById('myaUC').oninput = e => { u.col = e.target.value; myaTouch(); };
   document.getElementById('myaTM').onclick = () => { u.ty = 'm'; myaTouch(1); };
   document.getElementById('myaTR').onclick = () => { u.ty = 'r'; myaTouch(1); };
-  document.getElementById('myaPW').oninput = e => { MYA_PW = +e.target.value; };
-  document.getElementById('myaPF').onclick = e => { MYA_PF = !MYA_PF; e.target.classList.toggle('on', MYA_PF); };
-  document.getElementById('myaPU').onclick = () => { u.art.pop(); myaTouch(); };
-  document.getElementById('myaPX').onclick = () => { u.art.length = 0; myaTouch(); };
+  const on = (id, ev, fn) => { const el = document.getElementById(id); if (el) el[ev] = fn; };
+  on('myaPW', 'oninput', e => { MYA_PW = +e.target.value; });
+  on('myaPF', 'onclick', e => { MYA_PF = !MYA_PF; e.target.classList.toggle('on', MYA_PF); });
+  on('myaPU', 'onclick', () => { myaArt().pop(); myaTouch(); });
+  on('myaPX', 'onclick', () => { myaArt().length = 0; myaTouch(); });
   m.querySelectorAll('[data-pc]').forEach(b => b.onclick = () => { MYA_PC = b.dataset.pc; });
+  m.querySelectorAll('[data-an]').forEach(b => b.onclick = () => { u.an = b.dataset.an; myaTouch(1); });
+  m.querySelectorAll('[data-pt]').forEach(b => b.onclick = () => { MYA_PT = b.dataset.pt; MYA_TOOL = 'draw'; myaTouch(1); });
+  m.querySelectorAll('[data-tl]').forEach(b => b.onclick = () => { MYA_TOOL = b.dataset.tl; myaTouch(1); });
+  m.querySelectorAll('[data-tj]').forEach(b => b.onclick = () => { u.tj = b.dataset.tj; myaTouch(1); });
+  const swr = document.getElementById('myaSWR');
+  if (swr) swr.oninput = () => { u.swr = +swr.value; document.getElementById('myaSWRV').textContent = swr.value + '°'; myaTouch(); };
+  const swx = document.getElementById('myaSWX');
+  if (swx) swx.onclick = () => { u.swp = []; u.mz = null; myaTouch(1); };
   const fin = document.getElementById('myaImgF');
   document.getElementById('myaImg').onclick = () => fin.click();
   document.getElementById('myaImgX').onclick = () => { u.img = null; myaTouch(1); };
@@ -7721,7 +7868,14 @@ function myaAfter() {
     ' · 체력 <b>' + (SOLDIER_HP * u.hp).toFixed(0) + '</b> · 고용값 <b>' +
     (MYA_K === 's' ? Math.max(3, Math.round(u.cost * (u.ty === 'r' ? 1.3 : 1))) : wPrice(w)) + '</b> 코인';
   const pn = document.getElementById('myaPN');
-  if (pn) pn.textContent = '선 ' + u.art.length + '개';
+  if (pn) pn.textContent = MYA_PT === 'swp'
+    ? ((u.swp && u.swp.length >= 4) ? '길 ' + (u.swp.length >> 1) + '점' : '안 그림')
+    : '선 ' + myaArt().length + '개';
+  const ttl = document.getElementById('myaPT');
+  if (ttl) ttl.textContent = MYA_PT === 'swp'
+    ? (u.ty === 'r' ? '쏘는 모션 그리기 — 무기가 지나갈 길을 그으세요' : '휘두르는 모션 그리기 — 무기가 지나갈 길을 그으세요')
+    : MYA_PT === 'bart' ? '탄알 그리기 — ✛ 가 한가운데, 오른쪽이 날아가는 방향'
+    : '무기 그리기 — ● 가 손에 잡히는 자리, 오른쪽이 공격 방향';
   myaDrawPaint(); myaDrawPrev();
 }
 function myaReadImg(file, u) {
@@ -7757,29 +7911,60 @@ function myaPaintInit() {
   c.onpointerdown = e => {
     const u = myaCur(); if (!u) return;
     e.preventDefault(); c.setPointerCapture(e.pointerId);
-    myaDrawing = { c: MYA_PC, w: MYA_PW, f: MYA_PF, p: pt(e) };
+    const p = pt(e);
+    if (MYA_PT === 'swp') {
+      if (MYA_TOOL === 'muzzle') {                    // 총구 자리를 찍는다
+        u.mz = [Math.round(SWX(p[0])), Math.round(46 - SWY(p[1]))];
+        myaTouch(); return;
+      }
+      myaDrawing = { sw: 1, p: p };                   // 모션 길 긋기
+      myaDrawPaint(); return;
+    }
+    if (MYA_TOOL === 'pivot') {                       // 중심 옮기기
+      if (MYA_PT === 'bart') { u.bx = Math.round(p[0]); u.by = Math.round(p[1]); }
+      else { u.hx = Math.round(p[0]); u.hy = Math.round(p[1]); }
+      myaTouch(); return;
+    }
+    myaDrawing = { c: MYA_PC, w: MYA_PW, f: MYA_PF, p: p };
     myaDrawPaint();
   };
   c.onpointermove = e => {
     if (!myaDrawing) return;
-    const p = pt(e), n = myaDrawing.p;
-    if (Math.abs(p[0] - n[n.length - 2]) + Math.abs(p[1] - n[n.length - 1]) > 1.2) {
+    const p = pt(e), n = myaDrawing.p, gap = myaDrawing.sw ? 3.5 : 1.2;
+    if (Math.abs(p[0] - n[n.length - 2]) + Math.abs(p[1] - n[n.length - 1]) > gap) {
       n.push(p[0], p[1]); myaDrawPaint();
     }
   };
   const up = () => {
     if (!myaDrawing) return;
     const u = myaCur();
+    if (u && myaDrawing.sw) {                         // 모션 길을 저장한다 (최대 28점)
+      let p = myaDrawing.p;
+      if (p.length >= 4) {
+        const n = p.length >> 1, step = Math.max(1, Math.ceil(n / 28));
+        const out = [];
+        for (let i = 0; i < n; i += step) out.push(Math.round(SWX(p[i * 2]) * 10) / 10,
+                                                   Math.round(SWY(p[i * 2 + 1]) * 10) / 10);
+        out.push(Math.round(SWX(p[p.length - 2]) * 10) / 10, Math.round(SWY(p[p.length - 1]) * 10) / 10);
+        u.swp = out;
+      }
+      myaDrawing = null; myaTouch(1); return;
+    }
+    const arr = myaArt();
     if (u && myaDrawing.p.length >= 2) {
       if (myaDrawing.p.length === 2) { myaDrawing.p.push(myaDrawing.p[0] + .6, myaDrawing.p[1]); }
-      u.art.push({ c: myaDrawing.c, w: myaDrawing.w, f: myaDrawing.f,
-                   p: myaDrawing.p.map(v => Math.round(v * 10) / 10) });
-      if (u.art.length > 120) u.art.shift();
+      arr.push({ c: myaDrawing.c, w: myaDrawing.w, f: myaDrawing.f,
+                 p: myaDrawing.p.map(v => Math.round(v * 10) / 10) });
+      if (arr.length > 120) arr.shift();
     }
     myaDrawing = null; myaTouch();
   };
   c.onpointerup = up; c.onpointercancel = up;
 }
+// 모션 판의 좌표 ↔ 팔 좌표 (ax 는 앞으로, ay 는 목에서 아래로)
+const SWX = gx => -12 + gx * .72, SWY = gy => -34 + gy * .80;
+const unSWX = ax => (ax + 12) / .72, unSWY = ay => (ay + 34) / .80;
+
 function myaDrawPaint() {
   const c = document.getElementById('myaPaint'); if (!c) return;
   const x = c.getContext('2d'), W = c.width, H = c.height;
@@ -7790,23 +7975,128 @@ function myaDrawPaint() {
     x.beginPath(); x.moveTo(i * PX, 0); x.lineTo(i * PX, H); x.stroke();
     x.beginPath(); x.moveTo(0, i * PY); x.lineTo(W, i * PY); x.stroke();
   }
+  const u = myaCur(); if (!u) return;
+
+  if (MYA_PT === 'swp') { myaDrawMotion(x, u, W, H); return; }
+
   x.strokeStyle = 'rgba(255,255,255,.14)';
   x.beginPath(); x.moveTo(0, 50 * PY); x.lineTo(W, 50 * PY); x.stroke();
-  const u = myaCur();
-  if (u) {
-    const list = myaDrawing ? u.art.concat([myaDrawing]) : u.art;
-    x.save(); x.translate(22 * PX, 50 * PY); x.scale(PX / .44, PY / .32);
-    artDraw(x, list, 1, u.col);
-    x.restore();
+  const bullet = MYA_PT === 'bart';
+  const ox = bullet ? (u.bx === undefined ? 50 : u.bx) : (u.hx === undefined ? 22 : u.hx);
+  const oy = bullet ? (u.by === undefined ? 50 : u.by) : (u.hy === undefined ? 50 : u.hy);
+  const base = myaArt();
+  const list = myaDrawing && !myaDrawing.sw ? base.concat([myaDrawing]) : base;
+  x.save(); x.translate(ox * PX, oy * PY); x.scale(PX / .44, PY / .32);
+  artDraw(x, list, 1, u.col, ox, oy);
+  x.restore();
+  if (bullet) {
+    x.strokeStyle = '#f0c46a'; x.lineWidth = 2;                   // 탄알 한가운데
+    x.beginPath(); x.moveTo(ox * PX - 8, oy * PY); x.lineTo(ox * PX + 8, oy * PY);
+    x.moveTo(ox * PX, oy * PY - 8); x.lineTo(ox * PX, oy * PY + 8); x.stroke();
+  } else {
+    x.fillStyle = '#f0c46a';                                      // 손
+    x.beginPath(); x.arc(ox * PX, oy * PY, 5.5, 0, 6.3); x.fill();
+    x.strokeStyle = 'rgba(240,196,106,.45)'; x.lineWidth = 1.5;
+    x.beginPath(); x.arc(ox * PX, oy * PY, 11, 0, 6.3); x.stroke();
   }
-  x.fillStyle = '#f0c46a';                                        // 손
-  x.beginPath(); x.arc(22 * PX, 50 * PY, 5, 0, 6.3); x.fill();
-  x.strokeStyle = 'rgba(240,196,106,.5)'; x.lineWidth = 2;        // 공격 방향
-  x.beginPath(); x.moveTo(22 * PX, 94 * PY); x.lineTo(70 * PX, 94 * PY); x.stroke();
-  x.beginPath(); x.moveTo(70 * PX, 94 * PY); x.lineTo(64 * PX, 91 * PY); x.lineTo(64 * PX, 97 * PY); x.closePath();
+  x.strokeStyle = 'rgba(240,196,106,.5)'; x.lineWidth = 2;        // 날아가는·때리는 방향
+  x.beginPath(); x.moveTo(ox * PX, 94 * PY); x.lineTo((ox + 46) * PX, 94 * PY); x.stroke();
+  x.beginPath(); x.moveTo((ox + 46) * PX, 94 * PY); x.lineTo((ox + 40) * PX, 91 * PY);
+  x.lineTo((ox + 40) * PX, 97 * PY); x.closePath();
   x.fillStyle = 'rgba(240,196,106,.5)'; x.fill();
   x.fillStyle = 'rgba(255,255,255,.35)'; x.font = '700 11px system-ui';
-  x.fillText('손', 22 * PX + 8, 50 * PY - 7); x.fillText('공격 방향 →', 24 * PX, 91 * PY);
+  if (!bullet) x.fillText('중심', ox * PX + 13, oy * PY - 8);
+  x.fillText(bullet ? '날아가는 방향 →' : '공격 방향 →', (ox + 2) * PX, 91 * PY);
+  if (MYA_TOOL === 'pivot') {
+    x.fillStyle = 'rgba(240,196,106,.85)'; x.font = '700 13px system-ui';
+    x.fillText('눌러서 중심을 옮기세요', 10, 20);
+  }
+}
+// 휘두르는 모션 판 — 몸을 그려 두고 그 위에 길을 긋는다
+function myaDrawMotion(x, u, W, H) {
+  const gx = unSWX(0), gy = unSWY(0);                  // 어깨(목) 자리
+  const px = a => unSWX(a) * PX, py = a => unSWY(a) * PY;
+  x.strokeStyle = 'rgba(255,255,255,.12)'; x.lineWidth = 1.5;     // 땅
+  x.beginPath(); x.moveTo(0, py(46)); x.lineTo(W, py(46)); x.stroke();
+  x.strokeStyle = 'rgba(154,232,255,.5)'; x.lineWidth = 3;        // 몸
+  x.beginPath(); x.moveTo(px(0), py(0)); x.lineTo(px(0), py(20)); x.stroke();
+  x.beginPath(); x.moveTo(px(0), py(20)); x.lineTo(px(-6), py(46)); x.moveTo(px(0), py(20)); x.lineTo(px(6), py(46)); x.stroke();
+  x.fillStyle = 'rgba(154,232,255,.5)';
+  x.beginPath(); x.arc(px(0), py(-9), 7.5 * PY / 3, 0, 6.3); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.3)'; x.font = '700 11px system-ui';
+  x.fillText('어깨', px(0) + 8, py(0) - 6);
+  // 지금 쓰는 길 (안 그렸으면 고른 동작의 길을 흐리게)
+  const live = myaDrawing && myaDrawing.sw ? myaDrawing.p : null;
+  let pts = [];
+  if (live) for (let i = 0; i < live.length; i += 2) pts.push(SWX(live[i]), SWY(live[i + 1]));
+  else if (u.swp && u.swp.length >= 4) pts = u.swp;
+  else pts = myaPresetPath(u);
+  const drawn = live || (u.swp && u.swp.length >= 4);
+  x.strokeStyle = drawn ? '#f0c46a' : 'rgba(240,196,106,.28)';
+  x.lineWidth = drawn ? 3 : 2; x.setLineDash(drawn ? [] : [6, 5]);
+  x.beginPath();
+  for (let i = 0; i < pts.length; i += 2) {
+    const X = px(pts[i]), Y = py(pts[i + 1]);
+    if (i) x.lineTo(X, Y); else x.moveTo(X, Y);
+  }
+  x.stroke(); x.setLineDash([]);
+  if (pts.length >= 4) {                               // 시작·끝 표시
+    x.fillStyle = '#6fd36f';
+    x.beginPath(); x.arc(px(pts[0]), py(pts[1]), 6, 0, 6.3); x.fill();
+    x.fillStyle = '#e06a4a';
+    x.beginPath(); x.arc(px(pts[pts.length - 2]), py(pts[pts.length - 1]), 6, 0, 6.3); x.fill();
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = '700 11px system-ui';
+    x.fillText('시작', px(pts[0]) + 8, py(pts[1]) - 7);
+    x.fillText('끝', px(pts[pts.length - 2]) + 8, py(pts[pts.length - 1]) - 7);
+    // 길 위에 무기를 몇 군데 얹어 본다
+    for (const t of [0, .5, 1]) {
+      const P = swPath(pts, t);
+      x.save(); x.translate(px(P[0]), py(P[1]));
+      x.globalAlpha = t === 1 ? .95 : .4;
+      x.rotate(P[2] + (u.swr || 0) * Math.PI / 180);
+      const w = WEAPONS[myaWep('myaPrevW', u, myaNow(), MYA_K === 's')];
+      if (w.art) artDraw(x, w.art, 2.1, w.col, w.hx, w.hy);
+      else { x.fillStyle = w.col; x.fillRect(0, -2, 34, 4); }
+      x.restore();
+    }
+    x.globalAlpha = 1;
+  }
+  if (u.ty === 'r') {                                  // 발사 위치
+    const mz = u.mz || [12, 34], MX = px(mz[0]), MY = py(46 - mz[1]);
+    x.strokeStyle = '#ff6a4a'; x.lineWidth = 2;
+    x.beginPath(); x.moveTo(MX - 9, MY); x.lineTo(MX + 9, MY);
+    x.moveTo(MX, MY - 9); x.lineTo(MX, MY + 9); x.stroke();
+    x.beginPath(); x.arc(MX, MY, 5, 0, 6.3); x.stroke();
+    x.fillStyle = '#ff6a4a'; x.font = '700 11px system-ui';
+    x.fillText('발사 위치', MX + 12, MY - 8);
+  }
+  x.fillStyle = 'rgba(240,196,106,.85)'; x.font = '700 13px system-ui';
+  x.fillText(MYA_TOOL === 'muzzle' ? '눌러서 발사 위치를 옮기세요'
+           : drawn ? '다시 그으면 새 길로 바뀐다' : '그어서 나만의 모션을 만드세요 (지금은 고른 동작대로)', 10, 20);
+}
+// 고른 동작이 그리는 길 (참고용)
+function myaPresetPath(u) {
+  const an = MYA_CUR_AN(u), out = [];
+  for (let i = 0; i <= 10; i++) {
+    const sg = 1 - i / 10;
+    let ax = 13 + 9 * sg, ay = 14 - 22 * sg;
+    if (an === 'smash') { ax = 10 + 5 * sg; ay = 14 - 32 * sg; }
+    else if (an === 'thrust') { ax = 7 + 28 * sg; ay = 14 - 3 * sg; }
+    else if (an === 'punch') { ax = 6 + 34 * sg; ay = 14 - 5 * sg; }
+    else if (an === 'shoot') { ax = 15 - 5 * sg; ay = 12 - 1 * sg; }
+    else if (an === 'throw') { ax = 11 + 11 * sg; ay = 13 - 26 * sg; }
+    else if (an === 'kick') { ax = 9 - 7 * sg; ay = 14 + 3 * sg; }
+    out.push(ax, ay);
+  }
+  return out;
+}
+let MYA_AT = 0, MYA_RAF = 0;
+function myaAnim() {
+  const box = myaBox();
+  if (!box || !box.classList.contains('on')) { MYA_RAF = 0; return; }
+  MYA_AT += .016;
+  myaDrawPrev();
+  MYA_RAF = requestAnimationFrame(myaAnim);
 }
 function myaDrawPrev() {
   const c = document.getElementById('myaPrev'); if (!c) return;
@@ -7818,11 +8108,24 @@ function myaDrawPrev() {
   const w = WEAPONS[myaWep('myaPrevW', u, a, MYA_K === 's')];
   const fake = { team: 0, ti: 0, td: { col: a.col, name: a.nm }, w, label: u.nm, style: a.style,
     col: a.col, x: c.width * .44, y: c.height - 26, size: clamp(1.9 * u.sz, .6, 2.6),
-    hp: 7, max: 10, face: 1, moving: false, ph: 0, swing: .3, rec: 0, hurt: 0,
+    hp: 7, max: 10, face: 1, moving: false, ph: 0,
+    swing: (() => { const t = MYA_AT % 1.9; return t < .75 ? 1 - t / .75 : 0; })(),
+    rec: u.ty === 'r' ? Math.max(0, 1 - (MYA_AT % 1.9) * 5) : 0, hurt: 0,
     vx: 0, vy: 0, ground: true, cool: 0, think: 0, tgt: null, size0: 1 };
   const old = LOD; LOD = false;
   try { drawSoldier(ctx, fake); } catch (e) { }
   LOD = old;
+  if (u.ty === 'r') {                                  // 날아가는 모습도 옆에 보여 준다
+    ctx.save();
+    ctx.translate(c.width * .78, c.height - 92);
+    if (w.bart) artDraw(ctx, w.bart, 1.5, w.col, 50);
+    else if (w.art) { ctx.save(); ctx.scale(1.2, 1.2); artDraw(ctx, w.art, 1.1, w.col); ctx.restore(); }
+    else { ctx.fillStyle = w.col; ctx.beginPath(); ctx.arc(0, 0, 5, 0, 6.3); ctx.fill(); }
+    ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '700 11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('날아가는 모습', c.width * .78, c.height - 62);
+    ctx.textAlign = 'left';
+  }
 }
 
 /* ── 저장 · 공유 ── */
@@ -7866,7 +8169,10 @@ function myaShareOpen(on) {
     const a = myaNow(); if (!a || a.shop.length >= 5) { myaMsg('상점은 5개까지'); return; }
     a.shop.push(myaUnit('상점 ' + (a.shop.length + 1), 'm', 8)); MYA_K = 's'; MYA_U = a.shop.length - 1; myaSync();
   };
-  document.getElementById('myaShare').onclick = () => myaShareOpen(!document.getElementById('myaShareBox').classList.contains('on'));
+  document.getElementById('myaShare').onclick = () => {
+    myaTab('make');
+    myaShareOpen(!document.getElementById('myaShareBox').classList.contains('on'));
+  };
   document.getElementById('myaShareClose').onclick = () => myaShareOpen(false);
   const code = document.getElementById('myaCode'), sst = document.getElementById('myaShareSt');
   document.getElementById('myaExpCopy').onclick = () => {
@@ -7916,6 +8222,167 @@ function myaListName() {
   const s2 = document.getElementById('myaList'), a = myaNow();
   if (s2 && a && s2.options[MYA_I]) s2.options[MYA_I].textContent = a.nm || '군대';
 }
+
+/* ── 공유된 팀 ──
+   중계(MQTT)에 '남겨 두는 메시지'로 올린다. 올려 두면 뒤에 들어온 사람도 그대로 받아 본다. */
+const SHR_TOP = 'plinkobattle/teams/v1/';
+const SHR_MINE = 'plinko.myarmy.pub.v1';
+const SHR_PAGE = 10;
+const SHR = { mq: null, map: {}, q: '', page: 0, st: '', mine: {} };
+
+function shrLoadMine() {
+  try { SHR.mine = JSON.parse(localStorage.getItem(SHR_MINE) || '{}') || {}; } catch (e) { SHR.mine = {}; }
+}
+function shrSaveMine() { try { localStorage.setItem(SHR_MINE, JSON.stringify(SHR.mine)); } catch (e) {} }
+const shrUrl = () => (document.getElementById('netSrv').value || 'wss://broker.hivemq.com:8884/mqtt').trim();
+function shrSt(t) { const e = document.getElementById('shrSt'); if (e) e.innerHTML = t; SHR.st = t; }
+
+function shrConnect(then) {
+  if (SHR.mq && SHR.mq.ok) { then && then(); return; }
+  shrSt('연결하는 중…');
+  SHR.mq = mqttConnect(shrUrl(), (topic, msg) => {
+    if (topic.indexOf(SHR_TOP) !== 0) return;
+    const id = topic.slice(SHR_TOP.length);
+    if (!msg) { delete SHR.map[id]; shrRender(); return; }     // 내려간 팀
+    let o;
+    try { o = JSON.parse(msg); } catch (e) { return; }
+    if (!o || !o.wep || !o.shop) return;
+    o.id = id;
+    SHR.map[id] = o;
+    shrRender();
+  }, () => {                                                   // 붙었다 — 올라와 있는 걸 받는다
+    shrSt('받는 중…');
+    SHR.mq.sub(SHR_TOP + '+');
+    shrRender();
+    setTimeout(() => { if (!Object.keys(SHR.map).length) shrSt('올라와 있는 팀이 없다 — 먼저 올려 보세요.'); else shrRender(); }, 1600);
+    then && then();
+  }, e => { shrSt('<b style="color:#e06a4a">중계에 못 붙었다</b> — ' + esc(e || '') + ' (온라인 탭에서 중계 서버를 바꿔 볼 수 있다)'); });
+}
+function shrClose() { if (SHR.mq) { try { SHR.mq.close(); } catch (e) {} SHR.mq = null; } }
+
+// 지금 군대를 모두에게 올린다
+function shrPublish() {
+  const a = myaNow();
+  if (!a) return;
+  const sst = document.getElementById('myaShareSt');
+  const by = (document.getElementById('myaBy').value || '').trim().slice(0, 12) || myNick();
+  document.getElementById('myaBy').value = by;
+  try { localStorage.setItem('plinko.myarmy.by', by); } catch (e) {}
+  const id = a.pubid || ('t' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+  a.pubid = id;
+  const body = JSON.stringify({ v: 1, nm: a.nm, by, t: Date.now(),
+    col: a.col, style: a.style, wep: a.wep, shop: a.shop });
+  if (body.length > 90000) {
+    sst.innerHTML = '<b style="color:#e06a4a">너무 크다</b> — 캐릭터 그림을 줄이거나 빼고 올리세요 (' +
+      Math.round(body.length / 1024) + 'KB / 88KB).';
+    return;
+  }
+  sst.innerHTML = '올리는 중…';
+  shrConnect(() => {
+    SHR.mq.pub(SHR_TOP + id, body, 1);                         // 남겨 두는 메시지
+    SHR.mine[id] = { nm: a.nm, t: Date.now() };
+    shrSaveMine(); myaStore();
+    sst.innerHTML = '<b style="color:#6fd36f">모두에게 올렸다</b> — <b>공유된 팀</b> 탭에서 누구나 불러 간다. ' +
+      '같은 군대를 다시 올리면 덮어쓰고, <b>공유 내리기</b>로 거둘 수 있다.';
+  });
+}
+function shrUnpublish() {
+  const a = myaNow(), sst = document.getElementById('myaShareSt');
+  if (!a || !a.pubid) { sst.innerHTML = '아직 올린 적 없는 군대다.'; return; }
+  shrConnect(() => {
+    SHR.mq.pub(SHR_TOP + a.pubid, '', 1);                      // 빈 메시지 = 내리기
+    delete SHR.map[a.pubid]; delete SHR.mine[a.pubid];
+    shrSaveMine(); shrRender();
+    sst.innerHTML = '<b style="color:#6fd36f">내렸다</b> — 목록에서 사라진다.';
+  });
+}
+
+// 목록 그리기 (검색 + 10개씩)
+function shrList() {
+  const q = SHR.q.trim().toLowerCase();
+  let all = Object.keys(SHR.map).map(k => SHR.map[k]);
+  if (q) all = all.filter(o => {
+    const hay = [o.nm, o.by].concat((o.wep || []).map(u => u.nm), (o.shop || []).map(u => u.nm)).join(' ').toLowerCase();
+    return hay.indexOf(q) >= 0;
+  });
+  all.sort((a, b) => (b.t || 0) - (a.t || 0));
+  return all;
+}
+function shrRender() {
+  const box = document.getElementById('shrList');
+  if (!box || !document.getElementById('myaGal').classList.contains('on')) return;
+  const all = shrList(), pages = Math.max(1, Math.ceil(all.length / SHR_PAGE));
+  SHR.page = clamp(SHR.page, 0, pages - 1);
+  const page = all.slice(SHR.page * SHR_PAGE, SHR.page * SHR_PAGE + SHR_PAGE);
+  document.getElementById('shrPage').textContent = (SHR.page + 1) + ' / ' + pages;
+  if (Object.keys(SHR.map).length) shrSt('<b>' + Object.keys(SHR.map).length + '개</b> 올라와 있다' +
+    (SHR.q ? ' · 찾은 것 ' + all.length + '개' : ''));
+  box.innerHTML = page.map((o, i) => {
+    const wep = (o.wep || []).map(u => esc(u.nm)).join(' · ');
+    const shop = (o.shop || []).map(u => esc(u.nm)).join(' · ');
+    const mine = SHR.mine[o.id] ? ' <b style="color:#f0c46a">(내가 올림)</b>' : '';
+    const pic = (o.wep || []).concat(o.shop || []).some(u => u && u.img) ? ' 🖼' : '';
+    return '<div class="shrRow"><canvas width="76" height="76" data-pv="' + i + '"></canvas>' +
+      '<div class="gro"><div class="nm">' + esc(o.nm || '이름 없음') + pic +
+      ' <span style="color:var(--dim);font-weight:400;font-size:11px">by ' + esc(o.by || '익명') + mine + '</span></div>' +
+      '<div class="sub">무기 ' + (o.wep || []).length + ' — ' + wep + '</div>' +
+      '<div class="sub">상점 ' + (o.shop || []).length + ' — ' + shop + '</div></div>' +
+      '<button class="mini" data-get="' + i + '" style="padding:8px 12px">불러오기</button></div>';
+  }).join('') || '<div class="hint">' + (SHR.q ? '찾는 팀이 없다.' : '아직 올라온 팀이 없다.') + '</div>';
+  box.querySelectorAll('[data-get]').forEach(b => b.onclick = () => {
+    const o = page[+b.dataset.get];
+    if (!o) return;
+    if (MYA.length >= 24) { shrSt('<b style="color:#e06a4a">내 군대가 24개로 꽉 찼다</b>'); return; }
+    const cp = myaClean(o);
+    cp.nm = (o.nm || '받은 군대').slice(0, 14);
+    MYA.push(cp); MYA_I = MYA.length - 1; MYA_K = 'w'; MYA_U = 0;
+    myaStore(); myaReg(); buildGrid('A'); buildGrid('B');
+    b.textContent = '불러옴 ✓'; b.disabled = true;
+    shrSt('<b style="color:#6fd36f">' + esc(cp.nm) + '</b> 를 내 팀 목록에 넣었다 — 닫고 바로 고르면 된다.');
+  });
+  box.querySelectorAll('[data-pv]').forEach(cv => {            // 작은 미리보기
+    const o = page[+cv.dataset.pv];
+    if (o) shrThumb(cv, o);
+  });
+}
+function shrThumb(cv, o) {
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#10161e'; ctx.fillRect(0, 0, cv.width, cv.height);
+  const a = myaClean(o), u = a.wep[0] || a.shop[0];
+  if (!u) return;
+  const w = WEAPONS[myaWep('shrThumbW', u, a, false)];
+  const fake = { team: 0, ti: 0, td: { col: a.col, name: a.nm }, w, label: u.nm, style: a.style,
+    col: a.col, x: cv.width * .42, y: cv.height - 6, size: .85, hp: 10, max: 10, face: 1,
+    moving: false, ph: 0, swing: .25, rec: 0, hurt: 0, vx: 0, vy: 0, ground: true,
+    cool: 0, think: 0, tgt: null };
+  const old = LOD; LOD = true;
+  try { drawSoldier(ctx, fake); } catch (e) {}
+  LOD = old;
+}
+
+/* ── 탭 ── */
+function myaTab(which) {
+  const gal = document.getElementById('myaGal');
+  document.querySelector('.myaBody').style.display = which === 'gal' ? 'none' : 'flex';
+  gal.classList.toggle('on', which === 'gal');
+  document.getElementById('myaTabMake').classList.toggle('on', which !== 'gal');
+  document.getElementById('myaTabShr').classList.toggle('on', which === 'gal');
+  if (which === 'gal') { myaShareOpen(false); shrConnect(); shrRender(); }
+}
+(function shrUI() {
+  shrLoadMine();
+  try { document.getElementById('myaBy').value = localStorage.getItem('plinko.myarmy.by') || ''; } catch (e) {}
+  document.getElementById('myaTabMake').onclick = () => myaTab('make');
+  document.getElementById('myaTabShr').onclick = () => myaTab('gal');
+  document.getElementById('myaPub').onclick = shrPublish;
+  document.getElementById('myaUnpub').onclick = shrUnpublish;
+  document.getElementById('shrRe').onclick = () => { SHR.map = {}; shrClose(); shrConnect(); shrRender(); };
+  document.getElementById('shrPrev').onclick = () => { SHR.page--; shrRender(); };
+  document.getElementById('shrNext').onclick = () => { SHR.page++; shrRender(); };
+  const q = document.getElementById('shrQ');
+  q.oninput = () => { SHR.q = q.value; SHR.page = 0; shrRender(); };
+})();
 
 /* ============================================================
    배경음악 — 소리 파일 없이 그 자리에서 만들어 내는 음악.
