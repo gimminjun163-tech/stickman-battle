@@ -820,6 +820,10 @@ input.pdot:hover{border-color:var(--hi)}
     목록을 받아 오는 동안과 팀을 불러오는 동안에는 <b>화면이 어두워지며 가운데에 빙글이와 '팀 데이터를 불러오는 중'</b> 이 뜬다. 중계가 막혀 있으면 덮개가 걷히고 그 자리에 까닭이 적힌다.<br>
     올릴 때는 <b>공유</b> → <b>모두에게 공유</b> 를 누른다 (올린이 이름도 같이 적는다). 같은 군대를 다시 올리면 덮어쓰고, <b>공유 내리기</b>로 거둘 수 있다. 올린 팀은 목록에 <b>(내가 올림)</b> 으로 표시된다. 캐릭터 그림까지 통째로 올라가지만 88KB를 넘으면 거절되니, 그럴 땐 그림을 빼고 올리면 된다.<br>
     공유는 온라인 매칭과 같은 <b>중계 서버</b>를 쓴다. 중계가 막힌 곳에서는 목록이 비어 보이는데, 그때는 온라인 탭에서 중계 서버를 바꾸거나 아래의 <b>코드 · 파일</b> 방식으로 주고받으면 된다.<br>
+    <b style="color:#7ad7ff">베이스 만들기</b> — 왼쪽 목록 맨 아래 <b>베이스</b> 를 누르면 우리 기지를 직접 만든다. 네모가 베이스 자리(108×152)고 아래 선이 땅이다. 그 안에 <b>생김새를 그대로 그리면</b> 전장에 그 모습으로 선다 (안 그리면 기본 성채).<br>
+    <b>포탑 위치</b> — <b>포탑 위치</b> 를 켜고 누르면 그 자리(✛)에 포가 달리고, <b>거기서 탄이 나간다</b>. 지붕 꼭대기든 성벽 옆이든 원하는 데 둘 수 있고, 포탑 색도 따로 고른다.<br>
+    <b>베이스가 쏘는 것</b> — <b>공격력 · 폭발 범위 · 쏘는 간격 · 탄 속도 · 궤도</b>(직선 · 포물선 · 높이 던지기 · 물결)를 정하고, <b>탄알 그림</b>으로 날아가는 모양까지 그린다 (안 그리면 동그란 탄). 베이스는 원래대로 <b>다칠수록 더 빨리 쏘는데</b>, 정한 간격을 기준으로 최대 45%까지 줄어든다 (1초로 두면 빈사 때 0.55초).<br>
+    베이스 설정도 저장·공유 코드·공유된 팀에 통째로 실려 간다.<br>
     <b>저장과 공유</b> — 만든 군대는 이 브라우저에 저장돼 팀 목록에 <b>✎</b> 로 뜨고, 기본 팀과 똑같이 골라 싸운다 (여러 개 만들어 두고 고를 수 있다). <b>공유</b>를 누르면 글자 코드가 나오는데 복사해서 메신저로 보내면 되고, 받은 사람은 그 코드를 붙여 넣고 <b>코드로 가져오기</b>를 누르면 그대로 들어온다. <b>파일로 저장 / 파일에서 가져오기</b>도 된다. 온라인 대전에서는 방장이 만든 군대가 참가자에게 자동으로 전달된다.<br>
     <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br>
     <b>자동</b> — 전투 상황을 보고 곡이 알아서 갈아탄다. <b>고요</b>(아직 병사가 적다) → <b>진군</b>(부대가 모인다) → <b>교전</b>(26명 이상 붙거나 처치가 잦아진다) → <b>격전</b>(한쪽 베이스가 45% 아래이거나 초당 1명 넘게 죽는다) → <b>막판</b>(베이스 18% 아래) → <b>승리</b>(승전가) 순으로 올라가고, 단계마다 어울리는 곡 몇 개 중 하나가 걸린다. 긴장이 올라갈 때는 8초 만에 바뀌지만 가라앉을 때는 22초를 기다려서, 상황이 출렁여도 곡이 들락거리지 않는다. 지금 단계는 <b>♪ 광란 · 격전</b> 처럼 곡 이름 옆에 뜬다.<br>
@@ -857,6 +861,8 @@ input.pdot:hover{border-color:var(--hi)}
       <h4>SHOP <i>— 값을 채워야 나오는 병사</i></h4>
       <div id="myaSList" class="myaUnits"></div>
       <button class="mini" id="myaSAdd">+ 상점 병사 추가</button>
+      <h4>베이스 <i>— 생김새와 포탑</i></h4>
+      <div id="myaBList" class="myaUnits"></div>
     </div>
     <div class="myaMain" id="myaMain"></div>
   </div>
@@ -2471,7 +2477,7 @@ function evolve(team) {
   const td = TEAMS[e.i], lk = G.wlock[team][0];
   const pool = (lk >= 0 && lk < td.basics.length) ? [td.basics[lk]] : td.basics;
   rangedId = pool.find(id => WEAPONS[id].type === 'r');
-  b.turret = WEAPONS[rangedId || 'bow'];
+  b.turret = (td.bw && WEAPONS[td.bw]) || WEAPONS[rangedId || 'bow'];   // 직접 만든 베이스 포탑
   // 알림
   G.nums.push({ x: b.x, y: bGY(b) - b.h - 80, vx: 0, vy: -26,
                 v: (G.era[team] + 1) + '시대 — ' + td.name, col: G.col[team], big: true, life: 3 });
@@ -3136,9 +3142,10 @@ function stepBattle(dt) {
     }
     if (best) {
       const wounded = 1 - clamp(b.hp / b.max, 0, 1);   // 0 = 멀쩡, 1 = 빈사
-      b.cool = 1.3 - wounded * .72;                     // 1.3초 → 0.58초
-      fire(b.x + (t === 0 ? 34 : -34), bGY(b) - b.h - 10, b.turret,
-           best.x, best.y - 26 * best.size, t, 0, 1 + wounded * 1.35);
+      const bcd = b.turret.bcd || 1.3;
+      b.cool = bcd * (1 - wounded * .55);               // 다칠수록 빨라진다
+      const tp = turretPt(t, b);
+      fire(tp[0], tp[1], b.turret, best.x, best.y - 26 * best.size, t, 0, 1 + wounded * 1.35);
     }
   }
 
@@ -4785,6 +4792,24 @@ function updateCam(dt) {
 }
 
 /* 군대마다 기지 모양이 다르다. 색은 진영 색을 그대로 쓴다. */
+// 포탑이 놓인 자리 (직접 그린 베이스는 찍어 둔 곳에서 쏜다)
+function turretPt(t, b) {
+  const bs = G.roster[t] && G.roster[t][0] && G.roster[t][0].bs;
+  if (bs && bs.art) {
+    const L = b.x - b.w / 2, TOP = bGY(b) - b.h;
+    return [L + bs.tx / 100 * b.w, TOP + bs.ty / 100 * b.h];
+  }
+  return [b.x + (t === 0 ? 34 : -34), bGY(b) - b.h - 10];
+}
+// 직접 그린 베이스 — 100칸 그림을 베이스 자리에 맞춰 늘린다
+function drawCustomBase(fx, b, bs, t) {
+  const L = b.x - b.w / 2, TOP = GROUND - b.h;
+  fx.save();
+  fx.translate(L, TOP);
+  fx.scale(b.w / 100 / .44, b.h / 100 / .32);         // artDraw 의 칸 크기에 맞춘다
+  artDraw(fx, bs.art, 1, '#8a9aa8', 0, 0);
+  fx.restore();
+}
 function drawBaseShape(fx, b, col, shape, t) {
   const L = b.x - b.w / 2, R = b.x + b.w / 2, TOP = GROUND - b.h, W = b.w, H = b.h;
   const face = t === 0 ? 1 : -1;                     // 적을 바라보는 쪽
@@ -5141,16 +5166,23 @@ function drawField() {
       }
       fx.fillStyle = 'rgba(0,0,0,.35)';
       fx.fillRect(b.x - 15, GROUND - 44, 30, 44);
-    } else drawBaseShape(fx, b, col, (G.roster[t][0] && G.roster[t][0].base) || 'keep', t);
+    } else {
+      const mbs = G.roster[t][0] && G.roster[t][0].bs;
+      if (mbs && mbs.art) drawCustomBase(fx, b, mbs, t);
+      else drawBaseShape(fx, b, col, (G.roster[t][0] && G.roster[t][0].base) || 'keep', t);
+    }
     // 포탑 — 체력이 깎일수록 과열되며 강해진다
     const wd = 1 - Math.max(0, b.hp / b.max);
-    fx.fillStyle = wd > .3 ? '#ff8a4a' : G.roster[t][0].col;
-    fx.fillRect(b.x - 12, GROUND - b.h - 26, 24, 14);
-    fx.fillRect(b.x + (t === 0 ? 8 : -26), GROUND - b.h - 22, 18, 5);
+    const mb = G.roster[t][0] && G.roster[t][0].bs;
+    const tx = mb && mb.art ? (b.x - b.w / 2) + mb.tx / 100 * b.w : b.x;
+    const ty = mb && mb.art ? (GROUND - b.h) + mb.ty / 100 * b.h : GROUND - b.h - 19;
+    fx.fillStyle = wd > .3 ? '#ff8a4a' : (mb && mb.art ? (mb.col || '#ffd76a') : G.roster[t][0].col);
+    fx.fillRect(tx - 12, ty - 7, 24, 14);
+    fx.fillRect(tx + (t === 0 ? 8 : -26), ty - 3, 18, 5);
     if (wd > .3) {
       fx.globalAlpha = (wd - .3) / .7 * (.45 + .35 * Math.sin(G.t * 9));
       fx.fillStyle = '#ffca6a';
-      fx.fillRect(b.x - 15, GROUND - b.h - 29, 30, 20);
+      fx.fillRect(tx - 15, ty - 10, 30, 20);
       fx.globalAlpha = 1;
     }
     // 체력바
@@ -6220,7 +6252,8 @@ function startGame(asGuest) {
       rangedId = pool.find(id => WEAPONS[id].type === 'r');
       if (rangedId) break;
     }
-    b.turret = WEAPONS[rangedId || 'bow'];
+    const bt = G.roster[t][0] && G.roster[t][0].bw;
+    b.turret = (bt && WEAPONS[bt]) || WEAPONS[rangedId || 'bow'];
   }
   buildBoard();
   document.getElementById('plinkoBox').style.display = MODE === 'hire' ? 'none' : '';
@@ -7477,7 +7510,11 @@ const myaUnit = (nm, ty, cost) => ({
   swp: [], swr: 0,           // 직접 그린 휘두르기 길 · 날 각도
   mz: null, tj: 'line'       // 발사 위치 · 궤도
 });
-const myaDef = () => ({ v: 1, nm: '나만의 군대', col: '#7ad7ff', style: 'stick',
+// 베이스 — 생김새 · 포탑 자리 · 쏘는 것
+const myaBaseDef = () => ({ art: [], tx: 50, ty: 12, bart: [],
+  dmg: 14, aoe: 0, cd: 1.3, ps: 560, tj: 'arc', col: '#ffd76a' });
+const myaBase = a => { if (!a.bs) a.bs = myaBaseDef(); return a.bs; };
+const myaDef = () => ({ v: 1, nm: '나만의 군대', col: '#7ad7ff', style: 'stick', bs: myaBaseDef(),
   wep: [myaUnit('내 검', 'm'), myaUnit('내 활', 'r')],
   shop: [myaUnit('내 용사', 'm', 8)] });
 
@@ -7495,7 +7532,11 @@ const myaNow = () => MYA[MYA_I] || null;
 const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const myaUnits = a => (MYA_K === 'w' ? a.wep : a.shop);
-const myaCur = () => { const a = myaNow(); if (!a) return null; const l = myaUnits(a); return l[Math.min(MYA_U, l.length - 1)] || null; };
+const myaCur = () => {
+  const a = myaNow(); if (!a) return null;
+  if (MYA_K === 'b') return myaBase(a);
+  const l = myaUnits(a); return l[Math.min(MYA_U, l.length - 1)] || null;
+};
 
 /* ── 엔진에 등록 ── */
 function myaWep(id, u, a, shop) {
@@ -7536,6 +7577,19 @@ function myaRank(w) {
   while (i < arr.length && arr[i] < p) i++;
   return arr.length > 1 ? clamp(i / (arr.length - 1), 0, 1) : .5;
 }
+// 베이스가 쏘는 것 — 무기 하나로 등록해 포탑에 물린다
+function myaBaseWep(id, bs, a) {
+  WEAPONS[id] = { id, name: (a.nm || '베이스') + ' 포탑', type: 'r',
+    dmg: clamp(+bs.dmg || 14, 1, 900), range: 640, cd: clamp(+bs.cd || 1.3, .2, 8),
+    shape: 'bullet', col: bs.col || '#ffd76a', ps: clamp(+bs.ps || 560, 120, 1600),
+    arc: bs.tj === 'arc' || bs.tj === 'lob', aoe: clamp(+bs.aoe || 0, 0, 400), kn: 1,
+    cry: null, sp: null, immune: null, dash: 0, mv: 1, kills: 0, bdmg: 0, mount: 0,
+    art: null, bart: (bs.bart && bs.bart.length) ? bs.bart : null, cimg: null,
+    bx: 50, by: 50, tj: /^(line|arc|lob|wave)$/.test(bs.tj || '') ? bs.tj : 'arc',
+    bcd: clamp(+bs.cd || 1.3, .2, 8), anim: 'shoot', mine: true };
+  WRANK[id] = 0;
+  return id;
+}
 function myaReg() {
   TEAMS.length = BUILTIN_N;
   MYA.forEach((a, ai) => {
@@ -7544,8 +7598,13 @@ function myaReg() {
       name: u.nm || ('상점 ' + (i + 1)), cost: clamp(Math.round(+u.cost || 6), 1, 40),
       w: myaWep('my' + ai + 's' + i, u, a, true), hp: clamp(+u.hp || 1, .2, 20),
       dmg: 1, size: clamp(+u.sz || 1, .4, 3.4) }));
+    const bs = myaBase(a);
     TEAMS.push({ name: a.nm || '나만의 군대', col: a.col, style: a.style || 'stick',
-                 base: 'keep', basics, shop, mine: ai });
+                 base: 'keep', basics, shop, mine: ai,
+                 bs: { art: (bs.art && bs.art.length) ? bs.art : null,
+                       tx: clamp(+bs.tx, -20, 120), ty: clamp(+bs.ty, -20, 120),
+                       col: bs.col || '#ffd76a' },
+                 bw: myaBaseWep('my' + ai + 'base', bs, a) });
   });
   for (const si of [0, 1]) sel[si] = sel[si].filter(e => e.i < TEAMS.length);
 }
@@ -7664,7 +7723,26 @@ function myaClean(a) {                                     // 받아 온 군대�
     })) : [],
     img: typeof x.img === 'string' && /^data:image\/(png|jpeg|webp);base64,/.test(x.img) && x.img.length < 400000 ? x.img : null
   });
-  return { v: 1, nm: String(a.nm || '받은 군대').slice(0, 14),
+  const bs = a.bs || {};
+  const cleanBs = {
+    art: Array.isArray(bs.art) ? bs.art.slice(0, 160).map(st => ({
+      c: /^#[0-9a-f]{6}$/i.test(st.c || '') ? st.c : '#8a9aa8',
+      w: clamp(+st.w || 3, .5, 16), f: !!st.f,
+      p: (Array.isArray(st.p) ? st.p : []).slice(0, 400).map(v => clamp(+v || 0, -20, 120))
+    })) : [],
+    bart: Array.isArray(bs.bart) ? bs.bart.slice(0, 120).map(st => ({
+      c: /^#[0-9a-f]{6}$/i.test(st.c || '') ? st.c : '#ffd76a',
+      w: clamp(+st.w || 3, .5, 16), f: !!st.f,
+      p: (Array.isArray(st.p) ? st.p : []).slice(0, 400).map(v => clamp(+v || 0, -20, 120))
+    })) : [],
+    tx: clamp(+bs.tx === +bs.tx ? +bs.tx : 50, -20, 120),
+    ty: clamp(+bs.ty === +bs.ty ? +bs.ty : 12, -20, 120),
+    dmg: clamp(+bs.dmg || 14, 1, 900), aoe: clamp(+bs.aoe || 0, 0, 400),
+    cd: clamp(+bs.cd || 1.3, .2, 8), ps: clamp(+bs.ps || 560, 120, 1600),
+    tj: /^(line|arc|lob|wave)$/.test(bs.tj || '') ? bs.tj : 'arc',
+    col: /^#[0-9a-f]{6}$/i.test(bs.col || '') ? bs.col : '#ffd76a'
+  };
+  return { v: 1, nm: String(a.nm || '받은 군대').slice(0, 14), bs: cleanBs,
     col: /^#[0-9a-f]{6}$/i.test(a.col || '') ? a.col : '#7ad7ff',
     style: MYA_STYLE.some(s => s[0] === a.style) ? a.style : 'stick',
     wep: (Array.isArray(a.wep) ? a.wep : []).slice(0, 5).map(x => u(x)),
@@ -7707,9 +7785,15 @@ function myaFill() {
         (k === 's' ? ' · 값 ' + u.cost : '') + '</em>' +
         (u.img ? '<em title="그림 올림">🖼</em>' : '') + '<span class="x" data-x="1">✕</span></div>').join('');
   }
+  const bs = myaBase(a);
+  document.getElementById('myaBList').innerHTML =
+    '<div class="myaU' + (MYA_K === 'b' ? ' on' : '') + '" data-k="b" data-i="0">' +
+    '<b>베이스</b><em>' + (bs.art && bs.art.length ? '직접 그림' : '기본 모양') +
+    ' · 포탑 ' + Math.round(bs.dmg) + '</em></div>';
   box.querySelectorAll('.myaU').forEach(d => {
     d.onclick = e => {
       const k = d.dataset.k, i = +d.dataset.i;
+      if (k === 'b') { MYA_K = 'b'; MYA_U = 0; MYA_PT = 'art'; MYA_TOOL = 'draw'; myaSync(false); myaStore(); return; }
       if (e.target.dataset.x) {                       // ✕ 지우기
         const l = k === 'w' ? a.wep : a.shop;
         if (l.length <= 1) { myaMsg('적어도 하나는 있어야 한다'); return; }
@@ -7734,7 +7818,7 @@ const MYA_COL = ['#dfe6ee', '#9aa6b4', '#b9c2cc', '#8a6a44', '#e05a4a', '#f0943a
                  '#6fd36f', '#5ad8e0', '#5a8cf0', '#b07ae0', '#20252c'];
 let MYA_PC = '#dfe6ee', MYA_PW = 4, MYA_PF = false, MYA_PT = 'art', MYA_TOOL = 'draw';
 const MYA_CUR_AN = u => u.an || (u.ty === 'r' ? 'shoot' : 'slash');
-function myaArt() {                                   // 지금 그리고 있는 쪽 (무기 / 탄알)
+function myaArt() {                                   // 지금 그리고 있는 쪽 (무기 / 탄알 / 베이스)
   const u = myaCur();
   if (!u) return [];
   if (MYA_PT === 'bart') { if (!u.bart) u.bart = []; return u.bart; }
@@ -7745,6 +7829,7 @@ function myaArt() {                                   // 지금 그리고 있는
 function myaEditor() {
   const a = myaNow(), u = myaCur(), m = document.getElementById('myaMain');
   if (!a || !u) { m.innerHTML = ''; return; }
+  if (MYA_K === 'b') { myaBaseEditor(a, u, m); return; }
   const shop = MYA_K === 's';
   const rg = (id, lb, v, mn, mx, stp, suf) =>
     '<div class="row"><label for="' + id + '">' + lb + '</label>' +
@@ -7862,6 +7947,77 @@ function myaEditor() {
   myaPaintInit();
   myaAfter();
 }
+// 베이스 — 생김새 · 포탑 자리 · 쏘는 것
+function myaBaseEditor(a, bs, m) {
+  const rg = (id, lb, v, mn, mx, stp, suf) =>
+    '<div class="row"><label for="' + id + '">' + lb + '</label>' +
+    '<input type="range" id="' + id + '" min="' + mn + '" max="' + mx + '" step="' + stp + '" value="' + v + '">' +
+    '<b id="' + id + 'V">' + v + (suf || '') + '</b></div>';
+  m.innerHTML =
+    '<div class="myaTop"><b style="color:var(--hi)">베이스</b>' +
+      '<span class="hint" style="margin:0">생김새를 직접 그리고, 포탑 자리와 쏘는 것을 정한다</span>' +
+      '<span style="flex:1"></span>' +
+      '<label for="myaBC" style="color:var(--dim);font-size:12px">포탑 색</label>' +
+      '<input type="color" id="myaBC" value="' + (bs.col || '#ffd76a') + '" style="width:44px;height:28px"></div>' +
+    '<div class="myaGrid" style="margin-top:10px">' +
+      '<div>' +
+        rg('myaBDmg', '공격력', bs.dmg, 1, 400, 1, '') +
+        rg('myaBAoe', '폭발 범위', bs.aoe, 0, 300, 10, '') +
+        rg('myaBCd', '쏘는 간격', bs.cd, .2, 6, .1, '초') +
+        rg('myaBPs', '탄 속도', bs.ps, 120, 1500, 20, '') +
+        '<div class="sw"><b style="font-size:12.5px;color:var(--hi)">궤도</b>' +
+        [['line', '직선'], ['arc', '포물선'], ['lob', '높이 던지기'], ['wave', '물결']].map(t =>
+          '<button data-btj="' + t[0] + '" class="' + ((bs.tj || 'arc') === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') +
+        '</div>' +
+        '<div class="hint" id="myaCalc" style="margin-top:8px"></div>' +
+      '</div>' +
+      '<div><b style="font-size:12.5px;color:var(--hi)">미리보기</b>' +
+        '<canvas id="myaPrev" width="300" height="220" style="width:100%;background:#16202c;border:1px solid var(--line);border-radius:10px;margin-top:6px"></canvas>' +
+        '<div class="hint" style="margin-top:6px">다칠수록 더 빨리 쏜다 (간격이 최대 45%까지 줄어든다).</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="sw" style="margin-top:10px">' +
+      '<button data-pt="art" class="' + (MYA_PT === 'art' ? 'on' : '') + '">베이스 그림' +
+        (bs.art && bs.art.length ? ' ●' : '') + '</button>' +
+      '<button data-pt="bart" class="' + (MYA_PT === 'bart' ? 'on' : '') + '">탄알 그림' +
+        (bs.bart && bs.bart.length ? ' ●' : '') + '</button>' +
+      '<span class="hint" style="margin:0">' +
+      (MYA_PT === 'bart' ? '안 그리면 그냥 동그란 탄이 날아간다 (✛ 가 한가운데)'
+                         : '네모 안이 베이스 자리 — 아래 선이 땅이다') + '</span></div>' +
+    '<div class="sw">' + MYA_COL.map(c => '<button data-pc="' + c + '" style="width:26px;height:26px;background:' + c + '"></button>').join('') +
+      '<label for="myaPW" style="color:var(--dim);font-size:12px">굵기</label>' +
+      '<input type="range" id="myaPW" min="1" max="16" step="1" value="' + MYA_PW + '" style="width:110px">' +
+      '<button id="myaPF" class="' + (MYA_PF ? 'on' : '') + '">면 채우기</button>' +
+      '<button data-tl="draw" class="' + (MYA_TOOL === 'draw' ? 'on' : '') + '">그리기</button>' +
+      (MYA_PT === 'art' ? '<button data-tl="muzzle" class="' + (MYA_TOOL === 'muzzle' ? 'on' : '') + '">포탑 위치</button>' : '') +
+      '<button id="myaPU">되돌리기</button><button id="myaPX">모두 지우기</button>' +
+      '<span class="hint" style="margin:0" id="myaPN"></span></div>' +
+    '<b style="font-size:12.5px;color:var(--hi);display:block;margin-top:8px" id="myaPT"></b>' +
+    '<canvas id="myaPaint" class="myaPaint" width="420" height="300" style="margin-top:6px"></canvas>';
+  const bind = (id, key) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.oninput = () => {
+      bs[key] = +el.value;
+      document.getElementById(id + 'V').textContent = el.value + (id === 'myaBCd' ? '초' : '');
+      myaTouch();
+    };
+  };
+  bind('myaBDmg', 'dmg'); bind('myaBAoe', 'aoe'); bind('myaBCd', 'cd'); bind('myaBPs', 'ps');
+  document.getElementById('myaBC').oninput = e => { bs.col = e.target.value; myaTouch(); };
+  m.querySelectorAll('[data-btj]').forEach(b => b.onclick = () => { bs.tj = b.dataset.btj; myaTouch(1); });
+  m.querySelectorAll('[data-pt]').forEach(b => b.onclick = () => { MYA_PT = b.dataset.pt; MYA_TOOL = 'draw'; myaTouch(1); });
+  m.querySelectorAll('[data-tl]').forEach(b => b.onclick = () => { MYA_TOOL = b.dataset.tl; myaTouch(1); });
+  m.querySelectorAll('[data-pc]').forEach(b => b.onclick = () => { MYA_PC = b.dataset.pc; });
+  const on = (id, ev, fn) => { const el = document.getElementById(id); if (el) el[ev] = fn; };
+  on('myaPW', 'oninput', e => { MYA_PW = +e.target.value; });
+  on('myaPF', 'onclick', e => { MYA_PF = !MYA_PF; e.target.classList.toggle('on', MYA_PF); });
+  on('myaPU', 'onclick', () => { myaArt().pop(); myaTouch(); });
+  on('myaPX', 'onclick', () => { myaArt().length = 0; myaTouch(); });
+  myaPaintInit();
+  myaAfter();
+}
+
 // 값만 바뀐 경우 — 화면을 다시 짓지 않고 그림과 숫자만 고친다
 function myaTouch(rebuild) {
   myaStore(); myaReg();
@@ -7871,6 +8027,19 @@ function myaTouch(rebuild) {
 function myaAfter() {
   const a = myaNow(), u = myaCur();
   if (!a || !u) return;
+  if (MYA_K === 'b') {                                // 베이스
+    const c = document.getElementById('myaCalc');
+    if (c) c.innerHTML = '초당 피해 <b>' + (u.dmg / Math.max(.2, u.cd)).toFixed(1) + '</b>' +
+      (u.aoe ? ' · 폭발 <b>' + Math.round(u.aoe) + '</b>' : ' · 단일 표적') +
+      ' · 궤도 <b>' + ({ line: '직선', arc: '포물선', lob: '높이 던지기', wave: '물결' }[u.tj || 'arc']) + '</b>';
+    const pn = document.getElementById('myaPN');
+    if (pn) pn.textContent = '선 ' + myaArt().length + '개';
+    const ttl = document.getElementById('myaPT');
+    if (ttl) ttl.textContent = MYA_PT === 'bart' ? '베이스 탄알 그리기 — ✛ 가 한가운데'
+      : '베이스 그리기 — 네모가 베이스 자리, 아래 선이 땅, ✛ 가 포탑';
+    myaDrawPaint(); myaDrawPrev();
+    return;
+  }
   const w = WEAPONS[myaWep('myaPrevW', u, a, MYA_K === 's')];
   const dps = (w.dmg / w.cd).toFixed(1);
   const c = document.getElementById('myaCalc');
@@ -7930,6 +8099,10 @@ function myaPaintInit() {
       myaDrawing = { sw: 1, p: p };                   // 모션 길 긋기
       myaDrawPaint(); return;
     }
+    if (MYA_K === 'b' && MYA_PT === 'art' && MYA_TOOL === 'muzzle') {    // 포탑 자리
+      u.tx = Math.round(p[0]); u.ty = Math.round(p[1]);
+      myaTouch(); return;
+    }
     if (MYA_TOOL === 'pivot') {                       // 중심 옮기기
       if (MYA_PT === 'bart') { u.bx = Math.round(p[0]); u.by = Math.round(p[1]); }
       else { u.hx = Math.round(p[0]); u.hy = Math.round(p[1]); }
@@ -7988,6 +8161,7 @@ function myaDrawPaint() {
   const u = myaCur(); if (!u) return;
 
   if (MYA_PT === 'swp') { myaDrawMotion(x, u, W, H); return; }
+  if (MYA_K === 'b' && MYA_PT === 'art') { myaDrawBaseArt(x, u, W, H); return; }
 
   x.strokeStyle = 'rgba(255,255,255,.14)';
   x.beginPath(); x.moveTo(0, 50 * PY); x.lineTo(W, 50 * PY); x.stroke();
@@ -8021,6 +8195,29 @@ function myaDrawPaint() {
     x.fillStyle = 'rgba(240,196,106,.85)'; x.font = '700 13px system-ui';
     x.fillText('눌러서 중심을 옮기세요', 10, 20);
   }
+}
+// 베이스 그림판 — 네모가 베이스 자리, 아래가 땅
+function myaDrawBaseArt(x, bs, W, H) {
+  const base = myaArt();
+  const list = myaDrawing && !myaDrawing.sw ? base.concat([myaDrawing]) : base;
+  x.save(); x.scale(PX / .44, PY / .32);
+  artDraw(x, list, 1, '#8a9aa8', 0, 0);
+  x.restore();
+  x.strokeStyle = 'rgba(255,255,255,.22)'; x.lineWidth = 2;      // 베이스 자리
+  x.strokeRect(0, 0, 100 * PX, 100 * PY);
+  x.strokeStyle = 'rgba(154,232,255,.45)'; x.lineWidth = 3;      // 땅
+  x.beginPath(); x.moveTo(0, 100 * PY - 1); x.lineTo(W, 100 * PY - 1); x.stroke();
+  const tx = bs.tx * PX, ty = bs.ty * PY;
+  x.strokeStyle = bs.col || '#ffd76a'; x.lineWidth = 2;          // 포탑 자리
+  x.beginPath(); x.moveTo(tx - 10, ty); x.lineTo(tx + 10, ty);
+  x.moveTo(tx, ty - 10); x.lineTo(tx, ty + 10); x.stroke();
+  x.beginPath(); x.arc(tx, ty, 6, 0, 6.3); x.stroke();
+  x.fillStyle = bs.col || '#ffd76a'; x.font = '700 11px system-ui';
+  x.fillText('포탑', tx + 13, ty - 9);
+  x.fillStyle = 'rgba(255,255,255,.3)';
+  x.fillText('땅', 6, 100 * PY - 7);
+  x.fillStyle = 'rgba(240,196,106,.85)'; x.font = '700 13px system-ui';
+  x.fillText(MYA_TOOL === 'muzzle' ? '눌러서 포탑 자리를 옮기세요' : '네모 안에 베이스를 그리세요', 10, 20);
 }
 // 휘두르는 모션 판 — 몸을 그려 두고 그 위에 길을 긋는다
 function myaDrawMotion(x, u, W, H) {
@@ -8108,8 +8305,39 @@ function myaAnim() {
   myaDrawPrev();
   MYA_RAF = requestAnimationFrame(myaAnim);
 }
+// 베이스 미리보기 — 실제 크기(108×152) 비율 그대로
+function myaDrawBasePrev(c, a, bs) {
+  const ctx = c.getContext('2d'), W = c.width, H = c.height;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#16202c'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#3a4a44'; ctx.fillRect(0, H - 24, W, 24);
+  const k = Math.min((H - 40) / 152, W * .5 / 108), bw = 108 * k, bh = 152 * k;
+  const L = W * .3 - bw / 2, TOP = H - 24 - bh;
+  if (bs.art && bs.art.length) {
+    ctx.save(); ctx.translate(L, TOP); ctx.scale(bw / 100 / .44, bh / 100 / .32);
+    artDraw(ctx, bs.art, 1, '#8a9aa8', 0, 0); ctx.restore();
+  } else {
+    ctx.fillStyle = a.col; ctx.fillRect(L, TOP, bw, bh);
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(L + bw * .35, H - 24 - bh * .3, bw * .3, bh * .3);
+  }
+  const tx = L + bs.tx / 100 * bw, ty = TOP + bs.ty / 100 * bh;
+  ctx.fillStyle = bs.col || '#ffd76a';                 // 포탑
+  ctx.fillRect(tx - 9, ty - 5, 18, 10); ctx.fillRect(tx + 6, ty - 2, 14, 4);
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.font = '700 11px system-ui';
+  ctx.fillText('포탑', tx + 12, ty - 9);
+  ctx.save();                                          // 날아가는 탄
+  ctx.translate(W * .76, ty - 10);
+  if (bs.bart && bs.bart.length) artDraw(ctx, bs.bart, 1.3, bs.col, 50, 50);
+  else { ctx.fillStyle = bs.col || '#ffd76a'; ctx.beginPath(); ctx.arc(0, 0, 5, 0, 6.3); ctx.fill(); }
+  ctx.restore();
+  ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '700 11px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('날아가는 모습', W * .76, ty + 16);
+  ctx.textAlign = 'left';
+}
 function myaDrawPrev() {
   const c = document.getElementById('myaPrev'); if (!c) return;
+  const a0 = myaNow();
+  if (MYA_K === 'b') { if (a0) myaDrawBasePrev(c, a0, myaBase(a0)); return; }
   const ctx = c.getContext('2d');
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.fillStyle = '#16202c'; ctx.fillRect(0, 0, c.width, c.height);
