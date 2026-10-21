@@ -222,6 +222,8 @@ input.pdot:hover{border-color:var(--hi)}
   flex-direction:column;gap:10px;padding:16px;overflow:auto}
 #mapBox.on{display:flex}
 #mapBox .mapTop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#mapBox .stslot{min-width:104px}
+#mapBox .stslot.on,#mapBox .mixb.on{border-color:var(--hi);background:#2a2618;color:#f0c46a}
 #mapBox h1{margin:0;font-size:20px}
 #mapCv{width:100%;max-width:1180px;margin:0 auto;background:#0e141b;border:1px solid var(--line);border-radius:14px;display:block}
 #stgBox,#upgBox{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:55;display:none;
@@ -843,7 +845,9 @@ input.pdot:hover{border-color:var(--hi)}
     <b style="color:#7ad7ff">스토리 모드</b> — 처음 화면이 <b>세계 지도</b>다. 월드 8개 × 스테이지 5개, 모두 40판이고 앞 스테이지를 깨야 다음이 열린다. 점을 누르면 적·난이도·보상이 나오고 <b>출격</b>으로 들어간다. 스테이지는 <b>고용</b>(코인으로 병사를 산다)과 <b>지휘</b>(거기에 전진·방어선·후퇴·돌격 명령이 붙는다, 3·5번째)로 나뉜다.<br>
     월드마다 <b>하늘·땅·배경·언덕 색과 지형</b>이 다르다 — 초원 지대(숲), 젖은 강변(강과 다리), 검은 숲(빽빽한 숲), 불의 산(붉은 바위 고지), 강철 도시(첨탑), 얼어붙은 벌판(설원), 모래 폐허(사막 신전), 별의 끝(보랏빛 하늘). 적도 월드마다 다르고 <b>갈수록 세진다</b> (적 전투력 0.75배 → 3.17배, AI 쉬움 → 최강, 수입 간격 11초 → 5.3초).<br>
     <b>시작 군대는 약하다</b> — 신병대는 몽둥이·돌팔매와 상점 '전사' 뿐이다. 깨면 들어오는 <b>EXP</b> 로 <b>업그레이드</b>에서 키운다: <b>군대 전체</b>(공격력·체력·연사·돌진·코인 수입·시작 코인), <b>지휘</b>(돌격 함성 — 베이스 돌격 명령에 전군이 돌진, 방어 태세 — 방어선 중 받는 피해 감소), <b>무기 해금</b>(돌도끼·검·활·창), <b>상점 병사 해금</b>(사냥꾼·석궁병·기사·성기사), <b>팀 해금</b> — 버섯·쿡 계열과 표적만 빼고 <b>기본 팀 33개 전부</b>를 EXP 로 열 수 있다 (센 팀일수록 비싸다: 석기시대 110 → 융성망 630). 나만의 군대로도 출격할 수 있다.<br>
-    처음 깬 판은 보상 전액, 다시 깨면 30%를 준다. 진행·EXP·해금은 이 브라우저에 저장되고 <b>진행 지우기</b>로 처음부터 할 수 있다. 스토리는 위쪽 <b>스토리</b> 탭에 있다 — 시뮬레이션·고용·진화·지휘는 그대로고, 탭을 누르면 세계 지도가 열리고 지도의 <b>← 일반 전투로</b> 로 원래 화면으로 돌아온다.<br>
+    처음 깬 판은 보상 전액, 다시 깨면 30%를 준다.<br>
+    <b>저장 칸 3개</b> — 지도 위 <b>1 · 2 · 3</b> 으로 따로 키운 진행을 바꿔 가며 쓴다. 칸마다 깬 판·EXP·업그레이드·해금·방식이 따로 남고, <b>이 칸 지우기</b>는 지금 칸만 지운다. 모두 이 브라우저에 저장된다.<br>
+    <b>방식</b> — 스테이지를 어떤 식으로 깔지 칸마다 고른다. <b>고용 위주</b>는 월드마다 우두머리만 지휘, <b>반반</b>은 3·5번째가 지휘(기본), <b>지휘 위주</b>는 첫 판만 고용이고 나머지가 전부 지휘다. 지도의 점 옆에 어느 방식인지 표시된다. 스토리는 위쪽 <b>스토리</b> 탭에 있다 — 시뮬레이션·고용·진화·지휘는 그대로고, 탭을 누르면 세계 지도가 열리고 지도의 <b>← 일반 전투로</b> 로 원래 화면으로 돌아온다.<br>
     <b style="color:#7ad7ff">나만의 군대</b> — 위쪽 <b>나만의 군대 만들기 · 불러오기</b> 를 누르면 내 군대를 직접 짠다. <b>WEAPON 5칸 · SHOP 5칸</b>까지 만들 수 있고, 칸마다 이름 · 근접/원거리 · <b>공격력 · 공격 간격 · 사거리 · 체력 · 크기 · 이동 속도</b>(원거리는 탄 속도와 폭발 범위까지) · SHOP은 필요한 값을 정한다. 초당 피해와 고용 값은 그때그때 계산돼 나온다 — 기본 무기들 사이에서 몇 번째쯤 센지로 값이 매겨지므로 고용 대전에서도 공정하다.<br>
     <b>무기 그리기</b> — 아래 모눈판에 <b>직접 그린 그대로</b> 무기가 된다. 노란 점(●)이 손이고 오른쪽이 공격 방향이다. 색 12가지 · 굵기 1~16 · <b>면 채우기</b>(획을 닫아 덩어리로 칠한다) · 되돌리기 · 모두 지우기를 쓴다. 그린 무기는 손에 들린 모습으로 나온다.<br>
     <b>탄알 그리기</b> — 그림판 위 <b>탄알 그림</b> 을 누르면 날아가는 것만 따로 그린다. 가운데 <b>✛</b> 가 탄알 한가운데고 오른쪽이 날아가는 방향이다. <b>안 그리면 지금처럼 무기 모양 그대로 날아간다.</b> 미리보기 오른쪽에 날아가는 모습이 같이 나온다.<br>
@@ -879,7 +883,18 @@ input.pdot:hover{border-color:var(--hi)}
     <span style="flex:1"></span>
     <button class="mini" id="mapUpg">업그레이드</button>
     <button class="mini" id="mapNormal">← 일반 전투로 (4종)</button>
-    <button class="mini" id="mapReset">진행 지우기</button>
+    <button class="mini" id="mapReset">이 칸 지우기</button>
+  </div>
+  <div class="mapTop">
+    <span class="hint" style="margin:0">저장 칸</span>
+    <button class="mini stslot" data-slot="0">1</button>
+    <button class="mini stslot" data-slot="1">2</button>
+    <button class="mini stslot" data-slot="2">3</button>
+    <span class="hint" style="margin:0 10px 0 16px">방식</span>
+    <button class="mini mixb" data-mix="hire">고용 위주</button>
+    <button class="mini mixb" data-mix="half">반반</button>
+    <button class="mini mixb" data-mix="cmd">지휘 위주</button>
+    <span class="hint" style="margin:0" id="mapMixT"></span>
   </div>
   <canvas id="mapCv" width="1180" height="720"></canvas>
   <div class="hint" style="max-width:1180px;margin:0 auto">
@@ -6369,7 +6384,7 @@ document.getElementById('startBtn').onclick = () => {
   if (typeof musStart === 'function') musStart(true);  // 배경음악 (끄기면 아무것도 안 한다)
 };
 document.getElementById('again').onclick = document.getElementById('again2').onclick = () => {
-  if (STORY.on) { stQuit(); return; }                  // 스토리는 지도로 돌아간다
+  if (STORY.on) { stQuit(); return; }                  // 스토리는 지도로 돌아간다 (단추 글씨만 바뀐다)
   document.getElementById('game').style.display = 'none';
   document.getElementById('setup').style.display = 'block';
 };
@@ -7563,10 +7578,8 @@ function frame(now) {
           wt.style.color = G.winner === 0 ? '#6fd36f' : '#e06a4a';
           const btn = document.getElementById('again2');
           btn.textContent = '세계 지도로';
-          btn.onclick = () => stQuit();
           sub.innerHTML = res + ' · 처치 ' + G.kills[0] + ' : ' + G.kills[1] + ' · ' + Math.round(G.t) + '초';
-          return;
-        }
+        } else
         sub.innerHTML = '처치 <b style="color:' + G.col[0] + '">' + G.kills[0] + '</b>' +
           ' : <b style="color:' + G.col[1] + '">' + G.kills[1] + '</b>' +
           (MODE === 'hire'
@@ -8890,15 +8903,49 @@ function stBuildTeamList() {
 
 var ST = null;                                           // var — 앞쪽 코드가 미리 들여다봐도 안전하게
 var STORY = { on: false, stage: null, prev: null };
-const stDef = () => ({ exp: 0, used: 0, clear: {}, up: {}, un: { w: [], s: [], t: [] }, team: 'new' });
-function stLoad() {
-  try { ST = JSON.parse(localStorage.getItem(ST_KEY) || 'null'); } catch (e) { ST = null; }
-  if (!ST || typeof ST !== 'object') ST = stDef();
-  ST.up = ST.up || {}; ST.un = ST.un || { w: [], s: [], t: [] };
-  ST.un.w = ST.un.w || []; ST.un.s = ST.un.s || []; ST.un.t = ST.un.t || [];
-  ST.clear = ST.clear || {}; ST.exp = +ST.exp || 0; ST.used = +ST.used || 0;
+const ST_SLOTS = 'plinko.story.slots.v1';
+const stDef = () => ({ exp: 0, used: 0, clear: {}, up: {}, un: { w: [], s: [], t: [] },
+                       team: 'new', mix: 'half', nm: '' });
+let ST_ALL = [null, null, null], ST_SLOT = 0;
+function stFix(o) {
+  if (!o || typeof o !== 'object') o = stDef();
+  o.up = o.up || {}; o.un = o.un || { w: [], s: [], t: [] };
+  o.un.w = o.un.w || []; o.un.s = o.un.s || []; o.un.t = o.un.t || [];
+  o.clear = o.clear || {}; o.exp = +o.exp || 0; o.used = +o.used || 0;
+  if (['hire', 'half', 'cmd'].indexOf(o.mix) < 0) o.mix = 'half';
+  return o;
 }
-function stSave() { try { localStorage.setItem(ST_KEY, JSON.stringify(ST)); } catch (e) {} }
+function stLoad() {
+  let box = null;
+  try { box = JSON.parse(localStorage.getItem(ST_SLOTS) || 'null'); } catch (e) {}
+  if (box && Array.isArray(box.s)) { ST_ALL = box.s.slice(0, 3); ST_SLOT = clamp(box.cur | 0, 0, 2); }
+  else {                                                  // 예전 한 칸짜리 저장을 1번으로 옮긴다
+    let old = null;
+    try { old = JSON.parse(localStorage.getItem(ST_KEY) || 'null'); } catch (e) {}
+    ST_ALL = [old, null, null]; ST_SLOT = 0;
+  }
+  while (ST_ALL.length < 3) ST_ALL.push(null);
+  ST = stFix(ST_ALL[ST_SLOT] || stDef());
+  ST_ALL[ST_SLOT] = ST;
+}
+function stSave() {
+  ST_ALL[ST_SLOT] = ST;
+  try { localStorage.setItem(ST_SLOTS, JSON.stringify({ cur: ST_SLOT, s: ST_ALL })); } catch (e) {}
+}
+function stSlotTo(i) {                                    // 저장 칸 바꾸기
+  i = clamp(i | 0, 0, 2);
+  if (i === ST_SLOT) return;
+  stSave();
+  ST_SLOT = i;
+  ST = stFix(ST_ALL[i] || stDef());
+  ST_ALL[i] = ST;
+  stSave(); stReg(); mapDraw(); stHud();
+}
+const stSlotSum = i => {
+  const o = ST_ALL[i];
+  if (!o || !o.clear || !Object.keys(o.clear).length) return '빈 칸';
+  return Object.keys(o.clear).length + '판 · EXP ' + (+o.exp || 0);
+};
 const stLv = k => ST.up[k] || 0;
 const stExp = () => ST.exp - ST.used;                    // 쓸 수 있는 EXP
 const stHasW = i => i < 2 || ST.un.w.indexOf(i) >= 0;
@@ -8907,11 +8954,18 @@ const stHasT = nm => ST.un.t.indexOf(nm) >= 0;
 const stDone = id => !!ST.clear[id];
 const stOpen = (w, i) => (w === 0 && i === 0) || stDone(i ? w * 10 + i - 1 : (w - 1) * 10 + 4);
 
+// 지휘로 할지 고용으로 할지 — 저장 칸마다 따로 정한다
+function stCmdAt(i) {
+  const m = (ST && ST.mix) || 'half';
+  if (m === 'cmd') return i >= 1;                         // 지휘 위주 — 첫 판만 고용
+  if (m === 'hire') return i === 4;                       // 고용 위주 — 우두머리만 지휘
+  return i === 2 || i === 4;                              // 반반
+}
 // 스테이지 — 뒤로 갈수록 세진다
 function stStage(w, i) {
   const W = WORLDS[w], d = w * 5 + i;
   return { w, i, id: w * 10 + i, nm: W.nm + ' ' + (i + 1) + (i === 4 ? ' · 우두머리' : ''),
-    cmd: i === 2 || i === 4, foe: W.foe[i % W.foe.length],
+    cmd: stCmdAt(i), foe: W.foe[i % W.foe.length],
     pow: Math.round((.75 + d * .062) * 100) / 100,
     ai: clamp(Math.floor(d / 10), 0, 3),
     every: Math.max(5, Math.round((11 - d * .145) * 10) / 10),
@@ -8951,8 +9005,18 @@ function stHud() {
   const e = document.getElementById('mapExp');
   if (!e) return;
   const n = Object.keys(ST.clear).length;
-  e.innerHTML = '남은 EXP <b style="color:var(--hi)">' + stExp() + '</b> · 모은 EXP ' + ST.exp +
-                ' · 깬 스테이지 <b>' + n + '</b>/' + (WORLDS.length * 5);
+  e.innerHTML = '저장 <b style="color:var(--hi)">' + (ST_SLOT + 1) + '번</b> · 남은 EXP <b style="color:var(--hi)">' +
+                stExp() + '</b> · 모은 EXP ' + ST.exp + ' · 깬 스테이지 <b>' + n + '</b>/' + (WORLDS.length * 5);
+  document.querySelectorAll('.stslot').forEach(b => {
+    const i = +b.dataset.slot;
+    b.classList.toggle('on', i === ST_SLOT);
+    b.innerHTML = (i + 1) + ' <span style="font-size:10px;color:var(--dim)">' + stSlotSum(i) + '</span>';
+  });
+  document.querySelectorAll('.mixb').forEach(b => b.classList.toggle('on', b.dataset.mix === ST.mix));
+  const mt = document.getElementById('mapMixT');
+  if (mt) mt.innerHTML = ST.mix === 'cmd' ? '월드마다 <b>1판만 고용</b>, 나머지는 지휘'
+                       : ST.mix === 'hire' ? '월드마다 <b>우두머리만 지휘</b>, 나머지는 고용'
+                       : '월드마다 <b>3·5번째가 지휘</b>, 나머지는 고용';
 }
 function mapDraw() {
   const c = mapCv(); if (!c) return;
@@ -9138,6 +9202,7 @@ function stQuit() {
   STORY.on = false; STORY.stage = null; SKIN = null;
   BUF = [bufDef(), bufDef()];
   document.getElementById('game').style.display = 'none';
+  document.getElementById('again2').textContent = '새 대결';
   mapShow(true);
 }
 
@@ -9224,9 +9289,15 @@ function upgOpen() {
       b.classList.toggle('on', b.dataset.mode === (CMD ? 'cmd' : MODE)));
   };
   document.getElementById('mapUpg').onclick = upgOpen;
+  document.querySelectorAll('.stslot').forEach(b => b.onclick = () => stSlotTo(+b.dataset.slot));
+  document.querySelectorAll('.mixb').forEach(b => b.onclick = () => {
+    ST.mix = b.dataset.mix; stSave(); mapDraw(); stHud();
+  });
   document.getElementById('mapReset').onclick = () => {
-    if (!confirm('스토리 진행을 모두 지운다. 그래도 할까?')) return;
-    ST = stDef(); stSave(); stReg(); mapDraw(); stHud();
+    if (!confirm('저장 ' + (ST_SLOT + 1) + '번의 진행을 지운다. 다른 칸은 그대로다. 그래도 할까?')) return;
+    const mix = ST.mix;
+    ST = stDef(); ST.mix = mix; ST_ALL[ST_SLOT] = ST;
+    stSave(); stReg(); mapDraw(); stHud();
   };
   document.getElementById('toMap').onclick = () => mapShow(true);
 })();
