@@ -218,6 +218,14 @@ input.pdot:hover{border-color:var(--hi)}
   background:var(--panel2);color:#c8d2de;cursor:pointer}
 #myaBox .sw button.on{border-color:var(--hi);background:#2a2618;color:#f0c46a}
 #myaOpen{width:100%;margin-top:8px}
+#myaLoad{position:fixed;inset:0;z-index:95;background:rgba(8,11,16,.78);display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;backdrop-filter:blur(2px)}
+#myaLoad.on{display:flex}
+#myaLoad .spin{width:54px;height:54px;border-radius:50%;border:5px solid rgba(240,196,106,.22);
+  border-top-color:var(--hi);animation:myaspin .8s linear infinite}
+#myaLoad b{font-size:15px;color:#e8eef5;letter-spacing:.3px}
+#myaLoad i{font-style:normal;font-size:12px;color:var(--dim)}
+@keyframes myaspin{to{transform:rotate(360deg)}}
 
 .cmdbox{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
 .cmdbox h5{font-size:11.5px;color:var(--dim);margin-bottom:7px;font-weight:700}
@@ -809,6 +817,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>궤도</b> — 원거리의 탄이 날아가는 길을 <b>직선 · 포물선 · 높이 던지기 · 물결</b> 중에 고른다. 포물선과 높이 던지기는 중력을 받아 떨어지고(높이 던지기가 더 높이 뜬다), 물결은 위아래로 일렁이며 날아간다.<br>
     <b>캐릭터 그림</b> — 칸마다 그림 파일을 올리면 졸라맨 대신 그 그림이 병사가 된다 (128px 로 줄여 저장). 발밑에 진영 색 고리가 돌고 체력바가 머리 위에 뜬다. 안 올리면 고른 <b>몸 모양</b>(졸라맨 · 갑옷 · 로봇 · 악마 · 점액 · 곤충 · 야수 · 해골 · 날개 · 버섯 · 요리사 · 융성망)으로 나온다.<br>
     <b style="color:#7ad7ff">공유된 팀</b> — <b>나만의 군대</b> 창 위쪽의 <b>공유된 팀</b> 탭을 누르면 <b>남들이 올려 둔 팀</b>이 쭉 나온다. 한 쪽에 <b>10개</b>씩 보이고 <b>‹ 이전 / 다음 ›</b> 으로 넘기며, 검색칸에 <b>팀 이름 · 올린이 · 무기 이름</b> 아무거나 치면 바로 걸러진다. 줄마다 작은 미리보기와 무기·상점 목록이 보이고, <b>불러오기</b>를 누르면 그 팀이 <b>내 팀 목록(✎)에 생겨서 바로 쓸 수 있다</b>.<br>
+    목록을 받아 오는 동안과 팀을 불러오는 동안에는 <b>화면이 어두워지며 가운데에 빙글이와 '팀 데이터를 불러오는 중'</b> 이 뜬다. 중계가 막혀 있으면 덮개가 걷히고 그 자리에 까닭이 적힌다.<br>
     올릴 때는 <b>공유</b> → <b>모두에게 공유</b> 를 누른다 (올린이 이름도 같이 적는다). 같은 군대를 다시 올리면 덮어쓰고, <b>공유 내리기</b>로 거둘 수 있다. 올린 팀은 목록에 <b>(내가 올림)</b> 으로 표시된다. 캐릭터 그림까지 통째로 올라가지만 88KB를 넘으면 거절되니, 그럴 땐 그림을 빼고 올리면 된다.<br>
     공유는 온라인 매칭과 같은 <b>중계 서버</b>를 쓴다. 중계가 막힌 곳에서는 목록이 비어 보이는데, 그때는 온라인 탭에서 중계 서버를 바꾸거나 아래의 <b>코드 · 파일</b> 방식으로 주고받으면 된다.<br>
     <b>저장과 공유</b> — 만든 군대는 이 브라우저에 저장돼 팀 목록에 <b>✎</b> 로 뜨고, 기본 팀과 똑같이 골라 싸운다 (여러 개 만들어 두고 고를 수 있다). <b>공유</b>를 누르면 글자 코드가 나오는데 복사해서 메신저로 보내면 되고, 받은 사람은 그 코드를 붙여 넣고 <b>코드로 가져오기</b>를 누르면 그대로 들어온다. <b>파일로 저장 / 파일에서 가져오기</b>도 된다. 온라인 대전에서는 방장이 만든 군대가 참가자에게 자동으로 전달된다.<br>
@@ -822,6 +831,7 @@ input.pdot:hover{border-color:var(--hi)}
   </div>
 </div></div>
 
+<div id="myaLoad"><div class="spin"></div><b id="myaLoadT">팀 데이터를 불러오는 중</b><i id="myaLoadS"></i></div>
 <div id="myaBox">
   <div class="myaTop">
     <b style="font-size:16px;color:var(--hi)">나만의 군대</b>
@@ -8236,10 +8246,28 @@ function shrLoadMine() {
 function shrSaveMine() { try { localStorage.setItem(SHR_MINE, JSON.stringify(SHR.mine)); } catch (e) {} }
 const shrUrl = () => (document.getElementById('netSrv').value || 'wss://broker.hivemq.com:8884/mqtt').trim();
 function shrSt(t) { const e = document.getElementById('shrSt'); if (e) e.innerHTML = t; SHR.st = t; }
+let SHR_LT = 0, SHR_LG = 0;
+// 불러오는 동안 화면을 덮고 빙글이를 돌린다
+function shrLoad(on, sub) {
+  const el = document.getElementById('myaLoad');
+  if (!el) return;
+  clearTimeout(SHR_LG);
+  if (on) {
+    SHR_LT = Date.now();
+    document.getElementById('myaLoadS').textContent = sub || '';
+    el.classList.add('on');
+    SHR_LG = setTimeout(() => shrLoad(false), 14000);     // 끝까지 안 와도 풀어 준다
+  } else {
+    const left = 420 - (Date.now() - SHR_LT);             // 너무 깜빡이지 않게
+    if (left > 0) { SHR_LG = setTimeout(() => el.classList.remove('on'), left); }
+    else el.classList.remove('on');
+  }
+}
 
 function shrConnect(then) {
   if (SHR.mq && SHR.mq.ok) { then && then(); return; }
   shrSt('연결하는 중…');
+  shrLoad(true, '중계에 붙는 중…');
   SHR.mq = mqttConnect(shrUrl(), (topic, msg) => {
     if (topic.indexOf(SHR_TOP) !== 0) return;
     const id = topic.slice(SHR_TOP.length);
@@ -8252,13 +8280,23 @@ function shrConnect(then) {
     shrRender();
   }, () => {                                                   // 붙었다 — 올라와 있는 걸 받는다
     shrSt('받는 중…');
+    document.getElementById('myaLoadS').textContent = '올라와 있는 팀을 받는 중…';
     SHR.mq.sub(SHR_TOP + '+');
     shrRender();
-    setTimeout(() => { if (!Object.keys(SHR.map).length) shrSt('올라와 있는 팀이 없다 — 먼저 올려 보세요.'); else shrRender(); }, 1600);
+    setTimeout(() => {
+      if (!Object.keys(SHR.map).length) shrSt('올라와 있는 팀이 없다 — 먼저 올려 보세요.'); else shrRender();
+      shrLoad(false);
+    }, 1600);
     then && then();
-  }, e => { shrSt('<b style="color:#e06a4a">중계에 못 붙었다</b> — ' + esc(e || '') + ' (온라인 탭에서 중계 서버를 바꿔 볼 수 있다)'); });
+  }, e => {
+    shrLoad(false);
+    shrSt('<b style="color:#e06a4a">중계에 못 붙었다</b> — ' + esc(e || '') + ' (온라인 탭에서 중계 서버를 바꿔 볼 수 있다)');
+  });
 }
-function shrClose() { if (SHR.mq) { try { SHR.mq.close(); } catch (e) {} SHR.mq = null; } }
+function shrClose() {
+  if (SHR.mq) { try { SHR.mq.close(); } catch (e) {} SHR.mq = null; }
+  shrLoad(false);
+}
 
 // 지금 군대를 모두에게 올린다
 function shrPublish() {
@@ -8278,7 +8316,9 @@ function shrPublish() {
     return;
   }
   sst.innerHTML = '올리는 중…';
+  shrLoad(true, '팀을 올리는 중…');
   shrConnect(() => {
+    shrLoad(false);
     SHR.mq.pub(SHR_TOP + id, body, 1);                         // 남겨 두는 메시지
     SHR.mine[id] = { nm: a.nm, t: Date.now() };
     shrSaveMine(); myaStore();
@@ -8333,12 +8373,18 @@ function shrRender() {
     const o = page[+b.dataset.get];
     if (!o) return;
     if (MYA.length >= 24) { shrSt('<b style="color:#e06a4a">내 군대가 24개로 꽉 찼다</b>'); return; }
-    const cp = myaClean(o);
-    cp.nm = (o.nm || '받은 군대').slice(0, 14);
-    MYA.push(cp); MYA_I = MYA.length - 1; MYA_K = 'w'; MYA_U = 0;
-    myaStore(); myaReg(); buildGrid('A'); buildGrid('B');
-    b.textContent = '불러옴 ✓'; b.disabled = true;
-    shrSt('<b style="color:#6fd36f">' + esc(cp.nm) + '</b> 를 내 팀 목록에 넣었다 — 닫고 바로 고르면 된다.');
+    shrLoad(true, esc(o.nm || '') + ' — 무기와 그림을 들이는 중…');
+    setTimeout(() => {                                  // 덮개가 먼저 뜨고 나서 들인다
+      try {
+        const cp = myaClean(o);
+        cp.nm = (o.nm || '받은 군대').slice(0, 14);
+        MYA.push(cp); MYA_I = MYA.length - 1; MYA_K = 'w'; MYA_U = 0;
+        myaStore(); myaReg(); buildGrid('A'); buildGrid('B');
+        for (const u of cp.wep.concat(cp.shop)) if (u.img) imgOf(u.img);   // 그림 미리 올려 둔다
+        b.textContent = '불러옴 ✓'; b.disabled = true;
+        shrSt('<b style="color:#6fd36f">' + esc(cp.nm) + '</b> 를 내 팀 목록에 넣었다 — 닫고 바로 고르면 된다.');
+      } finally { shrLoad(false); }
+    }, 30);
   });
   box.querySelectorAll('[data-pv]').forEach(cv => {            // 작은 미리보기
     const o = page[+cv.dataset.pv];
