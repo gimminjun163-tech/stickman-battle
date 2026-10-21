@@ -218,6 +218,38 @@ input.pdot:hover{border-color:var(--hi)}
   background:var(--panel2);color:#c8d2de;cursor:pointer}
 #myaBox .sw button.on{border-color:var(--hi);background:#2a2618;color:#f0c46a}
 #myaOpen{width:100%;margin-top:8px}
+#mapBox{position:fixed;inset:0;z-index:40;background:#0b1016;display:none;
+  flex-direction:column;gap:10px;padding:16px;overflow:auto}
+#mapBox.on{display:flex}
+#mapBox .mapTop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#mapBox h1{margin:0;font-size:20px}
+#mapCv{width:100%;max-width:1180px;margin:0 auto;background:#0e141b;border:1px solid var(--line);border-radius:14px;display:block}
+#stgBox,#upgBox{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:55;display:none;
+  flex-direction:column;width:min(900px,94vw);max-height:88vh;overflow:auto;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#stgBox.on,#upgBox.on{display:flex}
+#stgBox .myaTop,#upgBox .myaTop{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+#stgBox .myaGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#stgBox .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12.5px}
+#stgBox .row label{min-width:84px;color:var(--dim)}
+#stgBox .presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}
+#stgBox .presets button{padding:8px;font-size:12px;border-radius:8px;border:1px solid var(--line);
+  background:var(--panel2);color:#c8d2de;cursor:pointer}
+#stgBox .presets button.on{border-color:var(--hi);background:#2a2618;color:#f0c46a}
+#stgBox .go{padding:13px;font-size:15px;font-weight:800;border-radius:10px;border:0;
+  background:var(--hi);color:#1a1206;cursor:pointer}
+@media(max-width:820px){#stgBox .myaGrid{grid-template-columns:1fr}}
+#upgBox .upgBody{overflow:auto}
+#upgBox .upgGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:8px}
+#upgBox .upgCard{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+#upgBox .upgCard.max{opacity:.62}
+#upgBox .upgCard b{display:block;font-size:13px}
+#upgBox .upgCard b span{color:var(--hi);font-size:11px}
+#upgBox .upgCard i{display:block;font-style:normal;color:var(--dim);font-size:11px;margin:3px 0 7px;min-height:28px}
+#upgBox .upgCard em{font-style:normal;color:#6fd36f;font-size:11.5px;font-weight:700}
+#upgBox .upgCard button{width:100%}
+#upgBox .upgCard button:disabled{opacity:.45;cursor:not-allowed}
 #myaLoad{position:fixed;inset:0;z-index:95;background:rgba(8,11,16,.78);display:none;
   flex-direction:column;align-items:center;justify-content:center;gap:18px;backdrop-filter:blur(2px)}
 #myaLoad.on{display:flex}
@@ -260,6 +292,7 @@ input.pdot:hover{border-color:var(--hi)}
     <button class="tab" data-mode="hire">고용</button>
     <button class="tab" data-mode="evo">진화</button>
     <button class="tab" data-mode="cmd">지휘</button>
+    <button class="tab" id="toMap">스토리</button>
   </div>
 
   <button class="mini" id="myaOpen" style="padding:9px">나만의 군대 만들기 · 불러오기</button>
@@ -807,6 +840,10 @@ input.pdot:hover{border-color:var(--hi)}
     <b>병사 고정</b> — 전투 화면에서 <b>병사를 누르면 그 자리에 선다</b> (발밑에 금빛 고리, 머리 위에 못 표시). 걷지도 밀려나지도 않고 제자리에서 싸운다. 한 번 더 누르거나 빈 곳을 누르면 풀리고, 다른 병사를 누르면 그쪽으로 옮겨 간다. 죽으면 저절로 풀린다. 돌진·내려찍기처럼 몸을 날리는 기술이 터지는 동안에는 잠깐 움직인다.<br>
     <b>반동</b> — 쏘는 순간 총구에서 연기와 섬광이 터지고, 총이면 탄피가 튀고, 포·로켓처럼 무거운 것은 발밑 흙먼지까지 인다. 쏜 사람(또는 전차·장갑차·수레)은 뒤로 밀렸다가 제자리로 돌아오고, 차체는 앞이 살짝 들린다.<br>
     <b>탈것</b> — 전차병·대포는 <b>전차</b>, 중기관총병은 <b>장갑차</b>, 발리스타대는 <b>발리스타</b>, 융합포병은 <b>보행 병기</b>, 궤도 사령관은 <b>부양 포대</b>, 매머드 기수는 <b>매머드</b> 위에, 고대 이집트의 전차병은 말이 끄는 <b>나무 수레</b> 위에 올라탄 모습으로 나온다 (같은 이름이라도 현대 전차병은 전차다). 드론 운용병 머리 위에는 작은 드론이 따라다닌다. 모두 진영 색을 그대로 쓰고, 쏠 때 포신이 뒤로 밀리며 포구 화염이 튄다.<br>
+    <b style="color:#7ad7ff">스토리 모드</b> — 처음 화면이 <b>세계 지도</b>다. 월드 8개 × 스테이지 5개, 모두 40판이고 앞 스테이지를 깨야 다음이 열린다. 점을 누르면 적·난이도·보상이 나오고 <b>출격</b>으로 들어간다. 스테이지는 <b>고용</b>(코인으로 병사를 산다)과 <b>지휘</b>(거기에 전진·방어선·후퇴·돌격 명령이 붙는다, 3·5번째)로 나뉜다.<br>
+    월드마다 <b>하늘·땅·배경·언덕 색과 지형</b>이 다르다 — 초원 지대(숲), 젖은 강변(강과 다리), 검은 숲(빽빽한 숲), 불의 산(붉은 바위 고지), 강철 도시(첨탑), 얼어붙은 벌판(설원), 모래 폐허(사막 신전), 별의 끝(보랏빛 하늘). 적도 월드마다 다르고 <b>갈수록 세진다</b> (적 전투력 0.75배 → 3.17배, AI 쉬움 → 최강, 수입 간격 11초 → 5.3초).<br>
+    <b>시작 군대는 약하다</b> — 신병대는 몽둥이·돌팔매와 상점 '전사' 뿐이다. 깨면 들어오는 <b>EXP</b> 로 <b>업그레이드</b>에서 키운다: <b>군대 전체</b>(공격력·체력·연사·돌진·코인 수입·시작 코인), <b>지휘</b>(돌격 함성 — 베이스 돌격 명령에 전군이 돌진, 방어 태세 — 방어선 중 받는 피해 감소), <b>무기 해금</b>(돌도끼·검·활·창), <b>상점 병사 해금</b>(사냥꾼·석궁병·기사·성기사), <b>팀 해금</b> — 버섯·쿡 계열과 표적만 빼고 <b>기본 팀 33개 전부</b>를 EXP 로 열 수 있다 (센 팀일수록 비싸다: 석기시대 110 → 융성망 630). 나만의 군대로도 출격할 수 있다.<br>
+    처음 깬 판은 보상 전액, 다시 깨면 30%를 준다. 진행·EXP·해금은 이 브라우저에 저장되고 <b>진행 지우기</b>로 처음부터 할 수 있다. 스토리는 위쪽 <b>스토리</b> 탭에 있다 — 시뮬레이션·고용·진화·지휘는 그대로고, 탭을 누르면 세계 지도가 열리고 지도의 <b>← 일반 전투로</b> 로 원래 화면으로 돌아온다.<br>
     <b style="color:#7ad7ff">나만의 군대</b> — 위쪽 <b>나만의 군대 만들기 · 불러오기</b> 를 누르면 내 군대를 직접 짠다. <b>WEAPON 5칸 · SHOP 5칸</b>까지 만들 수 있고, 칸마다 이름 · 근접/원거리 · <b>공격력 · 공격 간격 · 사거리 · 체력 · 크기 · 이동 속도</b>(원거리는 탄 속도와 폭발 범위까지) · SHOP은 필요한 값을 정한다. 초당 피해와 고용 값은 그때그때 계산돼 나온다 — 기본 무기들 사이에서 몇 번째쯤 센지로 값이 매겨지므로 고용 대전에서도 공정하다.<br>
     <b>무기 그리기</b> — 아래 모눈판에 <b>직접 그린 그대로</b> 무기가 된다. 노란 점(●)이 손이고 오른쪽이 공격 방향이다. 색 12가지 · 굵기 1~16 · <b>면 채우기</b>(획을 닫아 덩어리로 칠한다) · 되돌리기 · 모두 지우기를 쓴다. 그린 무기는 손에 들린 모습으로 나온다.<br>
     <b>탄알 그리기</b> — 그림판 위 <b>탄알 그림</b> 을 누르면 날아가는 것만 따로 그린다. 가운데 <b>✛</b> 가 탄알 한가운데고 오른쪽이 날아가는 방향이다. <b>안 그리면 지금처럼 무기 모양 그대로 날아간다.</b> 미리보기 오른쪽에 날아가는 모습이 같이 나온다.<br>
@@ -835,6 +872,23 @@ input.pdot:hover{border-color:var(--hi)}
   </div>
 </div></div>
 
+<div id="mapBox">
+  <div class="mapTop">
+    <h1>플링코 <span style="color:var(--hi)">스토리</span></h1>
+    <span class="hint" id="mapExp" style="margin:0"></span>
+    <span style="flex:1"></span>
+    <button class="mini" id="mapUpg">업그레이드</button>
+    <button class="mini" id="mapNormal">← 일반 전투로 (4종)</button>
+    <button class="mini" id="mapReset">진행 지우기</button>
+  </div>
+  <canvas id="mapCv" width="1180" height="720"></canvas>
+  <div class="hint" style="max-width:1180px;margin:0 auto">
+    점을 눌러 스테이지에 들어간다. <b>고용</b> 스테이지는 코인으로 병사를 사고, <b>지휘</b> 스테이지는 거기에 명령이 붙는다.
+    깨면 EXP 가 들어오고, <b>업그레이드</b>에서 군대 전체를 키우거나 무기·상점 병사·팀을 연다. 진행은 이 브라우저에 저장된다.
+  </div>
+</div>
+<div id="stgBox"></div>
+<div id="upgBox"></div>
 <div id="myaLoad"><div class="spin"></div><b id="myaLoadT">팀 데이터를 불러오는 중</b><i id="myaLoadS"></i></div>
 <div id="myaBox">
   <div class="myaTop">
@@ -871,6 +925,7 @@ input.pdot:hover{border-color:var(--hi)}
       <b style="color:var(--hi)">공유된 팀</b>
       <input type="text" id="shrQ" placeholder="이름 · 올린이 · 무기로 찾기" style="flex:1;min-width:160px">
       <button class="mini" id="shrRe">새로 고치기</button>
+      <button class="mini" id="shrAdm">관리자</button>
       <span class="hint" style="margin:0" id="shrSt">연결하는 중…</span>
     </div>
     <div id="shrList" class="shrList"></div>
@@ -1401,6 +1456,11 @@ let NUM_LIST = [1, 2, 3, 5, 10];           // 직접 넣은 값
 let FORM_MAX = 99;                         // 공 하나가 될 수 있는 최대 병력 (셋업에서 조절)
 let COIN_START = 10, COIN_EVERY = 10, KILL_W = .67;
 let CTRL = ['human', 'ai'];                // 진영별 조종
+// 스토리 업그레이드가 얹히는 자리 (평소엔 모두 1배)
+let BUF = [{ rof: 1, hp: 1, coin: 1, guard: 0, cry: 0 }, { rof: 1, hp: 1, coin: 1, guard: 0, cry: 0 }];
+const bufDef = () => ({ rof: 1, hp: 1, coin: 1, guard: 0, cry: 0 });
+// 월드마다 다른 하늘·땅
+let SKIN = null;
 const MAX_CORP = 55;
 let SPAWN_EVERY = 7;   // 셋업에서 조절
 let NUKE_HP = 0;       // 이 체력 이하로 떨어지면 베이스가 적 병사를 전멸시킨다 (0 = 끔)
@@ -1642,6 +1702,11 @@ function setOrder(t, ty, x, k) {
   if (typeof x === 'number' && isFinite(x)) o.x = clamp(x, 150, WORLD_W - 150);
   if (was !== ty && G.sold) {
     const b = BASE[t];
+    if (ty === 'base' && BUF[t].cry > 0 && !k) {     // 지휘 '돌격 함성'
+      G.rush[t] = Math.max(G.rush[t], BUF[t].cry);
+      G.nums.push({ x: b.x, y: bGY(b) - b.h - 120, vx: 0, vy: -18,
+                    v: '돌격 함성!', col: '#ffd76a', big: true, life: 1.4 });
+    }
     G.nums.push({ x: b.x, y: bGY(b) - b.h - 96, vx: 0, vy: -20,
                   v: (k ? keyName(k) + ' ' : '') + ORD_NAME[ty] + '!', col: G.col[t], big: true, life: 1.6 });
   }
@@ -1865,8 +1930,8 @@ function drawTerrainBack(L, R) {
       fx.beginPath(); fx.moveTo(z.a, GROUND);
       for (let x = z.a; x < z.b; x += 10) fx.lineTo(x, gyAt(x));
       fx.lineTo(z.b, gyAt(z.b)); fx.lineTo(z.b, GROUND); fx.closePath();
-      fx.fillStyle = '#4b5e51'; fx.fill();
-      fx.strokeStyle = '#7d9582'; fx.lineWidth = 3; fx.stroke();
+      fx.fillStyle = (SKIN && SKIN.hill) || '#4b5e51'; fx.fill();
+      fx.strokeStyle = (SKIN && SKIN.hillL) || '#7d9582'; fx.lineWidth = 3; fx.stroke();
       fx.fillStyle = 'rgba(0,0,0,.14)';
       for (let x = Math.floor(x0 / 40) * 40; x < x1; x += 40) {
         const gy0 = gyAt(x);
@@ -2559,6 +2624,7 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX, price) {
   let n = 0; for (const s of G.sold) if (s.team === team) n++;
   if (n >= MAX_SOLD) return;
   const T = G.roster[team][ti], b = BASE[team];
+  hpMul *= BUF[team].hp || 1;                       // 스토리 업그레이드
   if (w.chp) hpMul *= w.chp;                        // 직접 만든 무기에 붙은 체력·크기
   if (w.csz) size *= w.csz;
   if (T.buff) { hpMul *= T.buff.hp; dmgMul *= T.buff.dmg; }
@@ -2773,6 +2839,8 @@ function dmgNum(x, y, v, col) {
 }
 
 function damage(s, amount, kx, ky) {
+  const gd = BUF[s.team].guard;                      // 지휘 '방어 태세'
+  if (gd && G.order && G.order[s.team] && G.order[s.team].t === 'hold') amount *= 1 - Math.min(.45, gd);
   if (TERR.length && amount < s.hp + 1) {            // 숲·언덕은 방어에 유리하다 (즉사급 기술은 그대로)
     const tc = terrCode(s.x);
     if (tc === 2) amount *= .75; else if (tc === 3) amount *= .9;
@@ -2988,7 +3056,7 @@ function stepBattle(dt) {
     // 코앞까지 붙으면 총·활을 제대로 겨눌 수 없다 — 근접이 붙을 이유를 만들어 준다
     const pinned = s.w.type === 'r' && !isBase && dist < RANGED_MIN;
     if (dist <= rgS && s.cool <= 0 && !pinned && !(RIVER_DEEP && tc === 1 && s.w.type === 'r')) {
-      s.cool = s.w.cd * rnd(.9, 1.1); s.swing = 1;
+      s.cool = s.w.cd * rnd(.9, 1.1) * (BUF[s.team].rof || 1); s.swing = 1;
       // 특수기는 적 병사만 노리게 돼 있었다. 베이스 앞에 서면 아무것도 못 하고 멈춰 있었다.
       const bangBase = dv => {
         eb.hp -= dv;
@@ -5107,20 +5175,32 @@ function drawBaseShape(fx, b, col, shape, t) {
 
 function drawField() {
   const W = fc.width, H = fc.height, s = G.cam.s;
+  const sk = SKIN || { sky: ['#16202c', '#22303f', '#2c3a46'], gnd: '#3a4a44', bg: 'city', bgc: 'rgba(255,255,255,.035)' };
   const g = fx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, '#16202c'); g.addColorStop(.62, '#22303f'); g.addColorStop(1, '#2c3a46');
+  g.addColorStop(0, sk.sky[0]); g.addColorStop(.62, sk.sky[1]); g.addColorStop(1, sk.sky[2]);
   fx.setTransform(1, 0, 0, 1, 0, 0); fx.fillStyle = g; fx.fillRect(0, 0, W, H);
 
   fx.setTransform(s, 0, 0, s, W / 2 - G.cam.x * s, H * .84 - GROUND * s);
 
-  // 먼 배경
-  fx.fillStyle = 'rgba(255,255,255,.035)';
+  // 먼 배경 — 월드마다 다른 실루엣
+  fx.fillStyle = sk.bgc;
   for (let i = 0, nb = Math.ceil(WORLD_W / 104) + 1; i < nb; i++) {
     const bx = i * 104 + 20, bw = 44 + (i * 37) % 46, bh = 70 + (i * 53) % 150;
-    fx.fillRect(bx, GROUND - bh, bw, bh);
+    if (sk.bg === 'none') break;
+    if (sk.bg === 'tree') {                          // 숲
+      fx.beginPath(); fx.moveTo(bx, GROUND); fx.lineTo(bx + bw / 2, GROUND - bh * 1.1);
+      fx.lineTo(bx + bw, GROUND); fx.closePath(); fx.fill();
+    } else if (sk.bg === 'rock') {                   // 바위산
+      fx.beginPath(); fx.moveTo(bx - 10, GROUND); fx.lineTo(bx + bw * .5, GROUND - bh * 1.5);
+      fx.lineTo(bx + bw + 10, GROUND); fx.closePath(); fx.fill();
+    } else if (sk.bg === 'spire') {                  // 첨탑
+      fx.fillRect(bx + bw * .3, GROUND - bh, bw * .4, bh);
+      fx.beginPath(); fx.moveTo(bx + bw * .25, GROUND - bh); fx.lineTo(bx + bw * .5, GROUND - bh - 36);
+      fx.lineTo(bx + bw * .75, GROUND - bh); fx.closePath(); fx.fill();
+    } else fx.fillRect(bx, GROUND - bh, bw, bh);     // 도시
   }
   // 땅
-  fx.fillStyle = '#3a4a44'; fx.fillRect(-200, GROUND, WORLD_W + 400, 400);
+  fx.fillStyle = sk.gnd; fx.fillRect(-200, GROUND, WORLD_W + 400, 400);
   fx.fillStyle = 'rgba(0,0,0,.22)'; fx.fillRect(-200, GROUND, WORLD_W + 400, 5);
   fx.fillStyle = 'rgba(255,255,255,.06)';
   for (let x = 0; x < WORLD_W; x += 120) fx.fillRect(x, GROUND + 16, 46, 3);
@@ -5929,7 +6009,8 @@ function setMode(tab) {
   const m = CMD ? 'hire' : tab;                    // 지휘 탭은 고용 위에 명령을 얹은 것
   MODE = m;
   if (m !== 'hire' && NET.on) netClose();          // 온라인은 고용·지휘에서만 쓴다
-  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.mode === tab));
+  document.querySelectorAll('.tabs button[data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === tab));
+  const tm = document.getElementById('toMap'); if (tm) tm.classList.remove('on');
   document.getElementById('hireOpts').style.display = m === 'hire' ? 'block' : 'none';
   document.getElementById('cmdHint').style.display  = CMD ? 'block' : 'none';
   document.getElementById('evoOpts').style.display  = m === 'evo'  ? 'block' : 'none';
@@ -5944,7 +6025,7 @@ function setMode(tab) {
   if (m === 'hire') for (const si of [0, 1]) if (sel[si].length > 1) sel[si] = [sel[si][0]];
   refresh('A'); refresh('B');
 }
-document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+document.querySelectorAll('.tabs button[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode));
 
 document.getElementById('netRand').onclick = netRandom;
 document.getElementById('netAdv').onclick = () => {
@@ -6288,6 +6369,7 @@ document.getElementById('startBtn').onclick = () => {
   if (typeof musStart === 'function') musStart(true);  // 배경음악 (끄기면 아무것도 안 한다)
 };
 document.getElementById('again').onclick = document.getElementById('again2').onclick = () => {
+  if (STORY.on) { stQuit(); return; }                  // 스토리는 지도로 돌아간다
   document.getElementById('game').style.display = 'none';
   document.getElementById('setup').style.display = 'block';
 };
@@ -6897,7 +6979,7 @@ function stepHire(dt) {
   if (COIN_EVERY > 0) while (G.incT >= COIN_EVERY) {   // 일정 시간마다 코인 하나
     G.incT -= COIN_EVERY;
     for (let t = 0; t < 2; t++) {
-      const k = CTRL[t] === 'ai' && !NET.on ? aiLv(t).coin : 1;     // 최강만 조금 더 받는다
+      const k = (CTRL[t] === 'ai' && !NET.on ? aiLv(t).coin : 1) * (BUF[t].coin || 1);
       G.coin[t] += k; G.earn[t] += k;
     }
   }
@@ -7474,6 +7556,17 @@ function frame(now) {
           sub.style.cssText = 'font-size:15px;font-weight:700;color:#8b96a5';
           wt.after(sub);
         }
+        if (STORY.on && typeof stFinish === 'function') {      // 스토리 — 보상 주고 지도로
+          const res = stFinish();
+          wt.innerHTML = (G.winner === 0 ? '승리' : '패배') +
+            ' <span style="font-size:15px;color:#8b96a5">' + STORY.stage.nm + '</span>';
+          wt.style.color = G.winner === 0 ? '#6fd36f' : '#e06a4a';
+          const btn = document.getElementById('again2');
+          btn.textContent = '세계 지도로';
+          btn.onclick = () => stQuit();
+          sub.innerHTML = res + ' · 처치 ' + G.kills[0] + ' : ' + G.kills[1] + ' · ' + Math.round(G.t) + '초';
+          return;
+        }
         sub.innerHTML = '처치 <b style="color:' + G.col[0] + '">' + G.kills[0] + '</b>' +
           ' : <b style="color:' + G.col[1] + '">' + G.kills[1] + '</b>' +
           (MODE === 'hire'
@@ -7606,6 +7699,7 @@ function myaReg() {
                        col: bs.col || '#ffd76a' },
                  bw: myaBaseWep('my' + ai + 'base', bs, a) });
   });
+  if (typeof stReg === 'function' && ST) stReg();     // 신병대는 늘 맨 뒤에 둔다
   for (const si of [0, 1]) sel[si] = sel[si].filter(e => e.i < TEAMS.length);
 }
 // 그 자리에서만 쓰는 임시 등록 (온라인으로 받은 군대)
@@ -8466,7 +8560,20 @@ function myaListName() {
 const SHR_TOP = 'plinkobattle/teams/v1/';
 const SHR_MINE = 'plinko.myarmy.pub.v1';
 const SHR_PAGE = 10;
-const SHR = { mq: null, map: {}, q: '', page: 0, st: '', mine: {} };
+const SHR = { mq: null, map: {}, q: '', page: 0, st: '', mine: {}, admin: false };
+/* 관리자 — 비밀번호를 치면 올라온 팀을 지울 수 있다.
+   혼자 쓰는 브라우저 안의 잠금이라 대단한 보안은 아니다 (파일을 뜯어보면 해시가 보인다). */
+const ADM_KEY = 'plinko.admin.v1';
+const ADM_DEF = 2982379222;                          // 정해 둔 관리자 비밀번호의 해시
+function admHash(t) {
+  let h = 2166136261;
+  for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function admWant() {
+  try { const v = +localStorage.getItem(ADM_KEY); if (v) return v; } catch (e) {}
+  return ADM_DEF;
+}
 
 function shrLoadMine() {
   try { SHR.mine = JSON.parse(localStorage.getItem(SHR_MINE) || '{}') || {}; } catch (e) { SHR.mine = {}; }
@@ -8595,7 +8702,9 @@ function shrRender() {
       ' <span style="color:var(--dim);font-weight:400;font-size:11px">by ' + esc(o.by || '익명') + mine + '</span></div>' +
       '<div class="sub">무기 ' + (o.wep || []).length + ' — ' + wep + '</div>' +
       '<div class="sub">상점 ' + (o.shop || []).length + ' — ' + shop + '</div></div>' +
-      '<button class="mini" data-get="' + i + '" style="padding:8px 12px">불러오기</button></div>';
+      '<button class="mini" data-get="' + i + '" style="padding:8px 12px">불러오기</button>' +
+      (SHR.admin ? '<button class="mini" data-del="' + i + '" style="padding:8px 10px;border-color:#e06a4a;color:#e06a4a">삭제</button>' : '') +
+      '</div>';
   }).join('') || '<div class="hint">' + (SHR.q ? '찾는 팀이 없다.' : '아직 올라온 팀이 없다.') + '</div>';
   box.querySelectorAll('[data-get]').forEach(b => b.onclick = () => {
     const o = page[+b.dataset.get];
@@ -8613,6 +8722,18 @@ function shrRender() {
         shrSt('<b style="color:#6fd36f">' + esc(cp.nm) + '</b> 를 내 팀 목록에 넣었다 — 닫고 바로 고르면 된다.');
       } finally { shrLoad(false); }
     }, 30);
+  });
+  box.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {   // 관리자 삭제
+    const o = page[+b.dataset.del];
+    if (!o || !SHR.admin) return;
+    if (!confirm('"' + (o.nm || '이름 없음') + '" 를 공유 목록에서 지운다. 모두에게서 사라진다.')) return;
+    shrLoad(true, '지우는 중…');
+    shrConnect(() => {
+      SHR.mq.pub(SHR_TOP + o.id, '', 1);                       // 빈 메시지 = 내리기
+      delete SHR.map[o.id]; delete SHR.mine[o.id];
+      shrSaveMine(); shrLoad(false); shrRender();
+      shrSt('<b style="color:#e06a4a">' + esc(o.nm || '') + '</b> 를 지웠다.');
+    });
   });
   box.querySelectorAll('[data-pv]').forEach(cv => {            // 작은 미리보기
     const o = page[+cv.dataset.pv];
@@ -8652,10 +8773,462 @@ function myaTab(which) {
   document.getElementById('myaPub').onclick = shrPublish;
   document.getElementById('myaUnpub').onclick = shrUnpublish;
   document.getElementById('shrRe').onclick = () => { SHR.map = {}; shrClose(); shrConnect(); shrRender(); };
+  document.getElementById('shrAdm').onclick = () => {
+    if (SHR.admin) {                                   // 켜져 있으면 끄거나 비밀번호를 바꾼다
+      const nw = prompt('관리자 모드를 끄려면 그냥 확인. 비밀번호를 바꾸려면 새 비밀번호를 치세요.', '');
+      if (nw) {
+        try { localStorage.setItem(ADM_KEY, String(admHash(nw))); } catch (e) {}
+        shrSt('<b style="color:#6fd36f">비밀번호를 바꿨다</b> (이 브라우저에만 저장된다)');
+        return;
+      }
+      SHR.admin = false;
+      document.getElementById('shrAdm').classList.remove('on');
+      shrRender(); shrSt('관리자 모드를 껐다.');
+      return;
+    }
+    const pw = prompt('관리자 비밀번호');
+    if (pw === null) return;
+    if (admHash(pw) !== admWant()) { shrSt('<b style="color:#e06a4a">비밀번호가 다르다</b>'); return; }
+    SHR.admin = true;
+    document.getElementById('shrAdm').classList.add('on');
+    shrRender();
+    shrSt('<b style="color:#ffd76a">관리자 모드</b> — 줄마다 <b>삭제</b>가 생겼다. 다시 누르면 끄거나 비밀번호를 바꾼다.');
+  };
   document.getElementById('shrPrev').onclick = () => { SHR.page--; shrRender(); };
   document.getElementById('shrNext').onclick = () => { SHR.page++; shrRender(); };
   const q = document.getElementById('shrQ');
   q.oninput = () => { SHR.q = q.value; SHR.page = 0; shrRender(); };
+})();
+
+/* ============================================================
+   스토리 모드 — 세계 지도를 돌며 스테이지를 깨고, 얻은 EXP 로 군대를 키운다
+   ============================================================ */
+const ST_KEY = 'plinko.story.v1';
+const WORLDS = [
+  { nm: '초원 지대', sub: '첫 싸움터. 느슨한 무리들이 돌아다닌다.',
+    sky: ['#1b2a33', '#2b4038', '#3a5540'], gnd: '#44603f', bg: 'tree', bgc: 'rgba(120,200,120,.07)',
+    hill: '#4e6b47', hillL: '#86a87e',
+    mapc: '#5a8f52', terr: { river: 0, forest: 2, hill: 1, swamp: 0 }, len: 2400,
+    foe: ['석기시대 군대', '곤충 군단', '늑대인간'] },
+  { nm: '젖은 강변', sub: '강이 길을 가른다. 건너는 쪽이 불리하다.',
+    sky: ['#16222c', '#223c4a', '#2d4f5c'], gnd: '#3a5059', bg: 'none', bgc: 'rgba(255,255,255,.03)',
+    hill: '#41606a', hillL: '#7fa6b0',
+    mapc: '#3d86c6', terr: { river: 2, forest: 1, hill: 0, swamp: 1 }, len: 2800,
+    foe: ['바이킹', '해적', '심해 괴물'] },
+  { nm: '검은 숲', sub: '나무가 빽빽해 화살이 잘 안 든다.',
+    sky: ['#12181d', '#1d2a22', '#26352a'], gnd: '#2f4030', bg: 'tree', bgc: 'rgba(60,120,70,.1)',
+    hill: '#35492f', hillL: '#5f7d54',
+    mapc: '#2f7a3a', terr: { river: 0, forest: 3, hill: 1, swamp: 1 }, len: 3000,
+    foe: ['좀비', '베놈', '해골단'] },
+  { nm: '불의 산', sub: '뜨거운 바위 위. 높낮이가 심하다.',
+    sky: ['#2a1414', '#4a2018', '#5e2c1c'], gnd: '#5a3328', bg: 'rock', bgc: 'rgba(255,120,60,.07)',
+    hill: '#6b3a24', hillL: '#c07a4a',
+    mapc: '#c0462a', terr: { river: 0, forest: 0, hill: 3, swamp: 0 }, len: 3200,
+    foe: ['화염 군단', '악마', '공룡'] },
+  { nm: '강철 도시', sub: '기계들이 줄지어 기다린다.',
+    sky: ['#141a24', '#1e2a3c', '#28374a'], gnd: '#39434e', bg: 'spire', bgc: 'rgba(160,200,255,.05)',
+    hill: '#444f5c', hillL: '#8fa3bb',
+    mapc: '#7a8fa8', terr: { river: 1, forest: 0, hill: 1, swamp: 0 }, len: 3600,
+    foe: ['현대 군대', '사이보그', '스팀펑크'] },
+  { nm: '얼어붙은 벌판', sub: '발이 묶이는 설원. 멀리서 늑대 소리가 난다.',
+    sky: ['#17202b', '#2b3b4a', '#3e5466'], gnd: '#5d6b76', bg: 'rock', bgc: 'rgba(220,240,255,.06)',
+    hill: '#6a7985', hillL: '#c3d6e4',
+    mapc: '#9ec8e8', terr: { river: 1, forest: 1, hill: 2, swamp: 0 }, len: 3400,
+    foe: ['얼음 왕국', '늑대인간', '바이킹'] },
+  { nm: '모래 폐허', sub: '무너진 신전 사이로 마른 바람이 분다.',
+    sky: ['#2b2314', '#4a3c1e', '#6a5630'], gnd: '#7a6336', bg: 'spire', bgc: 'rgba(255,220,140,.06)',
+    hill: '#876b3a', hillL: '#d8b878',
+    mapc: '#d8b060', terr: { river: 0, forest: 0, hill: 2, swamp: 0 }, len: 3600,
+    foe: ['고대 이집트', '아즈텍', '해골단'] },
+  { nm: '별의 끝', sub: '하늘이 갈라진 곳. 여기서 끝낸다.',
+    sky: ['#140f24', '#241a42', '#33265c'], gnd: '#3b3356', bg: 'spire', bgc: 'rgba(200,160,255,.07)',
+    hill: '#473c66', hillL: '#a98fd8',
+    mapc: '#b07ae0', terr: { river: 1, forest: 0, hill: 2, swamp: 1 }, len: 4000,
+    foe: ['외계인', '천사', '융성망'] }
+];
+const ST_UP = [
+  { k: 'atk',   nm: '공격력',    d: '전군 공격력 +6%',            max: 8, c: l => 24 + l * 14 },
+  { k: 'hp',    nm: '체력',      d: '전군 체력 +8%',              max: 8, c: l => 24 + l * 14 },
+  { k: 'rof',   nm: '연사',      d: '공격 간격 -4%',              max: 8, c: l => 30 + l * 16 },
+  { k: 'chg',   nm: '돌진',      d: '돌진 속도 +8%',              max: 6, c: l => 26 + l * 15 },
+  { k: 'coin',  nm: '코인 수입', d: '시간당 코인 +8%',            max: 6, c: l => 30 + l * 18 },
+  { k: 'start', nm: '시작 코인', d: '판 시작 코인 +2',            max: 6, c: l => 26 + l * 14 },
+  { k: 'cry',   nm: '돌격 함성', d: '지휘 — 베이스 돌격에 전군 3초 돌진 (레벨마다 +1.5초)', max: 3, c: l => 60 + l * 45, cmd: 1 },
+  { k: 'guard', nm: '방어 태세', d: '지휘 — 방어선 중 받는 피해 -10%', max: 3, c: l => 60 + l * 45, cmd: 1 }
+];
+// 신병대가 쓰는 것들 — 처음엔 둘뿐이고 나머지는 EXP 로 연다
+const ST_WEP = [
+  { id: 'club',      nm: '몽둥이',  c: 0 },
+  { id: 'sling',     nm: '돌팔매',  c: 0 },
+  { id: 'stoneaxe',  nm: '돌도끼',  c: 45 },
+  { id: 'sword',     nm: '검',      c: 80 },
+  { id: 'bow',       nm: '활',      c: 110 },
+  { id: 'spear',     nm: '창',      c: 150 }
+];
+const ST_SHOP = [
+  { nm: '전사',   cost: 5,  w: 'stoneaxe',  hp: 1.3, dmg: 1.2, size: 1.05, c: 0 },
+  { nm: '사냥꾼', cost: 7,  w: 'bonespear', hp: 1.4, dmg: 1.4, size: 1.1,  c: 70 },
+  { nm: '석궁병', cost: 9,  w: 'crossbow',  hp: 1.4, dmg: 1.6, size: 1.05, c: 130 },
+  { nm: '기사',   cost: 12, w: 'greatsword',hp: 2.2, dmg: 1.8, size: 1.3,  c: 200 },
+  { nm: '성기사', cost: 20, w: 'holyspear', hp: 4,   dmg: 2.6, size: 1.6,  c: 320 }
+];
+// 해금할 수 있는 팀 — 버섯·쿡 계열과 표적, 내가 만든 군대만 빼고 전부
+const TEAM_BAN = ['버섯 포자', '사이언스버섯포자', '악마의 쿡', '미슐랭 쿸', '도전 모드'];
+let ST_TEAM = [];
+function stBuildTeamList() {
+  const list = TEAMS.filter(t => !t.story && t.mine === undefined && TEAM_BAN.indexOf(t.name) < 0)
+    .map(t => {
+      let p = 0, n = 0;
+      for (const id of t.basics) { const w = WEAPONS[id]; if (w) { p += wPower(w); n++; } }
+      return { nm: t.name, s: (n ? p / n : 0) + t.shop.reduce((a, u) => a + u.cost, 0) * 8 };
+    })
+    .sort((a, b) => a.s - b.s);
+  ST_TEAM = list.map((x, i) => ({ nm: x.nm,
+    c: Math.round((110 + (list.length > 1 ? i / (list.length - 1) : 0) * 520) / 10) * 10 }));
+  return ST_TEAM;
+}
+
+var ST = null;                                           // var — 앞쪽 코드가 미리 들여다봐도 안전하게
+var STORY = { on: false, stage: null, prev: null };
+const stDef = () => ({ exp: 0, used: 0, clear: {}, up: {}, un: { w: [], s: [], t: [] }, team: 'new' });
+function stLoad() {
+  try { ST = JSON.parse(localStorage.getItem(ST_KEY) || 'null'); } catch (e) { ST = null; }
+  if (!ST || typeof ST !== 'object') ST = stDef();
+  ST.up = ST.up || {}; ST.un = ST.un || { w: [], s: [], t: [] };
+  ST.un.w = ST.un.w || []; ST.un.s = ST.un.s || []; ST.un.t = ST.un.t || [];
+  ST.clear = ST.clear || {}; ST.exp = +ST.exp || 0; ST.used = +ST.used || 0;
+}
+function stSave() { try { localStorage.setItem(ST_KEY, JSON.stringify(ST)); } catch (e) {} }
+const stLv = k => ST.up[k] || 0;
+const stExp = () => ST.exp - ST.used;                    // 쓸 수 있는 EXP
+const stHasW = i => i < 2 || ST.un.w.indexOf(i) >= 0;
+const stHasS = i => i < 1 || ST.un.s.indexOf(i) >= 0;
+const stHasT = nm => ST.un.t.indexOf(nm) >= 0;
+const stDone = id => !!ST.clear[id];
+const stOpen = (w, i) => (w === 0 && i === 0) || stDone(i ? w * 10 + i - 1 : (w - 1) * 10 + 4);
+
+// 스테이지 — 뒤로 갈수록 세진다
+function stStage(w, i) {
+  const W = WORLDS[w], d = w * 5 + i;
+  return { w, i, id: w * 10 + i, nm: W.nm + ' ' + (i + 1) + (i === 4 ? ' · 우두머리' : ''),
+    cmd: i === 2 || i === 4, foe: W.foe[i % W.foe.length],
+    pow: Math.round((.75 + d * .062) * 100) / 100,
+    ai: clamp(Math.floor(d / 10), 0, 3),
+    every: Math.max(5, Math.round((11 - d * .145) * 10) / 10),
+    exp: 20 + w * 11 + i * 6 + (i === 4 ? 25 : 0),
+    len: W.len + i * 120 };
+}
+// 신병대 — 연 것만 들어간다
+function stTeamDef() {
+  const basics = ST_WEP.filter((x, i) => stHasW(i)).map(x => x.id);
+  const shop = ST_SHOP.filter((x, i) => stHasS(i))
+    .map(x => ({ name: x.nm, cost: x.cost, w: x.w, hp: x.hp, dmg: x.dmg, size: x.size }));
+  return { name: '신병대', col: '#6f9ad6', style: 'stick', base: 'keep', basics, shop, story: true };
+}
+function stReg() {                                       // 팀 목록 맨 뒤에 신병대를 둔다
+  if (!ST_TEAM.length) stBuildTeamList();
+  const i = TEAMS.findIndex(t => t.story);
+  const td = stTeamDef();
+  if (i >= 0) TEAMS[i] = td; else TEAMS.push(td);
+  return TEAMS.findIndex(t => t.story);
+}
+const stTeamIdx = () => TEAMS.findIndex(t => t.story);
+
+/* ── 세계 지도 ── */
+const mapCv = () => document.getElementById('mapCv');
+let MAP_HOT = null, MAP_NODES = [];
+function mapShow(on) {
+  document.getElementById('mapBox').classList.toggle('on', on);
+  const tm = document.getElementById('toMap');
+  if (tm) tm.classList.toggle('on', on);
+  if (on) {                                          // 스토리 탭만 켜 둔다
+    document.querySelectorAll('.tabs button[data-mode]').forEach(b => b.classList.remove('on'));
+    document.getElementById('setup').style.display = 'none';
+    mapDraw(); stHud();
+  }
+}
+function stHud() {
+  const e = document.getElementById('mapExp');
+  if (!e) return;
+  const n = Object.keys(ST.clear).length;
+  e.innerHTML = '남은 EXP <b style="color:var(--hi)">' + stExp() + '</b> · 모은 EXP ' + ST.exp +
+                ' · 깬 스테이지 <b>' + n + '</b>/' + (WORLDS.length * 5);
+}
+function mapDraw() {
+  const c = mapCv(); if (!c) return;
+  const x = c.getContext('2d'), W = c.width, H = c.height;
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  const g = x.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#0e141b'); g.addColorStop(1, '#16202c');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  MAP_NODES = [];
+  const COLS = 4, rows = Math.ceil(WORLDS.length / COLS);
+  const bw = W / COLS, bh = H / rows;
+  WORLDS.forEach((Wd, w) => {
+    const open = w === 0 || stDone((w - 1) * 10 + 4);
+    const L = (w % COLS) * bw, T = Math.floor(w / COLS) * bh;
+    x.fillStyle = open ? Wd.mapc + '22' : 'rgba(255,255,255,.02)';
+    x.fillRect(L + 5, T + 26, bw - 10, bh - 36);
+    x.strokeStyle = open ? Wd.mapc + '88' : 'rgba(255,255,255,.08)';
+    x.lineWidth = 2; x.strokeRect(L + 5, T + 26, bw - 10, bh - 36);
+    x.fillStyle = open ? '#e8eef5' : '#55606d';
+    x.font = '800 14px system-ui'; x.textAlign = 'center';
+    x.fillText((w + 1) + '. ' + Wd.nm, L + bw / 2, T + 18);
+    if (!open) {
+      x.fillStyle = 'rgba(255,255,255,.3)'; x.font = '700 11.5px system-ui';
+      x.fillText('앞 월드를 깨면 열린다', L + bw / 2, T + bh / 2);
+    }
+    // 다섯 점을 지그재그로
+    const y0 = T + 60, y1 = T + bh - 54, st5 = (y1 - y0) / 4;
+    x.strokeStyle = open ? Wd.mapc + '66' : 'rgba(255,255,255,.06)';
+    x.lineWidth = 3.5; x.setLineDash([7, 7]); x.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const px = L + bw / 2 + (i % 2 ? 30 : -30), py = y0 + i * st5;
+      if (i) x.lineTo(px, py); else x.moveTo(px, py);
+    }
+    x.stroke(); x.setLineDash([]);
+    for (let i = 0; i < 5; i++) {
+      const px = L + bw / 2 + (i % 2 ? 30 : -30), py = y0 + i * st5;
+      const st = stStage(w, i), done = stDone(st.id), can = open && stOpen(w, i), hot = MAP_HOT && MAP_HOT.w === w && MAP_HOT.i === i;
+      MAP_NODES.push({ x: px, y: py, r: 18, w, i, can });
+      x.beginPath(); x.arc(px, py, 18, 0, 6.3);
+      x.fillStyle = done ? Wd.mapc : can ? '#1b2634' : '#141a21'; x.fill();
+      x.lineWidth = hot && can ? 4 : 3;
+      x.strokeStyle = hot && can ? '#ffd76a' : done ? '#ffd76a' : can ? Wd.mapc : 'rgba(255,255,255,.08)';
+      x.stroke();
+      x.fillStyle = done ? '#16202c' : can ? '#e8eef5' : '#49535f';
+      x.font = '800 13px system-ui';
+      x.fillText(done ? '✓' : String(i + 1), px, py + 4.5);
+      if (can && st.cmd) {                            // 지휘 스테이지 표시
+        x.fillStyle = '#9ae8ff'; x.font = '700 9.5px system-ui';
+        x.fillText('지휘', px + (i % 2 ? 30 : -30), py + 4);
+      }
+    }
+    if (MAP_HOT && MAP_HOT.w === w) {                 // 올려 둔 점의 적
+      const st = stStage(w, MAP_HOT.i);
+      x.fillStyle = '#ffd76a'; x.font = '700 11.5px system-ui';
+      x.fillText(st.foe + ' · ' + (st.cmd ? '지휘' : '고용') + ' · EXP ' + st.exp, L + bw / 2, T + bh - 22);
+    }
+  });
+  x.textAlign = 'left';
+}
+function mapHit(e) {
+  const c = mapCv(), r = c.getBoundingClientRect();
+  const px = (e.clientX - r.left) / r.width * c.width, py = (e.clientY - r.top) / r.height * c.height;
+  return MAP_NODES.find(n => Math.hypot(n.x - px, n.y - py) < n.r + 6) || null;
+}
+
+/* ── 스테이지 창 ── */
+function stgOpen(w, i) {
+  const st = stStage(w, i);
+  STORY.prev = st;
+  const box = document.getElementById('stgBox');
+  const foeT = TEAMS.find(t => t.name === st.foe);
+  const mine = stMyTeams();
+  box.innerHTML =
+    '<div class="myaTop"><b style="font-size:16px;color:var(--hi)">' + esc(st.nm) + '</b>' +
+    '<span class="hint" style="margin:0">' + esc(WORLDS[w].sub) + '</span>' +
+    '<span style="flex:1"></span><button class="ghost" id="stgX">닫기</button></div>' +
+    '<div class="myaGrid" style="margin-top:10px">' +
+      '<div><div class="hint" style="margin:0 0 8px">' +
+        '<b style="color:#e8eef5">' + (st.cmd ? '지휘' : '고용') + ' 스테이지</b> — ' +
+        (st.cmd ? '병사를 사고 군 전체에 명령을 내린다 (화면 아래 명령 단추·미니맵).'
+                : '코인으로 병사를 사서 적 베이스를 부순다.') + '</div>' +
+        '<div class="row"><label>적</label><b>' + esc(st.foe) + '</b></div>' +
+        '<div class="row"><label>적 전투력</label><b>' + st.pow.toFixed(2) + '배</b></div>' +
+        '<div class="row"><label>적 AI</label><b>' + AI_LV[st.ai].nm + '</b></div>' +
+        '<div class="row"><label>지형</label><b>' + WORLDS[w].nm + '</b></div>' +
+        '<div class="row"><label>보상</label><b style="color:var(--hi)">EXP ' + st.exp +
+          (stDone(st.id) ? ' (다시 깨면 ' + Math.round(st.exp * .3) + ')' : '') + '</b></div>' +
+      '</div>' +
+      '<div><b style="font-size:12.5px;color:var(--hi)">내 군대</b>' +
+        '<div class="presets" style="margin-top:6px" id="stgTeams">' +
+          mine.map(m => '<button data-mt="' + esc(m.k) + '" class="' + (ST.team === m.k ? 'on' : '') + '">' +
+            esc(m.nm) + '</button>').join('') + '</div>' +
+        '<div class="hint" style="margin-top:8px">' + stBufTxt() + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="myaTop" style="margin-top:10px"><button class="go" id="stgGo" style="flex:1">출격</button></div>';
+  box.classList.add('on');
+  document.getElementById('stgX').onclick = () => box.classList.remove('on');
+  box.querySelectorAll('[data-mt]').forEach(b => b.onclick = () => {
+    ST.team = b.dataset.mt; stSave(); stgOpen(w, i);
+  });
+  document.getElementById('stgGo').onclick = () => { box.classList.remove('on'); stStart(st); };
+}
+function stMyTeams() {
+  const out = [{ k: 'new', nm: '신병대 (기본)' }];
+  for (const t of ST_TEAM) if (stHasT(t.nm)) out.push({ k: 'T:' + t.nm, nm: t.nm });
+  MYA.forEach((a, i) => out.push({ k: 'M:' + i, nm: '✎ ' + (a.nm || '나만의 군대') }));
+  return out;
+}
+function stBufTxt() {
+  const p = [];
+  if (stLv('atk')) p.push('공격력 +' + (stLv('atk') * 6) + '%');
+  if (stLv('hp')) p.push('체력 +' + (stLv('hp') * 8) + '%');
+  if (stLv('rof')) p.push('연사 +' + (stLv('rof') * 4) + '%');
+  if (stLv('chg')) p.push('돌진 +' + (stLv('chg') * 8) + '%');
+  if (stLv('coin')) p.push('수입 +' + (stLv('coin') * 8) + '%');
+  if (stLv('start')) p.push('시작 코인 +' + (stLv('start') * 2));
+  if (stLv('cry')) p.push('돌격 함성 ' + (3 + (stLv('cry') - 1) * 1.5) + '초');
+  if (stLv('guard')) p.push('방어 태세 -' + (stLv('guard') * 10) + '%');
+  return p.length ? '붙어 있는 힘 — ' + p.join(' · ') : '아직 올린 것이 없다. <b>업그레이드</b>에서 EXP 를 쓴다.';
+}
+
+/* ── 출격 ── */
+function stTeamIndex() {
+  if (ST.team && ST.team.indexOf('T:') === 0) {
+    const i = TEAMS.findIndex(t => t.name === ST.team.slice(2) && !t.story);
+    if (i >= 0) return i;
+  }
+  if (ST.team && ST.team.indexOf('M:') === 0) {
+    const n = +ST.team.slice(2), i = TEAMS.findIndex(t => t.mine === n);
+    if (i >= 0) return i;
+  }
+  return stTeamIdx();
+}
+function stStart(st) {
+  STORY.on = true; STORY.stage = st;
+  stReg();
+  const W = WORLDS[st.w];
+  SKIN = { sky: W.sky, gnd: W.gnd, bg: W.bg, bgc: W.bgc, hill: W.hill, hillL: W.hillL };
+  // 설정 화면 값을 스테이지에 맞게 맞춘다
+  setMode(st.cmd ? 'cmd' : 'hire');
+  CTRL = ['human', 'ai']; syncCtl();
+  AI_DIF = [1, st.ai];
+  document.querySelectorAll('.aidif').forEach(b => b.classList.toggle('on', +b.dataset.lv === AI_DIF[+b.dataset.ai]));
+  lenRange.value = st.len;
+  riverN.value = W.terr.river; forestN.value = W.terr.forest;
+  hillN.value = W.terr.hill; swampN.value = W.terr.swamp;
+  hillH.value = 62; baseEl.value = 0; baseElR.value = 0;
+  CUSTOM = null; GPAINT = null; TSEED = 1000 + st.id * 37;
+  syncArena();
+  coinNum.value = 10 + stLv('start') * 2;
+  incRange.value = st.every;
+  const foeI = TEAMS.findIndex(t => t.name === st.foe);
+  sel[0] = [{ i: stTeamIndex(), pow: 1 + stLv('atk') * .06, wp: -1, spd: 1 + stLv('chg') * .08, col: '#6f9ad6' }];
+  sel[1] = [{ i: foeI >= 0 ? foeI : 0, pow: st.pow, wp: -1, spd: 1, col: '#e06a4a' }];
+  colA.value = '#3b82f6'; colB.value = '#ef4444';
+  refresh('A'); refresh('B');
+  startGame();
+  BUF = [{ rof: 1 - stLv('rof') * .04, hp: 1 + stLv('hp') * .08, coin: 1 + stLv('coin') * .08,
+           guard: stLv('guard') * .1, cry: stLv('cry') ? 3 + (stLv('cry') - 1) * 1.5 : 0 }, bufDef()];
+  mapShow(false);
+  document.getElementById('mapBox').classList.remove('on');
+  if (typeof musStart === 'function') musStart(true);
+}
+// 판이 끝나면 — 이겼으면 EXP
+function stFinish() {
+  const st = STORY.stage;
+  if (!st) return '';
+  const win = G.winner === 0;
+  let got = 0;
+  if (win) {
+    const first = !stDone(st.id);
+    got = first ? st.exp : Math.round(st.exp * .3);
+    ST.exp += got;
+    ST.clear[st.id] = Math.max(ST.clear[st.id] || 0, 1);
+    stSave();
+  }
+  return win ? '<b style="color:#ffd76a">EXP +' + got + '</b>' +
+               (stStage(st.w, st.i).i === 4 && st.w < 4 ? ' · 다음 월드가 열렸다!' : '')
+             : '<b style="color:#e06a4a">실패</b> — 업그레이드를 올리고 다시 붙어 보자';
+}
+function stQuit() {
+  STORY.on = false; STORY.stage = null; SKIN = null;
+  BUF = [bufDef(), bufDef()];
+  document.getElementById('game').style.display = 'none';
+  mapShow(true);
+}
+
+/* ── 업그레이드 창 ── */
+function upgOpen() {
+  const box = document.getElementById('upgBox');
+  const row = (title, items) => '<h4 style="margin:14px 0 6px;color:var(--hi);font-size:13px">' + title + '</h4>' +
+    '<div class="upgGrid">' + items + '</div>';
+  const ups = ST_UP.map(u => {
+    const lv = stLv(u.k), max = lv >= u.max, cost = u.c(lv);
+    return '<div class="upgCard' + (max ? ' max' : '') + '"><b>' + u.nm + ' <span>' + lv + '/' + u.max + '</span></b>' +
+      '<i>' + u.d + '</i>' +
+      (max ? '<em>끝까지 올림</em>'
+           : '<button class="mini" data-up="' + u.k + '"' + (stExp() < cost ? ' disabled' : '') + '>EXP ' + cost + '</button>') +
+      '</div>';
+  }).join('');
+  const weps = ST_WEP.map((w, i) => {
+    const has = stHasW(i);
+    return '<div class="upgCard' + (has ? ' max' : '') + '"><b>' + w.nm + '</b><i>신병대 WEAPON 칸</i>' +
+      (has ? '<em>' + (i < 2 ? '처음부터' : '열림') + '</em>'
+           : '<button class="mini" data-uw="' + i + '"' + (stExp() < w.c ? ' disabled' : '') + '>EXP ' + w.c + '</button>') + '</div>';
+  }).join('');
+  const shops = ST_SHOP.map((u, i) => {
+    const has = stHasS(i);
+    return '<div class="upgCard' + (has ? ' max' : '') + '"><b>' + u.nm + '</b><i>상점 · 값 ' + u.cost + '</i>' +
+      (has ? '<em>' + (i < 1 ? '처음부터' : '열림') + '</em>'
+           : '<button class="mini" data-us="' + i + '"' + (stExp() < u.c ? ' disabled' : '') + '>EXP ' + u.c + '</button>') + '</div>';
+  }).join('');
+  const teams = ST_TEAM.map(t => {
+    const has = stHasT(t.nm);
+    return '<div class="upgCard' + (has ? ' max' : '') + '"><b>' + t.nm + '</b><i>스토리에서 고를 수 있는 팀</i>' +
+      (has ? '<em>열림</em>'
+           : '<button class="mini" data-ut="' + esc(t.nm) + '"' + (stExp() < t.c ? ' disabled' : '') + '>EXP ' + t.c + '</button>') + '</div>';
+  }).join('');
+  box.innerHTML = '<div class="myaTop"><b style="font-size:16px;color:var(--hi)">업그레이드</b>' +
+    '<span class="hint" style="margin:0" id="upgExp">남은 EXP <b>' + stExp() + '</b></span>' +
+    '<span style="flex:1"></span><button class="ghost" id="upgX">닫기</button></div>' +
+    '<div class="upgBody">' +
+    row('군대 전체', ups) + row('신병대 무기 (WEAPON)', weps) + row('신병대 상점 (SHOP)', shops) + row('팀 해금', teams) +
+    '</div>';
+  box.classList.add('on');
+  document.getElementById('upgX').onclick = () => { box.classList.remove('on'); mapDraw(); stHud(); };
+  const buy = (cost, fn) => { if (stExp() < cost) return; ST.used += cost; fn(); stSave(); upgOpen(); stHud(); };
+  box.querySelectorAll('[data-up]').forEach(b => b.onclick = () => {
+    const u = ST_UP.find(x => x.k === b.dataset.up), lv = stLv(u.k);
+    if (lv >= u.max) return;
+    buy(u.c(lv), () => { ST.up[u.k] = lv + 1; });
+  });
+  box.querySelectorAll('[data-uw]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.uw; buy(ST_WEP[i].c, () => { ST.un.w.push(i); stReg(); });
+  });
+  box.querySelectorAll('[data-us]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.us; buy(ST_SHOP[i].c, () => { ST.un.s.push(i); stReg(); });
+  });
+  box.querySelectorAll('[data-ut]').forEach(b => b.onclick = () => {
+    const nm = b.dataset.ut, t = ST_TEAM.find(x => x.nm === nm);
+    buy(t.c, () => { ST.un.t.push(nm); });
+  });
+}
+
+/* ── 연결 ── */
+(function stUI() {
+  stLoad(); stReg();
+  const c = mapCv();
+  c.addEventListener('pointermove', e => {
+    const h = mapHit(e);
+    const was = MAP_HOT;
+    MAP_HOT = h && h.can ? h : null;
+    c.style.cursor = MAP_HOT ? 'pointer' : 'default';
+    if (was !== MAP_HOT) mapDraw();
+  });
+  c.addEventListener('pointerdown', e => {
+    const h = mapHit(e);
+    if (h && h.can) stgOpen(h.w, h.i);
+  });
+  document.getElementById('mapNormal').onclick = () => {
+    STORY.on = false; SKIN = null; BUF = [bufDef(), bufDef()];
+    sel[0] = []; sel[1] = [];                          // 스토리에서 고른 건 지운다
+    refresh('A'); refresh('B');
+    document.getElementById('mapBox').classList.remove('on');
+    document.getElementById('setup').style.display = 'block';
+    document.getElementById('toMap').classList.remove('on');
+    document.querySelectorAll('.tabs button[data-mode]').forEach(b =>
+      b.classList.toggle('on', b.dataset.mode === (CMD ? 'cmd' : MODE)));
+  };
+  document.getElementById('mapUpg').onclick = upgOpen;
+  document.getElementById('mapReset').onclick = () => {
+    if (!confirm('스토리 진행을 모두 지운다. 그래도 할까?')) return;
+    ST = stDef(); stSave(); stReg(); mapDraw(); stHud();
+  };
+  document.getElementById('toMap').onclick = () => mapShow(true);
 })();
 
 /* ============================================================
