@@ -543,7 +543,8 @@ input.pdot:hover{border-color:var(--hi)}
     </div>
     <div class="row simonly" id="formRow5" style="display:none;margin-top:10px">
       <label for="fmaxNum">공 하나의 상한</label>
-      <input type="number" id="fmaxNum" min="2" max="999" step="1" value="99">
+      <input type="number" id="fmaxNum" min="2" max="999999" step="1" value="99">
+      <button class="mini" id="fmaxInf">무한</button>
       <b style="font-size:11px;color:var(--dim);white-space:nowrap">명</b>
     </div>
     <div class="presets simonly" id="formRow6" style="display:none">
@@ -620,6 +621,8 @@ input.pdot:hover{border-color:var(--hi)}
     <b>숫자 뽑기 방식</b>은 셋 중 하나다. <b>랜덤</b>은 앞칸부터 1, 2, 3 … 으로 시작해 뒤로 갈수록 큰 수가 나온다 (n번째 칸은 n ~ 2n). 이때만 <b>숫자 고정</b>이 뜨는데, 켜면 판 내내 그대로고 끄면 공이 들어간 그 칸만 새로 뽑힌다.<br>
     <b>1,2,3…</b> 은 칸 순서대로 1, 2, 3 … 이 박히고 안 바뀐다. <b>직접</b>은 쓸 숫자를 쉼표로 넣으면 (예: 1,2,3,5,10) 그대로 박힌다. 칸보다 적게 넣으면 앞에서부터 다시 쓰고, 많이 넣으면 남는 건 버린다 (1~999, 최대 16개).<br>
     아직 안 나온 병사 수는 전투 화면 <b>좌우 위</b>에 크게 뜬다 (= 10 이 떠서 3명이 나왔으면 7).<br>
+    <b style="color:#ffd76a">수식 거인</b> — 갈라지는 때를 <b>무기 정한 뒤</b>로 두면 수만큼 여럿이 나오는 대신 <b>거인 하나</b>가 나온다. <b>체력 = 기본 체력 × 공에 든 수</b>, 크기는 수에 따라 커지고(수의 0.45제곱, 최대 10배), <b>공격력은 ×올림(지금 체력 ÷ 기본 체력)</b> — 머리 위에 지금 배수가 뜨고 맞을수록 줄어든다. 예를 들어 25가 나오면 체력 3,375(기본 135×25)에 ×25로 시작해, 체력이 42%로 깎이면 ×11까지 떨어진다. 수가 1이면 그냥 평범한 병사다.<br>
+    <b>공 하나의 상한</b>은 999를 넘겨 적을 수 있고 <b>무한</b> 단추를 누르면 끝이 없다 (거인과 같이 쓰면 체력이 수백만까지 올라간다).<br>
     <b>병사 나오는 간격</b>은 공 하나가 갈라져 병사가 쏟아질 때 한 명씩 사이에 두는 시간이다 (0~1초, 기본 0.2초). 0으로 두면 예전처럼 한꺼번에 나온다. 줄은 진영마다 따로 서고, 공 하나의 상한만큼(상한 999면 2,997명까지) 기다린다. 전장이 꽉 차 있으면 줄에서 기다렸다가 자리가 나는 대로 나온다.<br>
     WEAPON 보드: 끄면 기본 무기 보드가 사라지고 <b>SHOP 으로만</b> 싸운다. BALL DROP 에는 SPLIT / SHOP 만 남고, 공은 모두 상점 물건 값으로 들어간다. 값이 비싼 만큼 병사는 드물게, 대신 센 놈들만 나온다. (동충하초처럼 보드를 안 거치고 기본 병사를 부르는 능력은 그대로 나온다.)<br>
     WEAPON 과 SHOP 은 <b>둘 다 끌 수는 없다</b> — 하나를 끄면 다른 쪽이 자동으로 켜진다.<br>
@@ -1321,7 +1324,8 @@ function T(name, col, style, basics, shop, base) {
 }
 
 T('현대 군대','#4a7c3f','armor',['rifle','pistol','shotgun','knife','grenade'],
-  [['중기관총병',8,'mg',1.8,1.5,1.15],['저격수',12,'sniper',1.2,3,1],['로켓병',18,'rpg',2,2.5,1.2],['전차병',28,'cannon',5,3,1.85]], 'bunker');
+  [['중기관총병',8,'mg',1.8,1.5,1.15],['화염방사병',9,'flamethrower',1.8,1.3,1.15],
+   ['저격수',12,'sniper',1.2,3,1],['로켓병',18,'rpg',2,2.5,1.2],['전차병',28,'cannon',5,3,1.85]], 'bunker');
 T('중세 군대','#8a6b3a','armor',['sword','spear','bow','axe','dagger'],
   [['기병',6,'lance',1.5,1.4,1.15],['석궁병',7,'crossbow',1.2,1.6,1],['기사',11,'greatsword',2.5,1.8,1.3],['미늘창병',16,'halberd',2.2,2.2,1.25],['성기사',27,'holyspear',5,3,1.75]], 'castle');
 T('베놈','#3a2b4d','blob',['claw','tentacle','websh','bite','acidspit'],
@@ -2607,8 +2611,13 @@ function resolveSlot(team, ti, reg, idx, x, y, ball) {
     // 여기서 비로소 갈라진다 — 무기가 정해졌으니 안에 든 수만큼 병사가 된다.
     // 한꺼번에 쏟지 않고 줄을 세워 간격을 두고 내보낸다.
     const n = ballVal(ball);
-    queueSpawn(team, n, () => spawnSoldier(team, ti, w, 1, 1, 1, w.name));
-    popText(x, y, n > 1 ? w.name + ' ×' + n : w.name, col);
+    if (USE_FORM && SPLIT_AT === 'pick' && n > 1) {    // 거인 하나로 나온다
+      queueSpawn(team, 1, () => makeGiant(team, ti, w, n));
+      popText(x, y, w.name + ' 거인 ×' + n, '#ffd76a');
+    } else {
+      queueSpawn(team, n, () => spawnSoldier(team, ti, w, 1, 1, 1, w.name));
+      popText(x, y, n > 1 ? w.name + ' ×' + n : w.name, col);
+    }
   } else {
     const u = T.shop[idx];
     if (!u) { popText(x, y, '없음', '#5c6a7c'); return; }
@@ -2661,6 +2670,26 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX, price) {
   G.sold.push(made);
   return made;
 }
+
+/* ── 수식 거인 ──
+   '무기 정한 뒤' 로 갈라질 때는 여럿이 아니라 거인 하나가 나온다.
+   체력 = 기본 × 수, 크기 = 수에 따라 커지고,
+   공격력은 '올림(지금 체력 / 기본 체력)' 배 — 맞을수록 약해진다. */
+const GIANT_CAP = 10;                                  // 그려지는 한계 (너무 커지면 화면을 덮는다)
+const giantSize = n => Math.min(GIANT_CAP, Math.pow(Math.max(1, n), .45));
+function makeGiant(team, ti, w, n) {
+  const s = spawnSoldier(team, ti, w, n, 1, giantSize(n), w.name + ' 거인');
+  if (!s) return null;
+  s.giant = n;
+  s.unit = s.max / n;                                  // 몸 하나치 체력
+  s.dmg0 = s.dmg;
+  s.dmg = s.dmg0 * n;
+  G.nums.push({ x: s.x, y: GROUND - 120 * s.size * .3, vx: 0, vy: -24,
+                v: '거인 ×' + n, col: '#ffd76a', big: true, life: 1.6 });
+  return s;
+}
+// 맞을수록 힘이 빠진다 — 지금 체력이 기본 체력의 몇 배인지로 다시 센다
+const giantMul = s => Math.max(1, Math.ceil(s.hp / s.unit));
 
 // 동충하초 — 숙주가 죽으면 몸을 뚫고 상점급 병사가 솟아난다
 function burstCordyceps(team, ti, x, y) {
@@ -2964,6 +2993,7 @@ function stepBattle(dt) {
   for (const s of G.sold) {
     if (s.hp <= 0) continue;
     s.think -= dt; s.cool -= dt;
+    if (s.giant) s.dmg = s.dmg0 * giantMul(s);         // 거인은 체력만큼 세다
     s.swing = Math.max(0, s.swing - dt * 4.5);
     s.hurt = Math.max(0, s.hurt - dt);
     if (s.think <= 0) { pickTarget(s); s.think = .22 + Math.random() * .22; }
@@ -4573,6 +4603,17 @@ function drawSoldier(ctx, s) {
   }
 
   if (!LOD && compOf(s) === 'drone') drawDrone(ctx, s);
+
+  if (s.giant) {                                   // 거인 — 지금 몇 배인지
+    const m = giantMul(s), fs = Math.max(11, 13 * Math.min(2.2, S));
+    ctx.font = '800 ' + fs + 'px system-ui'; ctx.textAlign = 'center';
+    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.7)';
+    const ty = headY - hr * 2.1 - 6 * Math.min(2, S);
+    ctx.strokeText('×' + m, x, ty);
+    ctx.fillStyle = m >= s.giant ? '#ffd76a' : '#ffb07a';
+    ctx.fillText('×' + m, x, ty);
+    ctx.textAlign = 'left';
+  }
 
   if (s === G.pin) {                               // 고정 표시 — 발밑 고리와 머리 위 못
     const t = G.t * 2.4;
@@ -6189,13 +6230,17 @@ function boardTgl(btn, other) {
   };
 }
 boardTgl(shopTgl, wpnTgl); boardTgl(wpnTgl, shopTgl);
-const INF = { ball: false, sold: false };
+const INF = { ball: false, sold: false, form: false };
 function syncInf() {
   ballInf.classList.toggle('on', INF.ball); ballNum.disabled = INF.ball;
   soldInf.classList.toggle('on', INF.sold); soldNum.disabled = INF.sold;
   if (INF.ball) ballNum.value = ''; else if (!ballNum.value) ballNum.value = 120;
   if (INF.sold) soldNum.value = ''; else if (!soldNum.value) soldNum.value = 130;
+  const fi = document.getElementById('fmaxInf'), fn = document.getElementById('fmaxNum');
+  if (fi) { fi.classList.toggle('on', INF.form); fn.disabled = INF.form;
+            if (INF.form) fn.value = ''; else if (!fn.value) fn.value = 99; }
 }
+document.getElementById('fmaxInf').onclick = () => { INF.form = !INF.form; syncInf(); };
 ballInf.onclick = () => { INF.ball = !INF.ball; syncInf(); };
 soldInf.onclick = () => { INF.sold = !INF.sold; syncInf(); };
 syncInf();
@@ -6284,8 +6329,9 @@ function startGame(asGuest) {
   if (!NUM_LIST.length) NUM_LIST = [1, 2, 3];
   SPAWN_GAP  = clamp(parseFloat(gapRange.value), 0, 1);
   SPLIT_AT   = SPLIT_AT_UI;
-  FORM_MAX   = clamp(Math.floor(+fmaxNum.value) || 99, 2, 999);   // 공 하나가 될 수 있는 최대 병력
-  QUE_MAX    = Math.max(600, FORM_MAX * 3);                       // 상한만큼은 줄이 다 받아야 한다
+  // 공 하나가 될 수 있는 최대 병력 — '무한' 이면 끝이 없다
+  FORM_MAX   = INF.form ? Infinity : clamp(Math.floor(+fmaxNum.value) || 99, 2, 999999);
+  QUE_MAX    = isFinite(FORM_MAX) ? Math.max(600, FORM_MAX * 3) : 200000;
   // 수식을 켜면 공은 수식에서 시작한다. BALL DROP 은 '=' 로 수가 정해진 뒤
   // 그 수를 어디에 쓸지 고르는 칸이 된다. SPLIT 은 빠진다.
   SLOTNAME = USE_FORM ? [] : ['SPLIT'];
