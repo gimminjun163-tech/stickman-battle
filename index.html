@@ -7722,7 +7722,10 @@ function myaTemp(def) {
   const basics = a.wep.map((u, i) => myaWep(p + 'w' + i, u, a, false));
   const shop = a.shop.map((u, i) => ({ name: u.nm, cost: clamp(Math.round(u.cost), 1, 40),
     w: myaWep(p + 's' + i, u, a, true), hp: u.hp, dmg: 1, size: u.sz }));
-  TEAMS.push({ name: a.nm, col: a.col, style: a.style, base: 'keep', basics, shop, mine: -1 });
+  TEAMS.push({ name: a.nm, col: a.col, style: a.style, base: 'keep', basics, shop, mine: -1,
+               bs: { art: (a.bs.art && a.bs.art.length) ? a.bs.art : null,
+                     tx: a.bs.tx, ty: a.bs.ty, col: a.bs.col },
+               bw: myaBaseWep(p + 'base', a.bs, a) });
   return TEAMS.length - 1;
 }
 // 고른 팀이 직접 만든 군대면 그 정의를 돌려준다 (온라인으로 같이 보낸다)
@@ -8657,7 +8660,7 @@ function shrPublish() {
   const id = a.pubid || ('t' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
   a.pubid = id;
   const body = JSON.stringify({ v: 1, nm: a.nm, by, t: Date.now(),
-    col: a.col, style: a.style, wep: a.wep, shop: a.shop });
+    col: a.col, style: a.style, bs: myaBase(a), wep: a.wep, shop: a.shop });
   if (body.length > 90000) {
     sst.innerHTML = '<b style="color:#e06a4a">너무 크다</b> — 캐릭터 그림을 줄이거나 빼고 올리세요 (' +
       Math.round(body.length / 1024) + 'KB / 88KB).';
