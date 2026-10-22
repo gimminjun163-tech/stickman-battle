@@ -875,6 +875,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
     <b>온라인 PvP</b> — 고용 탭 안에 있다. <b>랜덤 매칭</b>은 닉네임을 적고 누르기만 하면 같은 시간에 누른 다른 사람과 자동으로 붙는다. 아는 사람과 하려면 <b>방 만들기 / 참가하기</b>로 코드를 두 번 주고받으면 된다.<br>
     방장이 왼쪽, 참가자가 오른쪽을 맡고 각자 자기 진영만 고른다. 판은 방장 쪽에서 돌아가므로 설정·시작·배속은 방장이 정한다. 닉네임은 전투 화면 이름표에 팀 이름과 같이 나온다.<br>
+    팀은 <b>번호가 아니라 내용으로</b> 오간다 — 직접 만든 군대나 신병대처럼 사람마다 번호가 다른 팀도 상대 화면에 제대로 뜬다 (그린 무기·올린 그림·베이스까지 그대로). 상대가 시작 신호를 놓치면 <b>스스로 다시 받아</b> 판을 차리고, 방장이 상대 팀을 아직 못 받은 채 시작을 누르면 한 번 더 물어본 뒤 알려 준다.<br>
     랜덤 매칭은 서로를 찾는 동안만 공개 중계 서버를 거치고, 붙은 뒤에는 둘이 직접 주고받는다. 중계가 막혀 있으면 <b>중계 서버 바꾸기</b>로 다른 주소를 넣거나 코드 방식을 쓰면 된다.
   </div>
 </div></div>
@@ -6303,7 +6304,7 @@ function startGame(asGuest) {
   G.era = [0, 0]; G.study = [0, 0];
   STUDY_NEED = clamp(parseInt(stRange.value, 10) || 8, 1, 40);
   const live = t => evo ? [sel[t][0]] : sel[t];
-  G.roster = [live(0).map(e => TEAMS[e.i]), live(1).map(e => TEAMS[e.i])];
+  G.roster = [live(0).map(e => TEAMS[e.i] || TEAMS[0]), live(1).map(e => TEAMS[e.i] || TEAMS[0])];
   G.pow = [live(0).map(e => e.pow), live(1).map(e => e.pow)];
   G.wlock = [live(0).map(e => wlockOf(e)), live(1).map(e => wlockOf(e))];
   G.rspd  = [live(0).map(e => +e.spd || 1), live(1).map(e => +e.spd || 1)];
@@ -6415,17 +6416,17 @@ function startGame(asGuest) {
   resizeField();
   if (NET.on && NET.role === 'host' && !asGuest) {   // 참가자도 같은 판을 차리게 한다
     NET.started = true;
-    netSend({ t: 'go', a: sel[0][0], b: sel[1][0], ca: colA.value, cb: colB.value,
-              coin: COIN_START, every: COIN_EVERY, w: KILL_W,
-              ww: WORLD_W, rm: RANGE_MUL, dp: RIVER_DEEP ? 1 : 0, cm: CMD ? 1 : 0,
-              hh: HILL_H, be: BASE_EL[0], be2: BASE_EL[1], bc: BRIDGE_CAP, bb: BRIDGE_BACK, bx: BRIDGE_EXT,
-              tr: TERR.map(z => [z.k, z.a, z.b]),
-              gp: GPAINT ? GPAINT.map(v => Math.round(v)) : null,
-              cta: myaOfTeam(sel[0][0]), ctb: myaOfTeam(sel[1][0]) });
+    NET.go = netGoPayload();                         // 못 받았으면 다시 보낼 수 있게 들고 있는다
+    netSend(NET.go);
   }
 }
 document.getElementById('startBtn').onclick = () => {
   if (NET.on && NET.role === 'guest') { netSt('시작은 방장이 누른다.'); return; }
+  if (NET.on && NET.role === 'host' && NET.ready && !NET.gotTeam) {
+    netSend({ t: 'need' });                              // 아직 못 받았으면 한 번 더 묻는다
+    netSt('<b>상대 팀을 받는 중</b> — 잠깐 뒤에 다시 눌러 주세요.');
+    return;
+  }
   startGame();
   if (typeof musStart === 'function') musStart(true);  // 배경음악 (끄기면 아무것도 안 한다)
 };
@@ -6522,8 +6523,8 @@ const NET = {
   peerTeam: 1, peerCol: '#ef4444',  // 참가자가 고른 팀
   peerName: '-',
   lastRecv: 0,
-  nick: '', peerNick: '',
-  mq: null, myId: null, mate: null, mmT: null, waitT: null, matching: false
+  nick: '', peerNick: '', gotTeam: false,
+  mq: null, myId: null, mate: null, mmT: null, waitT: null, matching: false, go: null
 };
 
 function netSt(msg, ok) {
@@ -6539,8 +6540,8 @@ function netClose() {
   NET.mate = null; NET.peerNick = '';
   if (NET.ch) { try { NET.ch.close(); } catch (e) {} }
   if (NET.pc) { try { NET.pc.close(); } catch (e) {} }
-  NET.on = false; NET.role = null; NET.pc = null; NET.ch = null;
-  NET.ready = false; NET.started = false; NET.snap = NET.prev = null;
+  NET.on = false; NET.role = null; NET.pc = null; NET.ch = null; NET.gotTeam = false;
+  NET.ready = false; NET.started = false; NET.snap = NET.prev = null; NET.go = null;
   document.getElementById('netStep1').style.display = 'none';
   document.getElementById('netStep2').style.display = 'none';
   document.getElementById('netOff').disabled = true;
@@ -6590,6 +6591,7 @@ function hookChannel(ch) {
     document.getElementById('netStep1').style.display = 'none';
     document.getElementById('netStep2').style.display = 'none';
     netSendTeam();
+    if (NET.role === 'host') netSend({ t: 'need' });    // 상대 팀을 한 번 더 받아 둔다
     refresh('A'); refresh('B');
   };
   ch.onclose = () => { NET.ready = false; netSt('상대가 나갔다.'); };
@@ -6764,12 +6766,70 @@ async function mmMsg(topic, raw) {
   }
 }
 
+/* ── 온라인에서 팀 주고받기 ──
+   기본 팀은 번호가 서로 같지만, 직접 만든 군대나 신병대는 사람마다 번호가 달라서
+   번호만 보내면 상대 화면에서 엉뚱한 팀이 되거나 아예 안 뜬다. 그래서 정의를 같이 보낸다. */
+const NET_TEMP = [];                                   // 받아서 임시로 올려 둔 팀
+function netTeamDef(i) {
+  const t = TEAMS[i];
+  if (!t || i < BUILTIN_N) return null;                // 기본 팀이면 번호로 충분하다
+  if (t.netdef) return t.netdef;                       // 받아 둔 팀은 받은 정의 그대로 넘긴다
+  if (t.mine !== undefined && t.mine >= 0 && MYA[t.mine]) return { k: 'mya', a: MYA[t.mine] };
+  return { k: 'raw', nm: t.name, col: t.col, style: t.style,
+           basics: (t.basics || []).filter(id => WEAPONS[id]).slice(0, 8),
+           shop: (t.shop || []).slice(0, 8).map(u => ({ name: u.name, cost: u.cost, w: u.w,
+                                                        hp: u.hp, dmg: u.dmg, size: u.size })) };
+}
+function netTeamTake(def) {
+  if (!def) return -1;
+  const keep = i => { if (TEAMS[i]) TEAMS[i].netdef = def; return i; };   // 원래 정의를 달아 둔다
+  try {
+    if (def.wep && def.shop) return keep(myaTemp(def)); // 예전 방식 — 군대 정의 그대로
+    if (def.k === 'mya') return keep(myaTemp(def.a));
+    if (def.k === 'raw') {
+      const t = { name: String(def.nm || '상대 팀').slice(0, 16),
+        col: /^#[0-9a-f]{6}$/i.test(def.col || '') ? def.col : '#8b96a5',
+        style: def.style || 'stick', base: 'keep', mine: -1,
+        basics: (Array.isArray(def.basics) ? def.basics : []).filter(id => WEAPONS[id]).slice(0, 8),
+        shop: (Array.isArray(def.shop) ? def.shop : []).slice(0, 8).map(u => ({
+          name: String(u.name || '병사').slice(0, 16), cost: clamp(Math.round(+u.cost || 6), 1, 99),
+          w: WEAPONS[u.w] ? u.w : 'sword', hp: clamp(+u.hp || 1, .1, 30),
+          dmg: clamp(+u.dmg || 1, .1, 30), size: clamp(+u.size || 1, .3, 4) })) };
+      if (!t.basics.length) t.basics = ['sword'];
+      t.netdef = def;
+      TEAMS.push(t); NET_TEMP.push(t);
+      return TEAMS.length - 1;
+    }
+  } catch (e) {}
+  return -1;
+}
+// 받은 번호를 내 쪽에서 쓸 수 있는 번호로 (모르는 번호는 기본 팀으로 떨어뜨린다)
+function netTeamIdx(i, def) {
+  const j = netTeamTake(def);
+  if (j >= 0) return j;
+  const k = Math.round(+i);
+  return (k >= 0 && k < BUILTIN_N && TEAMS[k]) ? k : 0;
+}
+
+// 판을 차리는 데 필요한 모든 것 (참가자가 놓치면 다시 보낸다)
+function netGoPayload() {
+  return { t: 'go', a: sel[0][0], b: sel[1][0], ca: colA.value, cb: colB.value,
+           coin: COIN_START, every: COIN_EVERY, w: KILL_W,
+           ww: WORLD_W, rm: RANGE_MUL, dp: RIVER_DEEP ? 1 : 0, cm: CMD ? 1 : 0,
+           hh: HILL_H, be: BASE_EL[0], be2: BASE_EL[1], bc: BRIDGE_CAP, bb: BRIDGE_BACK, bx: BRIDGE_EXT,
+           tr: TERR.map(z => [z.k, z.a, z.b]),
+           gp: GPAINT ? GPAINT.map(v => Math.round(v)) : null,
+           cta: netTeamDef(sel[0][0] ? sel[0][0].i : 0),
+           ctb: netTeamDef(sel[1][0] ? sel[1][0].i : 0) };
+}
+
 // 참가자가 고른 팀을 방장에게 알린다
 function netSendTeam() {
   if (NET.role !== 'guest') return;
   const e = sel[1][0];
   netSend({ t: 'team', i: e ? e.i : 0, pow: e ? e.pow : 1, wp: e ? e.wp : -1,
-            spd: e ? e.spd : 1, col: (e && e.col) || colB.value });
+            spd: e ? e.spd : 1, col: (e && e.col) || colB.value,
+            def: netTeamDef(e ? e.i : 0) });
 }
 
 // ── 장면 보내기 (방장) ──
@@ -6907,9 +6967,11 @@ function netRecv(m) {
     if (NET.role === 'host') netSend({ t: 'nick', n: NET.nick });
     return;
   }
+  if (m.t === 'need' && NET.role === 'guest') { netSendTeam(); return; }   // 방장이 팀을 묻는다
   if (m.t === 'team' && NET.role === 'host') {           // 참가자가 고른 팀
-    NET.peerTeam = m.i; NET.peerCol = m.col;
-    sel[1] = [{ i: m.i, pow: m.pow, wp: m.wp, spd: m.spd, col: m.col }];
+    const gi = netTeamIdx(m.i, m.def);                   // 번호가 다를 수 있으니 옮겨 담는다
+    NET.peerTeam = gi; NET.peerCol = m.col; NET.gotTeam = true;
+    sel[1] = [{ i: gi, pow: m.pow, wp: m.wp, spd: m.spd, col: m.col }];
     colB.value = m.col; refresh('B');
   } else if (m.t === 'cmd' && NET.role === 'host') {      // 참가자의 명령
     if (CMD) setOrder(1, m.o, typeof m.x === 'number' ? m.x : undefined, typeof m.k === 'string' ? m.k : undefined);
@@ -6918,7 +6980,10 @@ function netRecv(m) {
     buy(1, list[m.i]);
   } else if (m.t === 'go' && NET.role === 'guest') {     // 방장이 시작했다
     netStartAsGuest(m);
+  } else if (m.t === 'rego' && NET.role === 'host') {    // 참가자가 판을 못 받았다
+    if (NET.started && NET.go) netSend(NET.go);
   } else if (m.t === 's' && NET.role === 'guest') {
+    if (!NET.started) { netSend({ t: 'rego' }); return; } // 아직 판이 안 차려졌다
     netApply(m);
   } else if (m.t === 'end' && NET.role === 'guest') {
     G.over = true; G.winner = m.w;
@@ -6936,8 +7001,10 @@ function netStartAsGuest(m) {
   BASE_EL = [clamp(+m.be || 0, 0, 220), clamp(+(m.be2 === undefined ? m.be : m.be2) || 0, 0, 220)];
   TERR = (m.tr || []).filter(a => TK[a[0]]).map(a => ({ k: a[0], a: +a[1], b: +a[2] }));
   GPAINT = m.gp && m.gp.length ? m.gp.map(v => +v || 0) : null;
-  if (m.cta) m.a.i = myaTemp(m.cta);                 // 방장이 직접 만든 군대도 그대로 받는다
-  if (m.ctb) m.b.i = myaTemp(m.ctb);
+  m.a = m.a || { i: 0, pow: 1, wp: -1, spd: 1 };
+  m.b = m.b || { i: 0, pow: 1, wp: -1, spd: 1 };
+  m.a.i = netTeamIdx(m.a.i, m.cta);                  // 직접 만든 군대·신병대도 그대로 받는다
+  m.b.i = netTeamIdx(m.b.i, m.ctb);
   sel[0] = [m.a]; sel[1] = [m.b];
   colA.value = m.ca; colB.value = m.cb;
   COIN_START = m.coin; COIN_EVERY = m.every; KILL_W = m.w;
@@ -7759,6 +7826,7 @@ function myaReg() {
                  bw: myaBaseWep('my' + ai + 'base', bs, a) });
   });
   if (typeof stReg === 'function' && ST) stReg();     // 신병대는 늘 맨 뒤에 둔다
+  if (typeof NET_TEMP !== 'undefined') for (const t of NET_TEMP) TEAMS.push(t);   // 받아 둔 상대 팀
   for (const si of [0, 1]) sel[si] = sel[si].filter(e => e.i < TEAMS.length);
 }
 // 그 자리에서만 쓰는 임시 등록 (온라인으로 받은 군대)
