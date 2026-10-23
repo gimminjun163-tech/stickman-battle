@@ -621,6 +621,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>숫자 뽑기 방식</b>은 셋 중 하나다. <b>랜덤</b>은 앞칸부터 1, 2, 3 … 으로 시작해 뒤로 갈수록 큰 수가 나온다 (n번째 칸은 n ~ 2n). 이때만 <b>숫자 고정</b>이 뜨는데, 켜면 판 내내 그대로고 끄면 공이 들어간 그 칸만 새로 뽑힌다.<br>
     <b>1,2,3…</b> 은 칸 순서대로 1, 2, 3 … 이 박히고 안 바뀐다. <b>직접</b>은 쓸 숫자를 쉼표로 넣으면 (예: 1,2,3,5,10) 그대로 박힌다. 칸보다 적게 넣으면 앞에서부터 다시 쓰고, 많이 넣으면 남는 건 버린다 (1~999, 최대 16개).<br>
     아직 안 나온 병사 수는 전투 화면 <b>좌우 위</b>에 크게 뜬다 (= 10 이 떠서 3명이 나왔으면 7).<br>
+    <b style="color:#ff9a3a">화염방사기</b> — 현대 군대 상점의 <b>화염방사병</b>(값 9)과 화염 군단의 <b>화염병</b>이 쓴다. 실제 화염방사기처럼 <b>끊기지 않는 긴 불줄기</b>가 뻗어 나간다 — 노즐 바로 앞은 하얗게 달궈져 있고, 멀어질수록 노랑·주황·검붉은색으로 부풀어 퍼지며, 끝에서는 <b>검은 연기</b>로 피어오른다. 불길은 바람에 놀듯 일렁이고 겹칠수록 밝다. 사거리가 짧아 붙어야 하지만, <b>맞은 적은 몸에 불이 붙어</b> 3.2초 동안 0.5초마다 <b>화상</b> 피해를 입는다 (한 방 피해의 45%, 최소 3). 불은 겹쳐 쌓이지 않고 다시 맞으면 시간만 늘어나며, 타는 동안 몸에서 불길이 일렁이고 불티가 튄다. 버섯처럼 면역인 상대에게는 안 붙는다.<br>
     <b style="color:#ffd76a">수식 거인</b> — 갈라지는 때를 <b>무기 정한 뒤</b>로 두면 수만큼 여럿이 나오는 대신 <b>거인 하나</b>가 나온다. <b>체력 = 기본 체력 × 공에 든 수</b>, 크기는 수에 따라 커지고(수의 0.45제곱, 최대 10배), <b>공격력은 ×올림(지금 체력 ÷ 기본 체력)</b> — 머리 위에 지금 배수가 뜨고 맞을수록 줄어든다. 예를 들어 25가 나오면 체력 3,375(기본 135×25)에 ×25로 시작해, 체력이 42%로 깎이면 ×11까지 떨어진다. 수가 1이면 그냥 평범한 병사다.<br>
     <b>공 하나의 상한</b>은 999를 넘겨 적을 수 있고 <b>무한</b> 단추를 누르면 끝이 없다 (거인과 같이 쓰면 체력이 수백만까지 올라간다).<br>
     <b>병사 나오는 간격</b>은 공 하나가 갈라져 병사가 쏟아질 때 한 명씩 사이에 두는 시간이다 (0~1초, 기본 0.2초). 0으로 두면 예전처럼 한꺼번에 나온다. 줄은 진영마다 따로 서고, 공 하나의 상한만큼(상한 999면 2,997명까지) 기다린다. 전장이 꽉 차 있으면 줄에서 기다렸다가 자리가 나는 대로 나온다.<br>
@@ -1019,7 +1020,7 @@ function wp(id, name, type, dmg, range, cd, shape, o) {
   o = o || {};
   WEAPONS[id] = { id, name, type, dmg, range, cd, shape,
     col: o.col || '#dfe6ee', ps: o.ps || 460, arc: !!o.arc, aoe: o.aoe || 0, kn: o.kn || 1,
-    cry: o.cry || null, sp: o.sp || null, immune: o.immune || null, dash: o.dash || 0,
+    cry: o.cry || null, sp: o.sp || null, immune: o.immune || null, dash: o.dash || 0, burn: o.burn || 0,
     mv: o.mv || 0, kills: o.kills || 0, bdmg: o.bdmg || 0, mount: o.mount || 0 };
 }
 
@@ -1136,7 +1137,7 @@ wp('holybolt','신성광선','r',32,420,1.2,'beam',{col:'#fff4b0',ps:1200});
 wp('laser','레이저','r',20,400,.5,'beam',{col:'#ff5a5a',ps:1500});
 wp('plasma','플라즈마포','r',42,440,1.4,'ball',{col:'#7af0ff',ps:620,aoe:50});
 wp('railgun','레일건','r',75,640,2.6,'beam',{col:'#c0f0ff',ps:1800});
-wp('flamethrower','화염방사기','r',14,180,.12,'ball',{col:'#ff9a3a',ps:340});
+wp('flamethrower','화염방사기','r',14,180,.12,'ball',{col:'#ff9a3a',ps:340,burn:1});
 wp('sandblast','모래폭풍','r',24,300,1.2,'ball',{col:'#e0c890',ps:430,aoe:45});
 wp('sonicwave','음파','r',22,320,1,'beam',{col:'#a0d0ff',ps:900});
 wp('nuke','핵폭탄','r',300,620,7,'bomb',{col:'#ffe08a',ps:300,arc:1,aoe:240,kn:5});
@@ -1439,7 +1440,7 @@ const G = {
   dealt: [0, 0],               // 그 베이스가 받은 누적 피해
   tcol: [[], []],              // 진영 안에서 팀마다 조금씩 다른 색
   col: ['#3b82f6', '#ef4444'],
-  balls: [], sold: [], corp: [], proj: [], part: [], pops: [], nums: [], spr: [],
+  balls: [], sold: [], corp: [], proj: [], part: [], pops: [], nums: [], spr: [], flame: [],
   shopCount: [[], []],         // [진영][팀][칸]
   rage: 1, cordyN: [0, 0], shock: [], flash: 0, holes: [], rush: [0, 0], ooze: [0, 0], sciSide: [false, false], deliv: [], zones: [],
   wlock: [[], []],             // [진영][팀] = -1이면 전부, 아니면 그 무기 하나만
@@ -2001,6 +2002,40 @@ function swPath(a, t) {
   const f = clamp(t, 0, 1) * (n - 1), i = Math.min(n - 2, Math.floor(f)), k = f - i;
   const x0 = a[i * 2], y0 = a[i * 2 + 1], x1 = a[i * 2 + 2], y1 = a[i * 2 + 3];
   return [x0 + (x1 - x0) * k, y0 + (y1 - y0) * k, Math.atan2(y1 - y0, x1 - x0)];
+}
+
+/* ── 화염방사기 총구 ──
+   긴 불줄기는 G.flame 이 맡고, 여기선 노즐 바로 앞의
+   타오르는 빛만 올린다. */
+function drawFlameJet(ctx, s) {
+  const j = s.jet;
+  if (!j || j.t <= 0) return;
+  const mz = s.w.mz || [12, 34], S = s.size;
+  const ox = s.x + s.face * mz[0] * S, oy = s.y - mz[1] * S;
+  const k = clamp(j.t / .17, 0, 1);                     // 갓 쇼은 순간이 가장 밝다
+  const R = (9 + 5 * Math.sin(G.t * 30 + j.seed)) * (.55 + .45 * k) * Math.max(.8, S);
+  const F = flameSpr();
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.translate(ox, oy); ctx.rotate(j.ang);
+  ctx.globalAlpha = .5 * k;                             // 번지는 주황 빛
+  ctx.drawImage(F.fire[2], R * .4 - R * 1.9, -R * 1.9, R * 3.8, R * 3.8);
+  ctx.globalAlpha = .75 * k;                            // 하얀 불꽃 심
+  ctx.drawImage(F.fire[0], R * .5 - R * .85, -R * .85, R * 1.7, R * 1.7);
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+// 불줄기 끝에서 오르는 검은 연기와 불티
+function jetSmoke(s) {
+  const j = s.jet;
+  if (!j || LOD || G.part.length > 900 || Math.random() < .72) return;
+  const mz = s.w.mz || [12, 34], S = s.size;
+  const ox = s.x + s.face * mz[0] * S, oy = s.y - mz[1] * S;
+  const t = .5 + Math.random() * .5, X = ox + Math.cos(j.ang) * j.len * t;
+  const Y = oy + Math.sin(j.ang) * j.len * t;
+  G.part.push({ x: X + rnd(-8, 8), y: Y + rnd(-8, 8), vx: rnd(-14, 14) + Math.cos(j.ang) * 20,
+                vy: rnd(-86, -34), life: rnd(.5, 1.1),
+                col: Math.random() < .5 ? '#3a3330' : '#5a4d45', sz: rnd(2, 4) });
 }
 
 // 붓으로 그린 땅 — 솟은 곳은 흙으로 채우고, 파인 곳은 도로 파낸다
@@ -2883,6 +2918,128 @@ function dmgNum(x, y, v, col) {
                 v: n, col, big: n >= 40, life: .95 });
 }
 
+const FLAME_CAP = 620;
+let FSPR = null;                                      // 불덩이 그림(한 번만 만든다)
+function flameSpr() {
+  if (FSPR) return FSPR;
+  const mk = (hex, soft) => {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+    const g = cv.getContext('2d');
+    const r = parseInt(hex.slice(1, 3), 16), gg = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    const rgba = a => 'rgba(' + r + ',' + gg + ',' + b + ',' + a + ')';
+    if (soft) { gr.addColorStop(0, rgba(.85)); gr.addColorStop(.45, rgba(.5)); gr.addColorStop(.78, rgba(.16)); }
+    else      { gr.addColorStop(0, rgba(1));   gr.addColorStop(.3, rgba(.78)); gr.addColorStop(.66, rgba(.26)); }
+    gr.addColorStop(1, rgba(0));
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+    return cv;
+  };
+  FSPR = { fire: ['#fff3cf', '#ffc85a', '#ff9c20', '#f8680e', '#c93e07', '#7d2404'].map(c => mk(c, false)),
+           smoke: mk('#3c332c', true) };
+  return FSPR;
+}
+/* ── 화염 분사 ──
+   실제 화염방사기처럼 '끊기지 않는 불줄기'로 보이게, 한 발마다 작은 불덩이를
+   여러 개 뿜어 겹쳐 그린다. 노즐 쪽은 희고 뜨겁게, 끝으로 갈수록 붉고
+   연기로 흩어지게. 피해는 원래 탄이 맡고 이것들은 보이기만 한다. */
+function spitFlame(sx, sy, vx, vy, w) {
+  if (G.flame.length > FLAME_CAP) return;
+  const sp = Math.hypot(vx, vy) || 1, ux = vx / sp, uy = vy / sp;
+  const reach = Math.max(70, w.range) * 1.2;
+  const n = LOD ? 6 : 14;
+  for (let i = 0; i < n; i++) {
+    const k = .16 + .98 * (i / n) + rnd(-.07, .07);     // 앞뒤로 흩어져 줄기를 메운다
+    const spread = rnd(-.085, .085) + (i / n) * rnd(-.075, .075);
+    const cs = Math.cos(spread), sn = Math.sin(spread);
+    const dx = ux * cs - uy * sn, dy = ux * sn + uy * cs;
+    const v = sp * k, off = rnd(0, 12);
+    G.flame.push({ x: sx + dx * off, y: sy + dy * off, ox: sx, oy: sy,
+                   vx: dx * v, vy: dy * v - rnd(0, 14),
+                   nx: -dy, ny: dx, wob: rnd(-1, 1),
+                   t: 0, life: rnd(.45, 1.05) * (reach / Math.max(150, sp)) + .24,
+                   reach, r0: rnd(3.4, 6.5), r1: rnd(24, 40),
+                   seed: Math.random() * 9, smoke: Math.random() < .2 });
+  }
+}
+function stepFlame(dt) {
+  for (let i = G.flame.length - 1; i >= 0; i--) {
+    const f = G.flame[i];
+    f.t += dt;
+    if (f.t >= f.life) { G.flame.splice(i, 1); continue; }
+    const k = f.t / f.life;
+    const tw = Math.sin(f.t * 15 + f.seed) * f.wob * (f.smoke ? 34 : 26) * dt;   // 일렁임
+    f.x += f.vx * dt + f.nx * tw; f.y += f.vy * dt + f.ny * tw;
+    f.vx *= 1 - (f.smoke ? 2.6 : 1.45) * dt;            // 앞으로 가다 멈추며 피어오른다
+    f.vy = f.vy * (1 - 1.35 * dt) - (f.smoke ? 125 : 40 + 95 * k) * dt;
+  }
+}
+// 불줄기 그리기 — 연기를 먼저 깔고, 불은 겹칠수록 밝아지게 더해 그린다
+function drawFlames() {
+  const n = G.flame.length;
+  if (!n) return;
+  const S = flameSpr();
+  fx.save();
+  for (let i = 0; i < n; i++) {                         // 연기는 불 뒤에
+    const f = G.flame[i];
+    if (!f.smoke) continue;
+    const k = f.t / f.life;
+    const r = (f.r0 + (f.r1 - f.r0) * Math.pow(k, .5)) * (1.7 + 2 * k);
+    const a = (k < .25 ? k / .25 : 1) * (1 - k) * .42;
+    if (a <= .01) continue;
+    fx.globalAlpha = a;
+    fx.drawImage(S.smoke, f.x - r, f.y - r, r * 2, r * 2);
+  }
+  fx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < n; i++) {
+    const f = G.flame[i];
+    if (f.smoke) continue;
+    const k = f.t / f.life;
+    const d = Math.hypot(f.x - f.ox, f.y - f.oy);
+    const u = Math.min(1, d / f.reach);                 // 노즐에서 얼마나 멀리 왔나
+    const puff = Math.max(u, k * .85);
+    const r = (f.r0 + (f.r1 - f.r0) * Math.pow(puff, .7)) * (1 + .09 * Math.sin(G.t * 20 + f.seed));
+    const a = (k < .1 ? k / .1 : 1) * (1 - Math.pow(k, 1.7)) * (1 - u * .35);
+    if (a <= .015) continue;
+    const ci = Math.min(5, Math.floor(u * 4.6 + k * 1.9));       // 멀수록 붉게
+    fx.globalAlpha = a * .42;                           // 옅게 겹쳐 색이 살아남게
+    fx.drawImage(S.fire[ci], f.x - r, f.y - r, r * 2, r * 2);
+    if (u < .5) {                                       // 노즐 쪽 뜨거운 속
+      const hr = r * (.5 - u * .5), hc = u < .22 ? 0 : 1;
+      fx.globalAlpha = a * (1 - u * 2) * .5;
+      fx.drawImage(S.fire[hc], f.x - hr, f.y - hr * 1.05, hr * 2, hr * 2);
+    }
+  }
+  fx.restore();
+}
+
+/* ── 불 데미지 ──
+   화염방사기에 맞으면 몸에 불이 붙어 일정 시간 동안 주기로 닳는다.
+   다시 맞으면 시간만 늘어나고 겹쳐서 더 아프지는 않다. */
+const BURN_TIME = 3.2, BURN_TICK = .5;   // 3.2초 동안 0.5초마다 한 번씩
+function ignite(s, w, team) {
+  if (!s || s.hp <= 0) return;
+  if (w.immune === 'mushroom' && isShroom(s)) return;
+  const d = Math.max(3, Math.round(w.dmg * .45));
+  if (s.fire && s.fire.dmg > d) { s.fire.t = Math.max(s.fire.t, BURN_TIME); return; }
+  s.fire = { t: BURN_TIME, c: s.fire ? s.fire.c : BURN_TICK * .5, dmg: d, team };
+}
+function stepBurn(s, dt) {
+  const f = s.fire;
+  if (!f) return;
+  f.t -= dt; f.c -= dt;
+  if (f.c <= 0) {
+    f.c += BURN_TICK;
+    damage(s, f.dmg, 0, 0);
+    G.nums.push({ x: s.x + rnd(-6, 6), y: s.y - 48 * s.size, vx: rnd(-10, 10), vy: -30,
+                  v: '화상 ' + f.dmg, col: '#ff9a3a', big: false, life: .7 });
+  }
+  if (!LOD && G.part.length < 950 && Math.random() < dt * 22)   // 타는 자리에 불티
+    G.part.push({ x: s.x + rnd(-8, 8) * s.size, y: s.y - rnd(6, 44) * s.size,
+                  vx: rnd(-18, 18), vy: rnd(-90, -30), life: rnd(.25, .55),
+                  col: Math.random() < .6 ? '#ff9a3a' : '#ffd76a', sz: rnd(1.4, 3) });
+  if (f.t <= 0) s.fire = null;
+}
+
 function damage(s, amount, kx, ky) {
   const gd = BUF[s.team].guard;                      // 지휘 '방어 태세'
   if (gd && G.order && G.order[s.team] && G.order[s.team].t === 'hold') amount *= 1 - Math.min(.45, gd);
@@ -2935,6 +3092,7 @@ function makeCorpse(s, kx, ky) {
    무기 종류에 따라 세기가 다르다 (대포·로켓이 가장 크다). */
 function recoilFx(s, w, dir) {
   const S = s.size, mx = s.x + dir * 20 * S, my = s.y - 34 * S;
+  if (w.burn) { s.rec = Math.min(1, (s.rec || 0) + .4); return; }  // 화염방사기는 불줄기가 전부
   const heavy = (w.aoe || 0) > 40 || w.ps < 460 || w.dmg >= 60;   // 포·로켓류
   if (G.part.length > 1400) return;                               // 이미 연기가 자욱하면 생략
   const busy = G.part.length > 700;                               // 많으면 입자를 줄인다
@@ -2964,10 +3122,13 @@ function fire(sx, sy, w, tx, ty, team, ti, dmgMul) {
   else if (tj === 'lob') vy -= d * 1.05;
   // 기술이 쌓이면 폭탄류가 점점 강해진다
   const tm = (G.sciSide[team] && w.shape === 'bomb') ? 1 + Math.min(2.5, techOf(team) / 120) : 1;
-  G.proj.push({ x: sx, y: sy, vx, vy, w, team, ti, dmg: w.dmg * dmgMul * tm,
+  const flife = w.burn ? Math.min(1.1, w.range / Math.max(120, w.ps) + .16) : 4;   // 사거리만큼만 간다
+  const fr = w.burn ? rnd(.82, 1.2) : 1, seed = Math.random() * 9;
+  if (w.burn) spitFlame(sx, sy, vx, vy, w);          // 보이는 불줄기
+  G.proj.push({ x: sx, y: sy, vx, vy, w, team, ti, dmg: w.dmg * dmgMul * tm, born: 0, flife, fr, seed,
                 aoe: w.aoe * (1 + (tm - 1) * .55), arc: tj === 'arc' || tj === 'lob',
                 wv: tj === 'wave' ? w.ps * .55 : 0, vy0: vy, wph: 0,
-                life: 4, from: terrCode(sx), ang: Math.atan2(vy, vx) });
+                life: flife, from: terrCode(sx), ang: Math.atan2(vy, vx) });
 }
 
 // 베이스가 무너지기 직전에 딱 한 번 터뜨리는 최후의 발악
@@ -2994,6 +3155,12 @@ function stepBattle(dt) {
   for (const s of G.sold) {
     if (s.hp <= 0) continue;
     s.think -= dt; s.cool -= dt;
+    if (s.jet) {                                       // 불줄기 — 연기가 오른다
+      s.jet.t -= dt;
+      if (Math.random() < dt * 4) jetSmoke(s);       // 재 몇 점 (연기는 불줄기가 낸다)
+      if (s.jet.t <= 0) s.jet = null;
+    }
+    if (s.fire) stepBurn(s, dt);                       // 몸에 붙은 불
     if (s.giant) s.dmg = s.dmg0 * giantMul(s);         // 거인은 체력만큼 세다
     s.swing = Math.max(0, s.swing - dt * 4.5);
     s.hurt = Math.max(0, s.hurt - dt);
@@ -3175,7 +3342,13 @@ function stepBattle(dt) {
         } else if (s.w.cry) say(s, s.w.cry, '#9ae8ff');
         if (fw) {
           const mz = fw.mz || [12, 34];             // 총구 — 직접 정할 수 있다
-          fire(s.x + dir * mz[0] * s.size, s.y - mz[1] * s.size, fw, tx, ty, s.team, s.ti, s.dmg * G.rage);
+          const sx0 = s.x + dir * mz[0] * s.size, sy0 = s.y - mz[1] * s.size;
+          fire(sx0, sy0, fw, tx, ty, s.team, s.ti, s.dmg * G.rage);
+          if (fw.burn) {                            // 화염방사기 — 이어진 불줄기
+            const dx0 = tx - sx0, dy0 = ty - sy0;
+            s.jet = { t: .17, ang: Math.atan2(dy0, dx0),
+                      len: clamp(Math.hypot(dx0, dy0) + 26, 60, fw.range * 1.15), seed: Math.random() * 9 };
+          }
           recoilFx(s, fw, dir);
         }
       }
@@ -3267,6 +3440,13 @@ function stepBattle(dt) {
     const p = G.proj[i];
     if (p.arc) p.vy += GRAV_W * .85 * dt;
     else if (p.wv) { p.wph += dt * 11; p.vy = p.vy0 + Math.cos(p.wph) * p.wv; }   // 물결 궤도
+    if (p.w.burn) {                                    // 불덩이 — 퍼지며 느려지고 떠오른다
+      p.born = Math.min(1, (p.born || 0) + dt / Math.max(.12, p.flife || .42));
+      p.vx *= 1 - .5 * dt; p.vy = p.vy * (1 - .5 * dt) - 22 * dt;   // 조금 느려지며 떠오른다
+      if (!LOD && G.part.length < 900 && Math.random() < dt * 5)      // 재 몇 점만
+        G.part.push({ x: p.x + rnd(-6, 6), y: p.y + rnd(-6, 6), vx: rnd(-26, 26), vy: rnd(-70, -16),
+                      life: rnd(.3, .7), col: '#6a5a52', sz: rnd(1.6, 2.8) });
+    }
     p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
     p.ang = Math.atan2(p.vy, p.vx);
     if (TERR.length && !p.arc && p.from !== 2 && p.y > GROUND - 80 && terrCode(p.x) === 2 &&
@@ -3292,7 +3472,10 @@ function stepBattle(dt) {
         if (p.w.immune === 'mushroom' && isShroom(hit)) {   // 버섯한테는 안 통한다
           G.nums.push({ x: hit.x, y: hit.y - 52 * hit.size, vx: 0, vy: -24,
                         v: '면역', col: '#9ae8ff', big: false, life: 1 });
-        } else damage(hit, p.dmg, Math.sign(p.vx) * RANGED_KNOCK * p.w.kn, -RANGED_KNOCK * .7 * p.w.kn);
+        } else {
+          damage(hit, p.dmg, Math.sign(p.vx) * RANGED_KNOCK * p.w.kn, -RANGED_KNOCK * .7 * p.w.kn);
+          if (p.w.burn) ignite(hit, p.w, p.team);
+        }
       }
       if (inBase) { eb.hp -= p.dmg; dmgNum(p.x, p.y, p.dmg, '#ff9a5a'); }
       const pt = G.roster[p.team] && G.roster[p.team][p.ti];
@@ -3333,8 +3516,11 @@ function stepBattle(dt) {
               continue;
             }
             const d = Math.hypot(s.x - p.x, (s.y - 26 * s.size) - p.y);
-            if (d < p.aoe) damage(s, p.dmg * (1 - d / p.aoe) * .85,
-                                  Math.sign(s.x - p.x || 1) * AOE_KNOCK * p.w.kn, -AOE_KNOCK * p.w.kn);
+            if (d < p.aoe) {
+              damage(s, p.dmg * (1 - d / p.aoe) * .85,
+                     Math.sign(s.x - p.x || 1) * AOE_KNOCK * p.w.kn, -AOE_KNOCK * p.w.kn);
+              if (p.w.burn) ignite(s, p.w, p.team);
+            }
           }
         }
         // 큰 폭발은 베이스도 휩쓴다. 예전엔 병사만 쳐서, 핵이 베이스 옆에 떨어져도 베이스가 멀쩡했다.
@@ -3373,6 +3559,8 @@ function stepBattle(dt) {
     for (const p of c.j) if (p.y > gyAt(p.x)) { p.y = gyAt(p.x); p.ox = p.x + (p.x - p.ox) * .35; }
     if (c.life <= 0) G.corp.splice(i, 1);
   }
+
+  if (G.flame.length) stepFlame(dt);                  // 불줄기
 
   for (let i = G.part.length - 1; i >= 0; i--) {
     const p = G.part[i];
@@ -4603,6 +4791,31 @@ function drawSoldier(ctx, s) {
     ctx.restore();
   }
 
+  if (s.jet) drawFlameJet(ctx, s);                 // 화염방사기 불줄기
+
+  if (s.fire) {                                    // 몸에 붙은 불
+    const S2 = S, n = LOD ? 2 : 4;
+    ctx.save();
+    for (let i = 0; i < n; i++) {
+      const ph = G.t * 11 + i * 2.1 + x * .05;
+      const fx0 = x + Math.sin(ph * .8 + i) * 8 * S2;
+      const fy0 = y - (10 + i * 12) * S2 - Math.abs(Math.sin(ph)) * 3 * S2;
+      const r = (4.6 - i * .5) * S2 * (.75 + .35 * Math.abs(Math.sin(ph * 1.3)));
+      ctx.globalAlpha = .75;
+      ctx.fillStyle = '#ff6a1a';
+      ctx.beginPath();
+      ctx.moveTo(fx0, fy0 - r * 2.1);
+      ctx.quadraticCurveTo(fx0 + r, fy0 - r * .4, fx0, fy0 + r * .7);
+      ctx.quadraticCurveTo(fx0 - r, fy0 - r * .4, fx0, fy0 - r * 2.1);
+      ctx.fill();
+      ctx.globalAlpha = .9;
+      ctx.fillStyle = '#ffd76a';
+      ctx.beginPath(); ctx.arc(fx0, fy0 - r * .2, r * .42, 0, 6.3); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
   if (!LOD && compOf(s) === 'drone') drawDrone(ctx, s);
 
   if (s.giant) {                                   // 거인 — 지금 몇 배인지
@@ -4654,7 +4867,7 @@ const PLOOK = {
   grenade: 'grenade', bomb: 'grenade', javelin: 'javelin', pilum: 'javelin',
   harpoon: 'harpoon', sling: 'rock', meteor: 'meteor', boomerang: 'boomerang',
   shuriken: 'star', kunai: 'star', blowdart: 'dart', iceshard: 'icecrystal',
-  fireball: 'fire', firearrow: 'firearrow', flamethrower: 'fire', sandblast: 'sand',
+  fireball: 'fire', firearrow: 'firearrow', flamethrower: 'flamejet', sandblast: 'sand',
   lightning: 'lightning', railgun: 'rail', laser: 'laser', radbeam: 'laser',
   photon: 'laser', holybolt: 'laser', sonicwave: 'sonic', sonicboom: 'sonic',
   plasma: 'plasma', fusion: 'plasma', gravgun: 'orb', darkbolt: 'orb', bloodbolt: 'orb',
@@ -4752,6 +4965,27 @@ function drawProj(p) {
       fx.beginPath(); fx.moveTo(9, 0); fx.lineTo(0, -4); fx.lineTo(-6, 0); fx.lineTo(0, 4); fx.closePath(); fx.fill();
       fx.fillStyle = 'rgba(255,255,255,.7)';
       fx.beginPath(); fx.moveTo(7, 0); fx.lineTo(0, -1.8); fx.lineTo(-3, 0); fx.closePath(); fx.fill(); break;
+    case 'flamejet': break;                          // 화염방사기 — 불줄기가 따로 그려진다
+    case 'flamepuff': {                              // (예전 방식) 퍼지며 식는 불덩이
+      const a = Math.max(0, Math.min(1, (p.born || 0)));   // 0 갓 나옴 → 1 다 퍼짐
+      const R = (6 + a * 13) * (p.fr || 1), fl = 1 + .2 * Math.sin(G.t * 24 + (p.seed || 0));
+      fx.save();
+      fx.rotate(-p.ang);                             // 불은 날아가는 쪽으로 기울지 않는다
+      fx.globalAlpha = .18 + (1 - a) * .42;          // 바깥 연기
+      fx.fillStyle = a > .62 ? '#6a5a52' : '#c0501c';
+      fx.beginPath(); fx.arc(0, -a * 5, R * 1.25 * fl, 0, 6.3); fx.fill();
+      fx.globalAlpha = Math.max(0, .72 - a * .7);    // 불꽃 본체
+      fx.fillStyle = '#ff6a1a';
+      fx.beginPath(); fx.arc(0, -a * 3, R * fl, 0, 6.3); fx.fill();
+      fx.fillStyle = '#ff9a3a';
+      fx.beginPath(); fx.arc(1, -a * 2, R * .68 * fl, 0, 6.3); fx.fill();
+      fx.globalAlpha = Math.max(0, .95 - a * 1.5);   // 하얀 속
+      fx.fillStyle = '#fff0b0';
+      fx.beginPath(); fx.arc(2, -a, R * .34 * fl, 0, 6.3); fx.fill();
+      fx.globalAlpha = 1;
+      fx.restore();
+      break;
+    }
     case 'fire': case 'firearrow': {
       const fl = 1 + .25 * Math.sin(G.t * 30);
       if (k === 'firearrow') { fx.fillStyle = '#9a7a52'; fx.fillRect(-11, -1.1, 20, 2.2); }
@@ -5408,6 +5642,7 @@ function drawField() {
   for (const so of G.sold) if (onScreen(so.x)) shown++;
   LOD = LOD ? shown > LOD_OFF : shown > LOD_ON;
   for (const so of G.sold) if (onScreen(so.x)) drawSoldier(fx, so);
+  drawFlames();                                    // 불은 병사 앞에서 타오른다
   drawBridges(true);                               // 난간은 병사 앞에
   drawTerrainFront(viewL, viewR);
   drawOrders();
@@ -6359,7 +6594,7 @@ function startGame(asGuest) {
   REG.weapon.floor = Math.min(120, 8 + rows * ROW_H);
   REG.shop.floor   = Math.min(126, 8 + rows * ROW_H);
   layoutBoards();
-  G.balls.length = G.sold.length = G.corp.length = G.proj.length = G.part.length = G.pops.length = G.nums.length = G.spr.length = 0;
+  G.balls.length = G.sold.length = G.corp.length = G.proj.length = G.part.length = G.pops.length = G.nums.length = G.spr.length = G.flame.length = 0;
   G.shopCount = [0, 1].map(t => G.roster[t].map(() => [0, 0, 0, 0, 0])); G.cordyN = [0, 0];
   G.shock.length = 0; G.flash = 0; G.holes.length = 0; G.rush = [0, 0]; G.ooze = [0, 0];
   G.sciSide = [0, 1].map(t => G.roster[t].some(td => td.special));
@@ -6934,6 +7169,7 @@ function netLerp(dt) {
 
 // 참가자는 시뮬레이션을 안 돌리니 불꽃·숫자·충격파만 따로 늙힌다
 function stepFx(dt) {
+  if (G.flame.length) stepFlame(dt);
   for (let i = G.part.length - 1; i >= 0; i--) {
     const p = G.part[i];
     p.vy += GRAV_W * .5 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
