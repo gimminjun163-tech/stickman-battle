@@ -657,7 +657,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>1,2,3…</b> 은 칸 순서대로 1, 2, 3 … 이 박히고 안 바뀐다. <b>직접</b>은 쓸 숫자를 쉼표로 넣으면 (예: 1,2,3,5,10) 그대로 박힌다. 칸보다 적게 넣으면 앞에서부터 다시 쓰고, 많이 넣으면 남는 건 버린다 (1~999, 최대 16개).<br>
     아직 안 나온 병사 수는 전투 화면 <b>좌우 위</b>에 크게 뜬다 (= 10 이 떠서 3명이 나왔으면 7).<br>
     <b style="color:#c8b68a">투석기</b> — 중세 군대 상점의 <b>투석기</b>(값 21)가 끌고 다닌다. 바퀴 달린 나무 틀에서 <b>큰 바위를 높은 포물선으로</b> 던진다 — 사거리 650으로 가장 멀리 나가고, 떨어진 자리 반경 95 안을 한꺼번에 뎎치며 크게 밀어낸다. 다만 3.6초에 한 발뿐이고 발걸음이 절반쯤 느려서, 앞줄이 막아주는 동안 뒤에서 쪼야 제 값을 한다. <b>기지를 허무는 데</b>도 아주 좋다.<br><b style="color:#ff9a3a">화염방사기</b> — 현대 군대 상점의 <b>화염방사병</b>(값 9)과 화염 군단의 <b>화염병</b>이 쓴다. 실제 화염방사기처럼 <b>끊기지 않는 긴 불줄기</b>가 뻗어 나간다 — 노즐 바로 앞은 하얗게 달궈져 있고, 멀어질수록 노랑·주황·검붉은색으로 부풀어 퍼지며, 끝에서는 <b>검은 연기</b>로 피어오른다. 불길은 바람에 놀듯 일렁이고 겹칠수록 밝다. 사거리가 짧아 붙어야 하지만, <b>맞은 적은 몸에 불이 붙어</b> 3.2초 동안 0.5초마다 <b>화상</b> 피해를 입는다 (한 방 피해의 45%, 최소 3). 불은 겹쳐 쌓이지 않고 다시 맞으면 시간만 늘어나며, 타는 동안 몸에서 불길이 일렁이고 불티가 튄다. 버섯처럼 면역인 상대에게는 안 붙는다.<br>
-    <b style="color:#ffd76a">수식 거인</b> — 갈라지는 때를 <b>무기 정한 뒤</b>로 두면 수만큼 여럿이 나오는 대신 <b>거인 하나</b>가 나온다. WEAPON 뿐 아니라 <b>SHOP 병사도 거인으로</b> 나온다 — 값을 치르고 한 번에 10명을 샀다면 '기병 거인 ×10' 하나가 나온다 (체력·공격력·크기 모두 그 상점 병사 기준으로 곱해진다). <b>체력 = 기본 체력 × 공에 든 수</b>, 크기는 수에 따라 커지고(수의 0.45제곱, 최대 10배), <b>공격력은 ×올림(지금 체력 ÷ 기본 체력)</b> — 머리 위에 지금 배수가 뜨고 맞을수록 줄어든다. <b>몸집도 그만큼 줄어든다</b> — ×6이던 거인이 ×5가 되면 ×5짜리 크기로 부드럽게 줄고, 작아진 만큼 발은 조금 빨라진다. 예를 들어 25가 나오면 체력 3,375(기본 135×25)에 ×25로 시작해, 체력이 42%로 깎이면 ×11·×11 크기까지 떨어진다. 수가 1이면 그냥 평범한 병사다.<br>
+    <b style="color:#ffd76a">수식 거인</b> — 갈라지는 때를 <b>무기 정한 뒤</b>로 두면 수만큼 여럿이 나오는 대신 <b>거인 하나</b>가 나온다. WEAPON 뿐 아니라 <b>SHOP 병사도 거인으로</b> 나온다 — 값을 치르고 한 번에 10명을 샀다면 '기병 거인 ×10' 하나가 나온다 (체력·공격력·크기 모두 그 상점 병사 기준으로 곱해진다). 몇 명 몫인지는 <b>머리 위 ×N</b> 으로 뜨고, 전차·중기관총병 같은 <b>차량과 올린 그림 캠릭터에도</b> 똑같이 붙는다. <b>체력 = 기본 체력 × 공에 든 수</b>, 크기는 수에 따라 커지고(수의 0.45제곱, 최대 10배), <b>공격력은 ×올림(지금 체력 ÷ 기본 체력)</b> — 머리 위에 지금 배수가 뜨고 맞을수록 줄어든다. <b>몸집도 그만큼 줄어든다</b> — ×6이던 거인이 ×5가 되면 ×5짜리 크기로 부드럽게 줄고, 작아진 만큼 발은 조금 빨라진다. 예를 들어 25가 나오면 체력 3,375(기본 135×25)에 ×25로 시작해, 체력이 42%로 깎이면 ×11·×11 크기까지 떨어진다. 수가 1이면 그냥 평범한 병사다.<br>
     <b>공 하나의 상한</b>은 999를 넘겨 적을 수 있고 <b>무한</b> 단추를 누르면 끝이 없다 (거인과 같이 쓰면 체력이 수백만까지 올라간다).<br><b style="color:#7fd8ff">병사가 나올 최소</b> — '=' 로 정해진 수가 이 수보다 작으면 그 공은 <b>병사가 안 되고 버려진다</b> (보드에 '= 3 (10 미만 · 버림)' 이 뜨며 알려준다). <b>1</b>로 두면 예전처럼 무엇이든 다 나온다. 큰 수를 만들어야만 병력이 나오니 곱셈을 노리게 된다 — 거인 설정과 같이 쓰면 '큰 거인 하나만 나오는' 판이 된다.<br><b style="color:#ffd76a">거인이 되는 기준</b> — 수가 <b>이 값을 넘어야만</b> 거인이 되고, 안 넘으면 그냥 그 수만큼 <b>평범한 병사 여럿</b>으로 나온다. 기본 1 — 2명부터 거인이다. 20으로 올리면 21명 이상일 때만 거인이 나오고, <b>거인 없음</b>으로 두면 언제나 여럿이 나온다. SHOP 에선 <b>한 번에 산 병사 수</b>로 따진다.<br><b style="color:#ffd76a">거인 크기 상한</b> — 거인이 커질 수 있는 한계를 정한다 (기본 10배). <b>무한</b> 으로 두면 수만큼 끝없이 커져서 하늘을 찌르고(×4,000 이면 약 42배), 그럴 땐 카메라가 저절로 물러나 거인을 화면에 담는다.<br>
     <b>병사 나오는 간격</b>은 공 하나가 갈라져 병사가 쏟아질 때 한 명씩 사이에 두는 시간이다 (0~1초, 기본 0.2초). 0으로 두면 예전처럼 한꺼번에 나온다. 줄은 진영마다 따로 서고, 공 하나의 상한만큼(상한 999면 2,997명까지) 기다린다. 전장이 꽉 차 있으면 줄에서 기다렸다가 자리가 나는 대로 나온다.<br>
     WEAPON 보드: 끄면 기본 무기 보드가 사라지고 <b>SHOP 으로만</b> 싸운다. BALL DROP 에는 SPLIT / SHOP 만 남고, 공은 모두 상점 물건 값으로 들어간다. 값이 비싼 만큼 병사는 드물게, 대신 센 놈들만 나온다. (동충하초처럼 보드를 안 거치고 기본 병사를 부르는 능력은 그대로 나온다.)<br>
@@ -684,6 +684,14 @@ input.pdot:hover{border-color:var(--hi)}
       <button id="musNext">다음 곡</button>
     </div>
     <div class="hint" id="musState" style="margin-top:8px"></div>
+    <div class="row" style="margin-top:12px">
+      <label>내 음악</label>
+      <button class="mini" id="musAdd" style="flex:1;padding:7px">파일 올리기</button>
+      <button class="mini" id="musRec" style="flex:1;padding:7px">녹음 시작</button>
+    </div>
+    <input type="file" id="musFile" accept="audio/*" multiple style="display:none">
+    <div id="myMusList" style="margin-top:8px;display:grid;gap:5px"></div>
+    <div class="hint" id="myMusNote" style="margin-top:6px">올린 곡과 녹음은 이 기기에 저장돼서 다음에 열어도 그대로 있다. 곡 목록과 전투 중 ♪ 목록에도 같이 나온다.</div>
 
     <h3 style="margin-top:20px">거리 설정</h3>
     <div class="row">
@@ -905,7 +913,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>베이스가 쏘는 것</b> — <b>공격력 · 폭발 범위 · 쏘는 간격 · 탄 속도 · 궤도</b>(직선 · 포물선 · 높이 던지기 · 물결)를 정하고, <b>탄알 그림</b>으로 날아가는 모양까지 그린다 (안 그리면 동그란 탄). 베이스는 원래대로 <b>다칠수록 더 빨리 쏘는데</b>, 정한 간격을 기준으로 최대 45%까지 줄어든다 (1초로 두면 빈사 때 0.55초).<br>
     베이스 설정도 저장·공유 코드·공유된 팀에 통째로 실려 간다.<br>
     <b>저장과 공유</b> — 만든 군대는 이 브라우저에 저장돼 팀 목록에 <b>✎</b> 로 뜨고, 기본 팀과 똑같이 골라 싸운다 (여러 개 만들어 두고 고를 수 있다). <b>공유</b>를 누르면 글자 코드가 나오는데 복사해서 메신저로 보내면 되고, 받은 사람은 그 코드를 붙여 넣고 <b>코드로 가져오기</b>를 누르면 그대로 들어온다. <b>파일로 저장 / 파일에서 가져오기</b>도 된다. 온라인 대전에서는 방장이 만든 군대가 참가자에게 자동으로 전달된다.<br>
-    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br>
+    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br><b style="color:#9ae8ff">내 음악</b> — 소리 설정에서 <b>파일 올리기</b>로 가지고 있는 곡(mp3·m4a·wav·ogg 등, 한 개 30MB까지, 여러 개 한꺼번에)을 넣거나, <b>녹음 시작</b>으로 마이크로 직접 녹음할 수 있다 (한 번에 10분까지). 넣은 곡은 만든 곡 14개와 같은 목록에 섞여 설정·전투 중 ♪ 목록·다음 곡·무작위에 모두 나온다. 곡이 끝나면 처음부터 다시 돌고, <b>이 기기에 저장</b>되어 다음에 열어도 그대로 있다 (지우기로 지운다). 다만 <b>자동</b> 모드는 전투 분위기에 맞춰 만든 곡만 골라 튼다 — 내 음악은 직접 고르거나 무작위로 듣는다.<br>
     <b>자동</b> — 전투 상황을 보고 곡이 알아서 갈아탄다. <b>고요</b>(아직 병사가 적다) → <b>진군</b>(부대가 모인다) → <b>교전</b>(26명 이상 붙거나 처치가 잦아진다) → <b>격전</b>(한쪽 베이스가 45% 아래이거나 초당 1명 넘게 죽는다) → <b>막판</b>(베이스 18% 아래) → <b>승리</b>(승전가) 순으로 올라가고, 단계마다 어울리는 곡 몇 개 중 하나가 걸린다. 긴장이 올라갈 때는 8초 만에 바뀌지만 가라앉을 때는 22초를 기다려서, 상황이 출렁여도 곡이 들락거리지 않는다. 지금 단계는 <b>♪ 광란 · 격전</b> 처럼 곡 이름 옆에 뜬다.<br>
     <b>전투 중에 바꾸기</b> — 위쪽 <b>♪</b> 를 누르면 끄기 · 자동 · 무작위 · 14곡이 한 판에 펼쳐지고, 누르는 즉시 바뀐다. 직접 고르면 그 곡이 계속 나오고(자동이 더는 끼어들지 않는다), 다시 <b>자동</b>을 고르면 상황에 맞춰 돌아간다. <b>◀ ▶</b> 로는 이전/다음 곡, <b>M</b> 키로는 끄고 켠다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
@@ -1510,6 +1518,7 @@ let NUM_SLOTS = 5;                         // 숫자 뽑기 칸 수 (수식과 �
 let NUM_FIX = false;                       // (랜덤일 때) 숫자를 고정할지 — 끄면 맞을 때마다 바뀐다
 let NUM_MODE = 'rand';                     // 'rand' | 'seq' (1,2,3…) | 'custom' (직접 넣은 값)
 let NUM_LIST = [1, 2, 3, 5, 10];           // 직접 넣은 값
+const SHOP_SLOTS = 8;                      // 팀 하나가 가질 수 있는 상점 칸 수
 let FORM_MAX = 99;                         // 공 하나가 될 수 있는 최대 병력 (셋업에서 조절)
 let FORM_MIN = 1;                          // 이 수보다 작게 나온 공은 병사가 안 된다 (1이면 다 나온다)
 let COIN_START = 10, COIN_EVERY = 10, KILL_W = .67;
@@ -2623,7 +2632,7 @@ function evolve(team) {
   // SHOP 으로만 싸우면 비싼 물건을 영영 못 사는 판이 됐다.
   // 다만 넘어오자마자 공짜로 사지지 않게 새 물건 값 바로 아래까지만 남긴다.
   const prev = G.shopCount[team][0] || [], nsh = TEAMS[e.i].shop || [];
-  G.shopCount[team] = [[0, 1, 2, 3, 4].map(i => {
+  G.shopCount[team] = [Array.from({ length: SHOP_SLOTS }, (_, i) => {
     const c = Math.max(1, (nsh[i] && nsh[i].cost) || 1);
     return clamp(Math.round(prev[i] || 0), 0, c - 1);
   })];
@@ -4603,6 +4612,23 @@ function drawMammoth(ctx, s) {
   ctx.restore();
 }
 
+/* 거인 머리 위에 '지금 몇 명 몫인지' 를 붙인다.
+   졸라맨뿐 아니라 전차 같은 차량, 올린 그림 캐릭터에도 똑같이 붙는다. */
+function giantTag(ctx, s, topY) {
+  if (!s.giant) return;
+  const S = s.size, m = giantMul(s);
+  const fs = Math.max(12, 13 * Math.min(4, S));
+  ctx.save();
+  ctx.font = '800 ' + fs + 'px system-ui'; ctx.textAlign = 'center';
+  ctx.lineWidth = Math.max(4, fs * .3); ctx.strokeStyle = 'rgba(0,0,0,.75)';
+  const tf = ctx.getTransform();                    // 머리가 화면 위로 솟아도 글씨는 보이게
+  if (tf.a > 0) topY = Math.max(topY, (-tf.f + fs * tf.a * 1.1) / tf.a);
+  const t = '×' + m;
+  ctx.strokeText(t, s.x, topY);
+  ctx.fillStyle = m >= s.giant ? '#ffd76a' : '#ffb07a';
+  ctx.fillText(t, s.x, topY);
+  ctx.restore();
+}
 function drawSoldier(ctx, s) {
   const S = s.size, f = s.face, x = s.x, y = s.y;
   const body = s.hurt > 0 ? '#ffffff' : s.col;
@@ -4619,19 +4645,21 @@ function drawSoldier(ctx, s) {
   const veh = vehOf(s);
   if (veh) {                                     // 전차·장갑차 등은 통째로 갈아 끼운다
     drawVehicle(ctx, s, veh);
+    const tall = veh === 'mech' || veh === 'hover';
+    const byy = y - (tall ? 82 : 62) * S;
     if (s.hp < s.max && !LOD) {                  // 체력바는 차체 위로
-      const tall = veh === 'mech' || veh === 'hover';
-      const bw = 34 * S, byy = y - (tall ? 82 : 62) * S;
+      const bw = 34 * S;
       ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(x - bw / 2, byy, bw, 4 * S);
       ctx.fillStyle = s.hp / s.max > .4 ? '#6fd36f' : '#e06a4a';
       ctx.fillRect(x - bw / 2, byy, bw * (s.hp / s.max), 4 * S);
     }
+    giantTag(ctx, s, byy - 8 * Math.min(2.4, S));   // 몇 명 몫인지
     ctx.restore();
     return;
   }
   if (s.w.cimg) {                                // 올린 캐릭터 그림으로 나온다
     const im = imgOf(s.w.cimg);
-    if (im) { drawCustomChar(ctx, s, im); ctx.restore(); return; }
+    if (im) { drawCustomChar(ctx, s, im); giantTag(ctx, s, y - 78 * S); ctx.restore(); return; }
   }
   const beast = beastOf(s);
   if (beast === 'mammoth') { drawMammoth(ctx, s); ctx.translate(0, -MAMMOTH_H * S); }
@@ -4889,16 +4917,8 @@ function drawSoldier(ctx, s) {
 
   if (!LOD && compOf(s) === 'drone') drawDrone(ctx, s);
 
-  if (s.giant) {                                   // 거인 — 지금 몇 배인지
-    const m = giantMul(s), fs = Math.max(11, 13 * Math.min(2.2, S));
-    ctx.font = '800 ' + fs + 'px system-ui'; ctx.textAlign = 'center';
-    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.7)';
-    const ty = headY - hr * 2.1 - 6 * Math.min(2, S);
-    ctx.strokeText('×' + m, x, ty);
-    ctx.fillStyle = m >= s.giant ? '#ffd76a' : '#ffb07a';
-    ctx.fillText('×' + m, x, ty);
-    ctx.textAlign = 'left';
-  }
+  // 거인 — 지금 몇 명 몫인지
+  if (s.giant) giantTag(ctx, s, headY - hr * 2.1 - 6 * Math.min(2, S));
 
   if (s === G.pin) {                               // 고정 표시 — 발밑 고리와 머리 위 못
     const t = G.t * 2.4;
@@ -6714,7 +6734,8 @@ function startGame(asGuest) {
   REG.shop.floor   = Math.min(126, 8 + rows * ROW_H);
   layoutBoards();
   G.balls.length = G.sold.length = G.corp.length = G.proj.length = G.part.length = G.pops.length = G.nums.length = G.spr.length = G.flame.length = 0;
-  G.shopCount = [0, 1].map(t => G.roster[t].map(() => [0, 0, 0, 0, 0])); G.cordyN = [0, 0];
+  G.shopCount = [0, 1].map(t => G.roster[t].map(() => new Array(SHOP_SLOTS).fill(0)));
+  G.cordyN = [0, 0];
   G.shock.length = 0; G.flash = 0; G.holes.length = 0; G.rush = [0, 0]; G.ooze = [0, 0];
   G.sciSide = [0, 1].map(t => G.roster[t].some(td => td.special));
   G.invin = [0, 1].map(t => G.roster[t].some(td => td.invincible));
@@ -9875,6 +9896,97 @@ const MUSIC = [
 ];
 
 let AC = null, MBUS = null, MDEL = null, NOISEB = null;
+/* ── 내 음악 ──
+   올린 파일과 녹음을 이 기기(IndexedDB)에 넣어 두고, 만든 곡들과 같은 목록에서 고른다.
+   고르면 통째로 이어 붙여 반복 재생한다. */
+let MYMUS = [], MUS_U = -1, MUS_SRC = null, MREC = null, MREC_T = 0, MREC_IV = null;
+function myDB() {
+  return new Promise((ok, no) => {
+    const rq = indexedDB.open('plinko.music', 1);
+    rq.onupgradeneeded = () => { const db = rq.result;
+      if (!db.objectStoreNames.contains('tracks')) db.createObjectStore('tracks', { keyPath: 'id', autoIncrement: true }); };
+    rq.onsuccess = () => ok(rq.result);
+    rq.onerror = () => no(rq.error);
+  });
+}
+function myTx(mode, fn) {
+  return myDB().then(db => new Promise((ok, no) => {
+    const tx = db.transaction('tracks', mode), st = tx.objectStore('tracks');
+    const r = fn(st);
+    tx.oncomplete = () => ok(r && r.result !== undefined ? r.result : r);
+    tx.onerror = () => no(tx.error);
+  }));
+}
+function myLoad() {
+  return myTx('readonly', st => st.getAll()).then(rows => {
+    MYMUS = (rows || []).map(r => ({ id: r.id, nm: r.nm, blob: r.blob, buf: null }));
+    myRender(); musRefill();
+  }).catch(() => {});
+}
+function myAdd(nm, blob) {
+  if (blob.size > 30 * 1024 * 1024) { myNote('파일이 너무 크다 (30MB까지).'); return Promise.resolve(); }
+  return myTx('readwrite', st => st.add({ nm, blob })).then(() => myLoad())
+    .then(() => myNote('"' + nm + '" 을 넣었다.'))
+    .catch(() => myNote('저장하지 못했다.'));
+}
+function myDel(id) {
+  const k = MYMUS.findIndex(m => m.id === id);
+  if (k >= 0 && k === MUS_U) musStop();
+  return myTx('readwrite', st => st.delete(id)).then(() => myLoad()).catch(() => {});
+}
+function myNote(t) { const n = document.getElementById('myMusNote'); if (n) n.textContent = t; }
+function myStop() {
+  if (MUS_SRC) { try { MUS_SRC.stop(); } catch (e) {} try { MUS_SRC.disconnect(); } catch (e) {} MUS_SRC = null; }
+  MUS_U = -1;
+}
+function myPlay(k) {
+  if (!audioOn()) return;
+  const it = MYMUS[k];
+  if (!it) return;
+  if (MUS_TIMER) { clearInterval(MUS_TIMER); MUS_TIMER = null; }   // 만든 곡은 멈춘다
+  MUS_I = -1; myStop();
+  const go = () => {
+    if (!it.buf) return;
+    const src = AC.createBufferSource();
+    src.buffer = it.buf; src.loop = true;                          // 끝나면 처음부터 다시
+    src.connect(MBUS); src.start();
+    MUS_SRC = src; MUS_U = k;
+    MBUS.gain.cancelScheduledValues(AC.currentTime);
+    MBUS.gain.setValueAtTime(0, AC.currentTime);
+    MBUS.gain.linearRampToValueAtTime(MUS_VOL, AC.currentTime + .5);
+    musLabel();
+  };
+  if (it.buf) { go(); return; }
+  it.blob.arrayBuffer()
+    .then(ab => AC.decodeAudioData(ab))
+    .then(buf => { it.buf = buf; if (MUS_SEL === myVal(k) || MUS_SEL === 'rand') go(); })
+    .catch(() => myNote('"' + it.nm + '" 은(는) 읽을 수 없는 소리 파일이다.'));
+}
+const myVal = k => MYMUS[k] ? 'u' + MYMUS[k].id : 'off';
+const myIdx = v => MYMUS.findIndex(m => 'u' + m.id === v);
+function myRender() {
+  const box = document.getElementById('myMusList');
+  if (!box) return;
+  box.innerHTML = '';
+  if (!MYMUS.length) {
+    const d = document.createElement('div');
+    d.className = 'hint'; d.textContent = '아직 올린 곡이 없다.';
+    box.appendChild(d); return;
+  }
+  MYMUS.forEach((m, k) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;align-items:center';
+    const b = document.createElement('button');
+    b.className = 'mini'; b.textContent = '♪ ' + m.nm;
+    b.style.cssText = 'flex:1;padding:7px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+    b.onclick = () => musChoose(myVal(k));
+    const d = document.createElement('button');
+    d.className = 'mini'; d.textContent = '지우기'; d.style.cssText = 'padding:7px 10px';
+    d.onclick = () => myDel(m.id);
+    row.appendChild(b); row.appendChild(d);
+    box.appendChild(row);
+  });
+}
 let MUS_SEL = 'off';                 // 'off' | 'rand' | 트랙 번호
 let MUS_VOL = .45, MUS_I = -1, MUS_T = 0, MUS_STEP = 0, MUS_TIMER = null;
 
@@ -10007,6 +10119,7 @@ function musTick() {
 }
 function musPlay(i) {
   if (!audioOn()) return;
+  myStop();                                           // 올린 곡이 나오고 있으면 끊는다
   MUS_I = clamp(i, 0, MUSIC.length - 1);
   MUS_STEP = 0; MUS_T = AC.currentTime + .08;
   if (!MUS_TIMER) MUS_TIMER = setInterval(musTick, 25);
@@ -10017,6 +10130,7 @@ function musPlay(i) {
 }
 function musStop() {
   MUS_I = -1;
+  myStop();                                           // 올린 곡도 멈춘다
   if (MUS_TIMER) { clearInterval(MUS_TIMER); MUS_TIMER = null; }
   if (AC && MBUS) {
     MBUS.gain.cancelScheduledValues(AC.currentTime);
@@ -10074,26 +10188,42 @@ function musStart(fresh) {
     return;
   }
   if (MUS_SEL === 'rand') {
-    if (MUS_I >= 0 && !fresh) return;                  // 이미 나오고 있으면 그대로 둔다
-    let i = Math.floor(Math.random() * MUSIC.length);
-    if (MUSIC.length > 1 && i === MUS_I) i = (i + 1) % MUSIC.length;
-    musPlay(i);
+    if ((MUS_I >= 0 || MUS_U >= 0) && !fresh) return;   // 이미 나오고 있으면 그대로 둔다
+    const vs = musVals();                              // 만든 곡 + 내 음악에서 하나
+    let v = vs[Math.floor(Math.random() * vs.length)];
+    if (vs.length > 1 && v === musCur()) v = vs[(vs.indexOf(v) + 1) % vs.length];
+    musGo(v);
+    return;
+  }
+  if (MUS_SEL[0] === 'u') {                            // 올린 곡 · 녹음
+    const k = myIdx(MUS_SEL);
+    if (k < 0) { musStop(); return; }
+    if (MUS_U === k) return;                           // 같은 곡이면 끊지 않는다
+    myPlay(k);
     return;
   }
   if (MUS_I === +MUS_SEL) return;                      // 같은 곡이면 끊지 않는다
   musPlay(+MUS_SEL);
 }
+// 만든 곡 14개 + 내 음악을 한 줄로 이은 목록
+const musItems = () => MUSIC.map((m, i) => [String(i), m.nm])
+  .concat(MYMUS.map((m, k) => ['u' + m.id, '♪ ' + m.nm]));
+const musVals = () => musItems().map(it => it[0]);
+const musCur = () => MUS_U >= 0 ? myVal(MUS_U) : MUS_I >= 0 ? String(MUS_I) : '';
+function musGo(v) { if (v[0] === 'u') { const k = myIdx(v); if (k >= 0) myPlay(k); } else musPlay(+v); }
 function musSkip(d) {
-  if (MUS_I < 0) { musToggle(); return; }
-  musPick((MUS_I + d + MUSIC.length) % MUSIC.length);
+  if (MUS_I < 0 && MUS_U < 0) { musToggle(); return; }
+  const vs = musVals(), i = vs.indexOf(musCur());
+  musPick(vs[((i < 0 ? 0 : i) + d + vs.length) % vs.length]);
 }
-function musPick(i) {                                  // 곡을 집어서 설정에도 반영한다
+function musPick(v) {                                  // 곡을 집어서 설정에도 반영한다
+  v = String(v);
   if (MUS_SEL !== 'rand' && MUS_SEL !== 'auto') {
-    MUS_SEL = String(i);
+    MUS_SEL = v;
     const sel = document.getElementById('musSel');
     if (sel) sel.value = MUS_SEL;
   }
-  musPlay(i);
+  musGo(v);
 }
 // 목록에서 하나를 고른다 (설정 화면 · 전투 중 둘 다 이걸 쓴다)
 function musChoose(v) {
@@ -10112,8 +10242,7 @@ function musPanel() {
   p.id = 'musList';
   p.style.cssText = 'position:fixed;z-index:60;background:#141c26;border:1px solid #2a3647;border-radius:10px;' +
     'padding:8px;display:grid;grid-template-columns:repeat(4,minmax(92px,1fr));gap:6px;box-shadow:0 12px 34px rgba(0,0,0,.55)';
-  const items = [['off', '끄기'], ['auto', '자동'], ['rand', '무작위']]
-    .concat(MUSIC.map((m, i) => [String(i), m.nm]));
+  const items = [['off', '끄기'], ['auto', '자동'], ['rand', '무작위']].concat(musItems());
   for (const it of items) {
     const b = document.createElement('button');
     b.textContent = it[1];
@@ -10135,7 +10264,7 @@ function musPanel() {
   setTimeout(() => addEventListener('pointerdown', close, true), 0);
 }
 function musToggle() {                                 // ♪ 단추 · M 키
-  if (MUS_I >= 0) { musStop(); return; }
+  if (MUS_I >= 0 || MUS_U >= 0) { musStop(); return; }
   if (MUS_SEL === 'off') {                             // 꺼 둔 상태에서 켜면 상황에 맞춰
     MUS_SEL = 'auto';
     const sel = document.getElementById('musSel');
@@ -10145,21 +10274,32 @@ function musToggle() {                                 // ♪ 단추 · M 키
 }
 function musLabel() {
   const auto = MUS_SEL === 'auto' && MA.mood ? ' · ' + MOOD_NM[MA.mood] : '';
+  const nm = MUS_U >= 0 && MYMUS[MUS_U] ? MYMUS[MUS_U].nm : MUS_I >= 0 ? MUSIC[MUS_I].nm : '';
+  const on = !!nm;
   const b = document.getElementById('mPlay');
-  if (b) b.textContent = MUS_I >= 0 ? '♪ ' + MUSIC[MUS_I].nm + auto : '♪ 음악 꺼짐';
+  if (b) b.textContent = on ? '♪ ' + nm + (MUS_U >= 0 ? '' : auto) : '♪ 음악 꺼짐';
   const st = document.getElementById('musState');
-  if (st) st.textContent = MUS_I >= 0
-    ? '지금 나오는 곡 — ' + MUSIC[MUS_I].nm + auto +
+  if (st) st.textContent = on
+    ? '지금 나오는 곡 — ' + nm + (MUS_U >= 0 ? ' (내 음악)' : auto) +
       (MUS_SEL === 'auto' ? ' (상황이 바뀌면 알아서 갈아탄다)' : '') + ' · 전투 중에는 ♪ 를 눌러 바꾼다'
     : (MUS_SEL === 'off' ? '음악 없이 한다.' : '판을 시작하면 나온다.');
 }
 
 /* ── 음악 설정 ── */
-(function musUI() {
+// 목록을 다시 채운다 (내 음악이 늘거나 줄면 부른다)
+function musRefill() {
   const sel = document.getElementById('musSel');
+  if (!sel) return;
+  const keep = MUS_SEL;
   sel.innerHTML = '<option value="off">끄기</option>' +
     '<option value="auto">자동 (전투 상황에 맞춰)</option><option value="rand">무작위</option>' +
-    MUSIC.map((m, i) => '<option value="' + i + '">' + m.nm + '</option>').join('');
+    musItems().map(it => '<option value="' + it[0] + '">' + esc(it[1]) + '</option>').join('');
+  sel.value = [...sel.options].some(o => o.value === keep) ? keep : 'off';
+  if (sel.value !== keep) MUS_SEL = sel.value;
+}
+(function musUI() {
+  const sel = document.getElementById('musSel');
+  musRefill();
   sel.value = 'off';
   sel.onchange = () => musChoose(sel.value);           // 고르는 즉시 들려준다
   const vol = document.getElementById('musVol');
@@ -10170,6 +10310,64 @@ function musLabel() {
   };
   document.getElementById('musTest').onclick = musToggle;
   document.getElementById('musNext').onclick = () => musSkip(1);
+
+  /* ── 내 음악 올리기 ── */
+  const fileIn = document.getElementById('musFile');
+  document.getElementById('musAdd').onclick = () => fileIn.click();
+  fileIn.onchange = () => {
+    const fs = [...(fileIn.files || [])];
+    fileIn.value = '';
+    if (!fs.length) return;
+    myNote(fs.length + '개를 넣는 중…');
+    fs.reduce((p, f) => p.then(() => myAdd(f.name.replace(/\.[^.]+$/, '').slice(0, 40) || '내 음악', f)),
+              Promise.resolve());
+  };
+
+  /* ── 녹음 ── */
+  const recBtn = document.getElementById('musRec');
+  const recStop = save => {
+    if (MREC_IV) { clearInterval(MREC_IV); MREC_IV = null; }
+    recBtn.textContent = '녹음 시작';
+    recBtn.classList.remove('on');
+    if (!MREC) return;
+    MREC.__save = save;
+    try { MREC.stop(); } catch (e) {}
+    try { MREC.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+    MREC = null;
+  };
+  recBtn.onclick = () => {
+    if (MREC) { recStop(true); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      myNote('이 브라우저에서는 녹음을 못 한다. 파일 올리기를 쓰자.'); return;
+    }
+    myNote('마이크를 허락해 달라고 물어본다…');
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      let rec;
+      try { rec = new MediaRecorder(stream); }
+      catch (e) { stream.getTracks().forEach(t => t.stop()); myNote('녹음을 시작하지 못했다.'); return; }
+      const parts = [];
+      rec.ondataavailable = e => { if (e.data && e.data.size) parts.push(e.data); };
+      rec.onstop = () => {
+        if (!rec.__save || !parts.length) { myNote('녹음을 버렸다.'); return; }
+        const blob = new Blob(parts, { type: parts[0].type || 'audio/webm' });
+        const d = new Date();
+        const two = n => (n < 10 ? '0' : '') + n;
+        myAdd('녹음 ' + two(d.getMonth() + 1) + '/' + two(d.getDate()) + ' ' +
+              two(d.getHours()) + ':' + two(d.getMinutes()), blob);
+      };
+      MREC = rec; MREC_T = Date.now();
+      rec.start();
+      recBtn.classList.add('on');
+      recBtn.textContent = '● 멈추기 0:00';
+      MREC_IV = setInterval(() => {
+        const sec = Math.floor((Date.now() - MREC_T) / 1000);
+        recBtn.textContent = '● 멈추기 ' + Math.floor(sec / 60) + ':' + (sec % 60 < 10 ? '0' : '') + (sec % 60);
+        if (sec >= 600) recStop(true);               // 10분까지
+      }, 250);
+      myNote('녹음 중 — 다 하면 다시 눌러 멈춘다 (10분까지).');
+    }).catch(() => myNote('마이크를 쓸 수 없다. 허락을 막았거나 마이크가 없다.'));
+  };
+  myLoad();                                          // 이 기기에 넣어 둔 내 음악을 읽어 온다
   const pv = document.getElementById('mPlay');
   if (pv) {
     pv.onclick = musPanel;                             // 전투 중 곡 고르기
