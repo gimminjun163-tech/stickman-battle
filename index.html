@@ -691,6 +691,17 @@ input.pdot:hover{border-color:var(--hi)}
     </div>
     <input type="file" id="musFile" accept="audio/*" multiple style="display:none">
     <div id="myMusList" style="margin-top:8px;display:grid;gap:5px"></div>
+    <div class="row" style="margin-top:12px">
+      <label for="musShrQ">공유된 음악</label>
+      <input type="text" id="musShrQ" placeholder="이름 · 올린 사람 검색" style="flex:1;min-width:0">
+      <button class="mini" id="musShrOpen" style="padding:7px 10px">목록 보기</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <label for="musBy">올릴 때 내 이름</label>
+      <input type="text" id="musBy" maxlength="12" placeholder="이름" style="flex:1;min-width:0">
+    </div>
+    <div id="musShrList" style="margin-top:8px;display:grid;gap:5px"></div>
+    <div class="hint" id="musShrSt" style="margin-top:6px"></div>
     <div class="hint" id="myMusNote" style="margin-top:6px">올린 곡과 녹음은 이 기기에 저장돼서 다음에 열어도 그대로 있다. 곡 목록과 전투 중 ♪ 목록에도 같이 나온다.</div>
 
     <h3 style="margin-top:20px">거리 설정</h3>
@@ -913,7 +924,7 @@ input.pdot:hover{border-color:var(--hi)}
     <b>베이스가 쏘는 것</b> — <b>공격력 · 폭발 범위 · 쏘는 간격 · 탄 속도 · 궤도</b>(직선 · 포물선 · 높이 던지기 · 물결)를 정하고, <b>탄알 그림</b>으로 날아가는 모양까지 그린다 (안 그리면 동그란 탄). 베이스는 원래대로 <b>다칠수록 더 빨리 쏘는데</b>, 정한 간격을 기준으로 최대 45%까지 줄어든다 (1초로 두면 빈사 때 0.55초).<br>
     베이스 설정도 저장·공유 코드·공유된 팀에 통째로 실려 간다.<br>
     <b>저장과 공유</b> — 만든 군대는 이 브라우저에 저장돼 팀 목록에 <b>✎</b> 로 뜨고, 기본 팀과 똑같이 골라 싸운다 (여러 개 만들어 두고 고를 수 있다). <b>공유</b>를 누르면 글자 코드가 나오는데 복사해서 메신저로 보내면 되고, 받은 사람은 그 코드를 붙여 넣고 <b>코드로 가져오기</b>를 누르면 그대로 들어온다. <b>파일로 저장 / 파일에서 가져오기</b>도 된다. 온라인 대전에서는 방장이 만든 군대가 참가자에게 자동으로 전달된다.<br>
-    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br><b style="color:#9ae8ff">내 음악</b> — 소리 설정에서 <b>파일 올리기</b>로 가지고 있는 곡(mp3·m4a·wav·ogg 등, 한 개 30MB까지, 여러 개 한꺼번에)을 넣거나, <b>녹음 시작</b>으로 마이크로 직접 녹음할 수 있다 (한 번에 10분까지). 넣은 곡은 만든 곡 14개와 같은 목록에 섞여 설정·전투 중 ♪ 목록·다음 곡·무작위에 모두 나온다. 곡이 끝나면 처음부터 다시 돌고, <b>이 기기에 저장</b>되어 다음에 열어도 그대로 있다 (지우기로 지운다). 다만 <b>자동</b> 모드는 전투 분위기에 맞춰 만든 곡만 골라 튼다 — 내 음악은 직접 고르거나 무작위로 듣는다.<br>
+    <b>배경음악</b> — 소리 파일 없이 그 자리에서 만들어 내는 음악이 <b>14곡</b> 있다 (진군 · 돌격 · 고요한 전선 · 기계 심장 · 중세 행진 · 모래폭풍 · 네온 질주 · 우주 정거장 · 초읽기 · 승전가 · 늪지대 · 픽셀 행진 · 광란 · 황혼의 평원). 곡마다 빠르기·음계·코드 진행·악기가 다르고 네 마디를 돌며 계속 이어진다. <b>끄기</b>가 기본이고, <b>무작위</b>로 두면 판을 시작할 때마다 다른 곡이 걸린다. 음량은 따로 조절한다. 다른 탭으로 넘어가면 저절로 멈춘다.<br><b style="color:#9ae8ff">내 음악</b> — 소리 설정에서 <b>파일 올리기</b>로 가지고 있는 곡(mp3·m4a·wav·ogg 등, 한 개 30MB까지, 여러 개 한꺼번에)을 넣거나, <b>녹음 시작</b>으로 마이크로 직접 녹음할 수 있다 (한 번에 10분까지). 넣은 곡은 만든 곡 14개와 같은 목록에 섞여 설정·전투 중 ♪ 목록·다음 곡·무작위에 모두 나온다. 곡이 끝나면 처음부터 다시 돌고, <b>이 기기에 저장</b>되어 다음에 열어도 그대로 있다 (지우기로 지운다). 다만 <b>자동</b> 모드는 전투 분위기에 맞춰 만든 곡만 골라 튼다 — 내 음악은 직접 고르거나 무작위로 듣는다.<br>곡 줄의 <b>이름</b>을 누르면 이름을 고칠 수 있고(엔터로 저장), <b>올리기</b>를 누르면 그 곡을 모두에게 공유한다 (한 곡 6MB까지). 소리 파일은 커서 조각을 내어 중계에 올리고, 받는 쪽은 조각을 다 모아 다시 붙인다. <b>공유된 음악</b>의 <b>목록 보기</b>로 남이 올린 곡을 보고, 이름·올린 사람으로 검색해 <b>받기</b>를 누르면 내 음악에 들어온다. 내릴 때는 같은 자리의 <b>내리기</b>를 누른다 (곡을 지우면 올려 둔 것도 같이 거둔다). 올리고 받는 데는 <b>온라인 탭의 중계 서버</b>를 그대로 쓴다.<br>
     <b>자동</b> — 전투 상황을 보고 곡이 알아서 갈아탄다. <b>고요</b>(아직 병사가 적다) → <b>진군</b>(부대가 모인다) → <b>교전</b>(26명 이상 붙거나 처치가 잦아진다) → <b>격전</b>(한쪽 베이스가 45% 아래이거나 초당 1명 넘게 죽는다) → <b>막판</b>(베이스 18% 아래) → <b>승리</b>(승전가) 순으로 올라가고, 단계마다 어울리는 곡 몇 개 중 하나가 걸린다. 긴장이 올라갈 때는 8초 만에 바뀌지만 가라앉을 때는 22초를 기다려서, 상황이 출렁여도 곡이 들락거리지 않는다. 지금 단계는 <b>♪ 광란 · 격전</b> 처럼 곡 이름 옆에 뜬다.<br>
     <b>전투 중에 바꾸기</b> — 위쪽 <b>♪</b> 를 누르면 끄기 · 자동 · 무작위 · 14곡이 한 판에 펼쳐지고, 누르는 즉시 바뀐다. 직접 고르면 그 곡이 계속 나오고(자동이 더는 끼어들지 않는다), 다시 <b>자동</b>을 고르면 상황에 맞춰 돌아간다. <b>◀ ▶</b> 로는 이전/다음 곡, <b>M</b> 키로는 끄고 켠다.<br>
     <b>고용 탭</b> — 공 대신 코인을 쓴다. 한 진영에 팀 하나, 옆 패널의 버튼으로 직접 사거나 AI에게 맡긴다. 사람끼리면 PvP, 한쪽만 사람이면 PvE, 둘 다 AI면 EvE다.<br>
@@ -9899,7 +9910,7 @@ let AC = null, MBUS = null, MDEL = null, NOISEB = null;
 /* ── 내 음악 ──
    올린 파일과 녹음을 이 기기(IndexedDB)에 넣어 두고, 만든 곡들과 같은 목록에서 고른다.
    고르면 통째로 이어 붙여 반복 재생한다. */
-let MYMUS = [], MUS_U = -1, MUS_SRC = null, MREC = null, MREC_T = 0, MREC_IV = null;
+let MYMUS = [], MUS_U = -1, MUS_SRC = null, MREC = null, MREC_T = 0, MREC_IV = null, MY_EDIT = 0;
 function myDB() {
   return new Promise((ok, no) => {
     const rq = indexedDB.open('plinko.music', 1);
@@ -9919,7 +9930,7 @@ function myTx(mode, fn) {
 }
 function myLoad() {
   return myTx('readonly', st => st.getAll()).then(rows => {
-    MYMUS = (rows || []).map(r => ({ id: r.id, nm: r.nm, blob: r.blob, buf: null }));
+    MYMUS = (rows || []).map(r => ({ id: r.id, nm: r.nm, blob: r.blob, pub: r.pub || null, buf: null }));
     myRender(); musRefill();
   }).catch(() => {});
 }
@@ -9931,10 +9942,26 @@ function myAdd(nm, blob) {
 }
 function myDel(id) {
   const k = MYMUS.findIndex(m => m.id === id);
+  if (k >= 0 && MYMUS[k].pub) mshUnpublish(MYMUS[k], true);   // 올려 둔 것도 거둔다
   if (k >= 0 && k === MUS_U) musStop();
   return myTx('readwrite', st => st.delete(id)).then(() => myLoad()).catch(() => {});
 }
 function myNote(t) { const n = document.getElementById('myMusNote'); if (n) n.textContent = t; }
+function myRename(id, nm) {
+  nm = (nm || '').trim().slice(0, 40);
+  if (!nm) return Promise.resolve();
+  const it = MYMUS.find(m => m.id === id);
+  if (!it) return Promise.resolve();
+  return myTx('readwrite', st => st.put({ id, nm, blob: it.blob, pub: it.pub || null }))
+    .then(() => { it.nm = nm; myRender(); musRefill(); musLabel(); })
+    .catch(() => myNote('이름을 바꾸지 못했다.'));
+}
+function mySetPub(id, pub) {
+  const it = MYMUS.find(m => m.id === id);
+  if (!it) return Promise.resolve();
+  it.pub = pub;
+  return myTx('readwrite', st => st.put({ id, nm: it.nm, blob: it.blob, pub })).catch(() => {});
+}
 function myStop() {
   if (MUS_SRC) { try { MUS_SRC.stop(); } catch (e) {} try { MUS_SRC.disconnect(); } catch (e) {} MUS_SRC = null; }
   MUS_U = -1;
@@ -9975,15 +10002,35 @@ function myRender() {
   }
   MYMUS.forEach((m, k) => {
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:6px;align-items:center';
-    const b = document.createElement('button');
-    b.className = 'mini'; b.textContent = '♪ ' + m.nm;
-    b.style.cssText = 'flex:1;padding:7px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+    row.style.cssText = 'display:flex;gap:5px;align-items:center;flex-wrap:wrap';
+    const mini = (t, w) => {
+      const e = document.createElement('button');
+      e.className = 'mini'; e.textContent = t;
+      e.style.cssText = 'padding:7px 9px;' + (w || '');
+      return e;
+    };
+    if (MY_EDIT === m.id) {                            // 이름 고치는 중
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.value = m.nm; inp.maxLength = 40;
+      inp.style.cssText = 'flex:1;min-width:120px';
+      const ok = mini('저장'), no = mini('취소');
+      ok.onclick = () => { MY_EDIT = 0; myRename(m.id, inp.value); };
+      no.onclick = () => { MY_EDIT = 0; myRender(); };
+      inp.onkeydown = e => { if (e.key === 'Enter') ok.onclick(); if (e.key === 'Escape') no.onclick(); };
+      row.appendChild(inp); row.appendChild(ok); row.appendChild(no);
+      box.appendChild(row);
+      setTimeout(() => { inp.focus(); inp.select(); }, 0);
+      return;
+    }
+    const b = mini('♪ ' + m.nm, 'flex:1;min-width:110px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap');
     b.onclick = () => musChoose(myVal(k));
-    const d = document.createElement('button');
-    d.className = 'mini'; d.textContent = '지우기'; d.style.cssText = 'padding:7px 10px';
+    const r = mini('이름');
+    r.onclick = () => { MY_EDIT = m.id; myRender(); };
+    const up = mini(m.pub ? '내리기' : '올리기');
+    up.onclick = () => (m.pub ? mshUnpublish(m) : mshPublish(m));
+    const d = mini('지우기');
     d.onclick = () => myDel(m.id);
-    row.appendChild(b); row.appendChild(d);
+    row.appendChild(b); row.appendChild(r); row.appendChild(up); row.appendChild(d);
     box.appendChild(row);
   });
 }
@@ -10285,6 +10332,180 @@ function musLabel() {
     : (MUS_SEL === 'off' ? '음악 없이 한다.' : '판을 시작하면 나온다.');
 }
 
+/* ── 공유된 음악 ──
+   소리 파일은 팀보다 훨씬 크니 조각을 내서 중계에 '남겨 두는 메시지'로 올린다.
+   <id>/i 에 설명, <id>/c0,c1… 에 조각. 받는 쪽은 조각을 다 모아 다시 붙인다. */
+const MSH_TOP = 'plinkobattle/music/v1/';
+const MSH_CH = 44000;                                  // 조각 하나 길이 (base64 글자)
+const MSH_MAX = 6 * 1024 * 1024;                       // 올릴 수 있는 크기
+const MSH_PAGE = 8;
+const MSH = { mq: null, map: {}, q: '', page: 0, want: null, parts: null, got: 0, tmr: 0, msgT: 0 };
+function mshSt(t) { const e = document.getElementById('musShrSt'); if (e) e.innerHTML = t; MSH.msgT = Date.now(); }
+function mshNick() {
+  const el = document.getElementById('musBy');
+  let v = (el && el.value || '').trim().slice(0, 12);
+  if (!v) { try { v = localStorage.getItem('plinko.myarmy.by') || ''; } catch (e) {} }
+  if (!v) v = '익명';
+  if (el) el.value = v;
+  try { localStorage.setItem('plinko.myarmy.by', v); } catch (e) {}
+  return v;
+}
+function mshConnect(then) {
+  if (MSH.mq && MSH.mq.ok) { then && then(); return; }
+  mshSt('중계에 붙는 중…');
+  MSH.mq = mqttConnect(shrUrl(), mshMsg, () => {
+    MSH.mq.sub(MSH_TOP + '+/i');                       // 설명만 먼저 받는다
+    mshSt('올라와 있는 음악을 받는 중…');
+    setTimeout(() => {
+      mshRender();
+      if (Date.now() - MSH.msgT < 1500) return;         // 올리는 중이면 그 알림을 덮지 않는다
+      if (!Object.keys(MSH.map).length) mshSt('올라와 있는 음악이 없다 — 먼저 올려 보세요.');
+    }, 1800);
+    then && then();
+  }, e => mshSt('<b style="color:#e06a4a">중계에 못 붙었다</b> — ' + esc(e || '')));
+}
+function mshMsg(topic, msg) {
+  if (topic.indexOf(MSH_TOP) !== 0) return;
+  const rest = topic.slice(MSH_TOP.length), sl = rest.indexOf('/');
+  if (sl < 0) return;
+  const id = rest.slice(0, sl), part = rest.slice(sl + 1);
+  if (part === 'i') {                                  // 설명
+    if (!msg) { delete MSH.map[id]; mshRender(); return; }
+    let o; try { o = JSON.parse(msg); } catch (e) { return; }
+    if (!o || !o.nm || !o.n) return;
+    o.id = id; MSH.map[id] = o; mshRender();
+    return;
+  }
+  if (!MSH.want || MSH.want.id !== id || part[0] !== 'c') return;
+  const k = +part.slice(1);
+  if (!(k >= 0) || !MSH.parts || MSH.parts[k] !== undefined || !msg) return;
+  MSH.parts[k] = msg; MSH.got++;
+  mshSt('받는 중… ' + MSH.got + ' / ' + MSH.want.n + ' 조각');
+  if (MSH.got >= MSH.want.n) mshDone();
+}
+function b64(buf) {                                    // 바이트 → base64 (조금씩 끊어서)
+  const u = new Uint8Array(buf);
+  let out = '';
+  for (let i = 0; i < u.length; i += 0x8000) out += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+  return btoa(out);
+}
+function unb64(t) {
+  const bin = atob(t), u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return u;
+}
+function mshPublish(m) {
+  if (!m) return;
+  if (m.blob.size > MSH_MAX) {
+    mshSt('<b style="color:#e06a4a">너무 크다</b> — ' + Math.round(m.blob.size / 1024 / 1024 * 10) / 10 +
+          'MB · 6MB 까지 올릴 수 있다.');
+    return;
+  }
+  const by = mshNick();
+  mshSt('"' + esc(m.nm) + '" 올리는 중…');
+  m.blob.arrayBuffer().then(ab => {
+    const all = b64(ab), n = Math.ceil(all.length / MSH_CH);
+    const id = m.pub || ('m' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+    mshConnect(() => {
+      let k = 0;
+      const step = () => {                             // 한 번에 여섯 조각씩 (중계가 체하지 않게)
+        for (let i = 0; i < 6 && k < n; i++, k++)
+          MSH.mq.pub(MSH_TOP + id + '/c' + k, all.slice(k * MSH_CH, (k + 1) * MSH_CH), 1);
+        if (k < n) { mshSt('올리는 중… ' + k + ' / ' + n + ' 조각'); setTimeout(step, 45); return; }
+        const info = { v: 1, nm: m.nm, by, t: Date.now(), n, sz: m.blob.size,
+                       mime: m.blob.type || 'audio/mpeg' };
+        MSH.mq.pub(MSH_TOP + id + '/i', JSON.stringify(info), 1);
+        info.id = id; MSH.map[id] = info; mshRender();    // 내 목록에도 바로 보이게
+        mySetPub(m.id, id).then(myRender);
+        mshSt('<b style="color:#6fd36f">올렸다</b> — 누구나 <b>공유된 음악</b>에서 받아 간다 (' +
+              n + ' 조각 · ' + Math.round(m.blob.size / 1024) + 'KB). 다시 누르면 내린다.');
+      };
+      step();
+    });
+  }).catch(() => mshSt('올리지 못했다.'));
+}
+function mshUnpublish(m, quiet) {
+  if (!m || !m.pub) return;
+  const id = m.pub, n = (MSH.map[id] && MSH.map[id].n) || 200;
+  mshConnect(() => {
+    MSH.mq.pub(MSH_TOP + id + '/i', '', 1);
+    for (let k = 0; k < n; k++) MSH.mq.pub(MSH_TOP + id + '/c' + k, '', 1);
+    delete MSH.map[id];
+    mySetPub(m.id, null).then(myRender);
+    mshRender();
+    if (!quiet) mshSt('<b style="color:#6fd36f">내렸다</b> — 목록에서 사라진다.');
+  });
+}
+function mshDone() {                                   // 조각이 다 모였다
+  clearTimeout(MSH.tmr);
+  const w = MSH.want;
+  MSH.want = null;
+  if (!w) return;
+  try {
+    const parts = [];
+    for (let k = 0; k < w.n; k++) parts.push(unb64(MSH.parts[k]));
+    const blob = new Blob(parts, { type: w.mime || 'audio/mpeg' });
+    shrLoad(false);
+    myAdd(w.nm + ' (' + (w.by || '익명') + ')', blob)
+      .then(() => mshSt('<b style="color:#6fd36f">받았다</b> — <b>내 음악</b> 목록에 들어갔다.'));
+  } catch (e) { shrLoad(false); mshSt('조각을 붙이지 못했다.'); }
+  MSH.parts = null; MSH.got = 0;
+}
+function mshTake(id) {
+  const o = MSH.map[id];
+  if (!o) return;
+  if (MSH.want) { mshSt('이미 하나 받는 중이다.'); return; }
+  MSH.want = o; MSH.parts = []; MSH.got = 0;
+  shrLoad(true, '음악을 받는 중…');
+  mshSt('받는 중… 0 / ' + o.n + ' 조각');
+  MSH.mq.sub(MSH_TOP + id + '/+');
+  clearTimeout(MSH.tmr);
+  MSH.tmr = setTimeout(() => {
+    if (!MSH.want) return;
+    MSH.want = null; MSH.parts = null; shrLoad(false);
+    mshSt('<b style="color:#e06a4a">다 받지 못했다</b> — 다시 눌러 보세요.');
+  }, 30000);
+}
+function mshRender() {
+  const box = document.getElementById('musShrList');
+  if (!box) return;
+  const q = MSH.q.trim().toLowerCase();
+  let all = Object.keys(MSH.map).map(k => MSH.map[k]);
+  if (q) all = all.filter(o => (o.nm + ' ' + (o.by || '')).toLowerCase().indexOf(q) >= 0);
+  all.sort((a, b) => (b.t || 0) - (a.t || 0));
+  const pages = Math.max(1, Math.ceil(all.length / MSH_PAGE));
+  MSH.page = clamp(MSH.page, 0, pages - 1);
+  const page = all.slice(MSH.page * MSH_PAGE, MSH.page * MSH_PAGE + MSH_PAGE);
+  box.innerHTML = '';
+  if (!all.length) return;
+  for (const o of page) {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:5px;align-items:center';
+    const nm = document.createElement('div');
+    nm.style.cssText = 'flex:1;min-width:0;font:700 12px system-ui;color:#c8d2de;overflow:hidden;' +
+      'text-overflow:ellipsis;white-space:nowrap';
+    nm.innerHTML = esc(o.nm) + ' <span style="color:#7d8a99;font-weight:600">· ' + esc(o.by || '익명') +
+      ' · ' + Math.round((o.sz || 0) / 1024) + 'KB</span>';
+    const b = document.createElement('button');
+    b.className = 'mini'; b.textContent = '받기'; b.style.cssText = 'padding:7px 10px';
+    b.onclick = () => mshTake(o.id);
+    row.appendChild(nm); row.appendChild(b);
+    box.appendChild(row);
+  }
+  if (pages > 1) {
+    const nav = document.createElement('div');
+    nav.style.cssText = 'display:flex;gap:6px;align-items:center;justify-content:center;margin-top:4px';
+    const mk = (t, d) => { const e = document.createElement('button'); e.className = 'mini';
+      e.textContent = t; e.style.cssText = 'padding:6px 10px';
+      e.onclick = () => { MSH.page += d; mshRender(); }; return e; };
+    const lab = document.createElement('b');
+    lab.style.cssText = 'font:700 12px system-ui;color:#8b96a5';
+    lab.textContent = (MSH.page + 1) + ' / ' + pages;
+    nav.appendChild(mk('◀', -1)); nav.appendChild(lab); nav.appendChild(mk('▶', 1));
+    box.appendChild(nav);
+  }
+}
+
 /* ── 음악 설정 ── */
 // 목록을 다시 채운다 (내 음악이 늘거나 줄면 부른다)
 function musRefill() {
@@ -10368,6 +10589,10 @@ function musRefill() {
     }).catch(() => myNote('마이크를 쓸 수 없다. 허락을 막았거나 마이크가 없다.'));
   };
   myLoad();                                          // 이 기기에 넣어 둔 내 음악을 읽어 온다
+  document.getElementById('musShrOpen').onclick = () => { MSH.page = 0; mshConnect(mshRender); };
+  const sq = document.getElementById('musShrQ');
+  sq.oninput = () => { MSH.q = sq.value; MSH.page = 0; mshRender(); };
+  try { document.getElementById('musBy').value = localStorage.getItem('plinko.myarmy.by') || ''; } catch (e) {}
   const pv = document.getElementById('mPlay');
   if (pv) {
     pv.onclick = musPanel;                             // 전투 중 곡 고르기
