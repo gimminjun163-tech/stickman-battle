@@ -564,6 +564,18 @@ input.pdot:hover{border-color:var(--hi)}
       <button data-fmin="10">10명</button>
       <button data-fmin="30">30명</button>
     </div>
+    <div class="row simonly" id="formRow5f" style="display:none;margin-top:10px">
+      <label for="gminNum">거인이 되는 기준</label>
+      <input type="number" id="gminNum" min="1" max="999999" step="1" value="1">
+      <button class="mini" id="gminInf">거인 없음</button>
+      <b style="font-size:11px;color:var(--dim);white-space:nowrap">명 초과</b>
+    </div>
+    <div class="presets simonly" id="formRow5g" style="display:none">
+      <button data-gmin="1">기본 (2명부터)</button>
+      <button data-gmin="5">5명 초과</button>
+      <button data-gmin="20">20명 초과</button>
+      <button data-gmin="inf">거인 없음</button>
+    </div>
     <div class="row simonly" id="formRow5d" style="display:none;margin-top:10px">
       <label for="gcapNum">거인 크기 상한</label>
       <input type="number" id="gcapNum" min="1" max="100000" step="1" value="10">
@@ -645,8 +657,8 @@ input.pdot:hover{border-color:var(--hi)}
     <b>1,2,3…</b> 은 칸 순서대로 1, 2, 3 … 이 박히고 안 바뀐다. <b>직접</b>은 쓸 숫자를 쉼표로 넣으면 (예: 1,2,3,5,10) 그대로 박힌다. 칸보다 적게 넣으면 앞에서부터 다시 쓰고, 많이 넣으면 남는 건 버린다 (1~999, 최대 16개).<br>
     아직 안 나온 병사 수는 전투 화면 <b>좌우 위</b>에 크게 뜬다 (= 10 이 떠서 3명이 나왔으면 7).<br>
     <b style="color:#c8b68a">투석기</b> — 중세 군대 상점의 <b>투석기</b>(값 21)가 끌고 다닌다. 바퀴 달린 나무 틀에서 <b>큰 바위를 높은 포물선으로</b> 던진다 — 사거리 650으로 가장 멀리 나가고, 떨어진 자리 반경 95 안을 한꺼번에 뎎치며 크게 밀어낸다. 다만 3.6초에 한 발뿐이고 발걸음이 절반쯤 느려서, 앞줄이 막아주는 동안 뒤에서 쪼야 제 값을 한다. <b>기지를 허무는 데</b>도 아주 좋다.<br><b style="color:#ff9a3a">화염방사기</b> — 현대 군대 상점의 <b>화염방사병</b>(값 9)과 화염 군단의 <b>화염병</b>이 쓴다. 실제 화염방사기처럼 <b>끊기지 않는 긴 불줄기</b>가 뻗어 나간다 — 노즐 바로 앞은 하얗게 달궈져 있고, 멀어질수록 노랑·주황·검붉은색으로 부풀어 퍼지며, 끝에서는 <b>검은 연기</b>로 피어오른다. 불길은 바람에 놀듯 일렁이고 겹칠수록 밝다. 사거리가 짧아 붙어야 하지만, <b>맞은 적은 몸에 불이 붙어</b> 3.2초 동안 0.5초마다 <b>화상</b> 피해를 입는다 (한 방 피해의 45%, 최소 3). 불은 겹쳐 쌓이지 않고 다시 맞으면 시간만 늘어나며, 타는 동안 몸에서 불길이 일렁이고 불티가 튄다. 버섯처럼 면역인 상대에게는 안 붙는다.<br>
-    <b style="color:#ffd76a">수식 거인</b> — 갈라지는 때를 <b>무기 정한 뒤</b>로 두면 수만큼 여럿이 나오는 대신 <b>거인 하나</b>가 나온다. <b>체력 = 기본 체력 × 공에 든 수</b>, 크기는 수에 따라 커지고(수의 0.45제곱, 최대 10배), <b>공격력은 ×올림(지금 체력 ÷ 기본 체력)</b> — 머리 위에 지금 배수가 뜨고 맞을수록 줄어든다. <b>몸집도 그만큼 줄어든다</b> — ×6이던 거인이 ×5가 되면 ×5짜리 크기로 부드럽게 줄고, 작아진 만큼 발은 조금 빨라진다. 예를 들어 25가 나오면 체력 3,375(기본 135×25)에 ×25로 시작해, 체력이 42%로 깎이면 ×11·×11 크기까지 떨어진다. 수가 1이면 그냥 평범한 병사다.<br>
-    <b>공 하나의 상한</b>은 999를 넘겨 적을 수 있고 <b>무한</b> 단추를 누르면 끝이 없다 (거인과 같이 쓰면 체력이 수백만까지 올라간다).<br><b style="color:#7fd8ff">병사가 나올 최소</b> — '=' 로 정해진 수가 이 수보다 작으면 그 공은 <b>병사가 안 되고 버려진다</b> (보드에 '= 3 (10 미만 · 버림)' 이 뜨며 알려준다). <b>1</b>로 두면 예전처럼 무엇이든 다 나온다. 큰 수를 만들어야만 병력이 나오니 곱셈을 노리게 된다 — 거인 설정과 같이 쓰면 '큰 거인 하나만 나오는' 판이 된다.<br><b style="color:#ffd76a">거인 크기 상한</b> — 거인이 커질 수 있는 한계를 정한다 (기본 10배). <b>무한</b> 으로 두면 수만큼 끝없이 커져서 하늘을 찌르고(×4,000 이면 약 42배), 그럴 땐 카메라가 저절로 물러나 거인을 화면에 담는다.<br>
+    <b style="color:#ffd76a">수식 거인</b> — 갈라지는 때를 <b>무기 정한 뒤</b>로 두면 수만큼 여럿이 나오는 대신 <b>거인 하나</b>가 나온다. WEAPON 뿐 아니라 <b>SHOP 병사도 거인으로</b> 나온다 — 값을 치르고 한 번에 10명을 샀다면 '기병 거인 ×10' 하나가 나온다 (체력·공격력·크기 모두 그 상점 병사 기준으로 곱해진다). <b>체력 = 기본 체력 × 공에 든 수</b>, 크기는 수에 따라 커지고(수의 0.45제곱, 최대 10배), <b>공격력은 ×올림(지금 체력 ÷ 기본 체력)</b> — 머리 위에 지금 배수가 뜨고 맞을수록 줄어든다. <b>몸집도 그만큼 줄어든다</b> — ×6이던 거인이 ×5가 되면 ×5짜리 크기로 부드럽게 줄고, 작아진 만큼 발은 조금 빨라진다. 예를 들어 25가 나오면 체력 3,375(기본 135×25)에 ×25로 시작해, 체력이 42%로 깎이면 ×11·×11 크기까지 떨어진다. 수가 1이면 그냥 평범한 병사다.<br>
+    <b>공 하나의 상한</b>은 999를 넘겨 적을 수 있고 <b>무한</b> 단추를 누르면 끝이 없다 (거인과 같이 쓰면 체력이 수백만까지 올라간다).<br><b style="color:#7fd8ff">병사가 나올 최소</b> — '=' 로 정해진 수가 이 수보다 작으면 그 공은 <b>병사가 안 되고 버려진다</b> (보드에 '= 3 (10 미만 · 버림)' 이 뜨며 알려준다). <b>1</b>로 두면 예전처럼 무엇이든 다 나온다. 큰 수를 만들어야만 병력이 나오니 곱셈을 노리게 된다 — 거인 설정과 같이 쓰면 '큰 거인 하나만 나오는' 판이 된다.<br><b style="color:#ffd76a">거인이 되는 기준</b> — 수가 <b>이 값을 넘어야만</b> 거인이 되고, 안 넘으면 그냥 그 수만큼 <b>평범한 병사 여럿</b>으로 나온다. 기본 1 — 2명부터 거인이다. 20으로 올리면 21명 이상일 때만 거인이 나오고, <b>거인 없음</b>으로 두면 언제나 여럿이 나온다. SHOP 에선 <b>한 번에 산 병사 수</b>로 따진다.<br><b style="color:#ffd76a">거인 크기 상한</b> — 거인이 커질 수 있는 한계를 정한다 (기본 10배). <b>무한</b> 으로 두면 수만큼 끝없이 커져서 하늘을 찌르고(×4,000 이면 약 42배), 그럴 땐 카메라가 저절로 물러나 거인을 화면에 담는다.<br>
     <b>병사 나오는 간격</b>은 공 하나가 갈라져 병사가 쏟아질 때 한 명씩 사이에 두는 시간이다 (0~1초, 기본 0.2초). 0으로 두면 예전처럼 한꺼번에 나온다. 줄은 진영마다 따로 서고, 공 하나의 상한만큼(상한 999면 2,997명까지) 기다린다. 전장이 꽉 차 있으면 줄에서 기다렸다가 자리가 나는 대로 나온다.<br>
     WEAPON 보드: 끄면 기본 무기 보드가 사라지고 <b>SHOP 으로만</b> 싸운다. BALL DROP 에는 SPLIT / SHOP 만 남고, 공은 모두 상점 물건 값으로 들어간다. 값이 비싼 만큼 병사는 드물게, 대신 센 놈들만 나온다. (동충하초처럼 보드를 안 거치고 기본 병사를 부르는 능력은 그대로 나온다.)<br>
     WEAPON 과 SHOP 은 <b>둘 다 끌 수는 없다</b> — 하나를 끄면 다른 쪽이 자동으로 켜진다.<br>
@@ -2676,7 +2688,7 @@ function resolveSlot(team, ti, reg, idx, x, y, ball) {
     // 여기서 비로소 갈라진다 — 무기가 정해졌으니 안에 든 수만큼 병사가 된다.
     // 한꺼번에 쏟지 않고 줄을 세워 간격을 두고 내보낸다.
     const n = ballVal(ball);
-    if (USE_FORM && SPLIT_AT === 'pick' && n > 1) {    // 거인 하나로 나온다
+    if (USE_FORM && SPLIT_AT === 'pick' && n > GIANT_MIN) {   // 기준을 넘으면 거인 하나
       queueSpawn(team, 1, () => makeGiant(team, ti, w, n));
       popText(x, y, w.name + ' 거인 ×' + n, '#ffd76a');
     } else {
@@ -2693,9 +2705,11 @@ function resolveSlot(team, ti, reg, idx, x, y, ball) {
       G.shopCount[team][ti][idx] -= cost;
       got++;
     }
-    if (got) queueSpawn(team, got,
+    const gi = USE_FORM && SPLIT_AT === 'pick' && got > GIANT_MIN;   // 상점 병사 거인
+    if (got && gi) queueSpawn(team, 1, () => makeGiant(team, ti, WEAPONS[u.w], got, u));
+    else if (got) queueSpawn(team, got,
       () => spawnSoldier(team, ti, WEAPONS[u.w], u.hp, u.dmg, u.size, u.name, undefined, uPrice(u)));
-    if (got) popText(x, y, '★ ' + u.name + (got > 1 ? ' ×' + got : ''), '#ffd76a');
+    if (got) popText(x, y, '★ ' + u.name + (gi ? ' 거인 ×' + got : got > 1 ? ' ×' + got : ''), '#ffd76a');
     else popText(x, y, (cost - G.shopCount[team][ti][idx]) + ' 남음', '#8b96a5');
   }
 }
@@ -2741,9 +2755,13 @@ function spawnSoldier(team, ti, w, hpMul, dmgMul, size, label, atX, price) {
    체력 = 기본 × 수, 크기 = 수에 따라 커지고,
    공격력은 '올림(지금 체력 / 기본 체력)' 배 — 맞을수록 약해진다. */
 let GIANT_CAP = 10;                                    // 크기 상한 (셋업에서 조절 · 무한도 된다)
+let GIANT_MIN = 1;                                     // 이 수를 넘어야 거인이 된다 (아니면 평범한 병사)
 const giantSize = n => Math.min(GIANT_CAP, Math.pow(Math.max(1, n), .45));
-function makeGiant(team, ti, w, n) {
-  const s = spawnSoldier(team, ti, w, n, 1, giantSize(n), w.name + ' 거인');
+function makeGiant(team, ti, w, n, u) {              // u 가 있으면 상점 병사 거인
+  const s = u
+    ? spawnSoldier(team, ti, w, u.hp * n, u.dmg, u.size * giantSize(n), u.name + ' 거인',
+                   undefined, uPrice(u))
+    : spawnSoldier(team, ti, w, n, 1, giantSize(n), w.name + ' 거인');
   if (!s) return null;
   s.giant = n;
   s.gsz = s.size / giantSize(n);                       // 크기에 걸린 다른 배율 (설정·무기)
@@ -6411,6 +6429,7 @@ const numFixTgl = document.getElementById('numFixTgl');
 const fmaxNum = document.getElementById('fmaxNum');
 const fminNum = document.getElementById('fminNum');
 const gcapNum = document.getElementById('gcapNum');
+const gminNum = document.getElementById('gminNum');
 const numListIn = document.getElementById('numListIn');
 const gapRange = document.getElementById('gapRange'), gapVal = document.getElementById('gapVal');
 function syncFs() { fsVal.textContent = fsRange.value + '칸'; nsVal.textContent = nsRange.value + '칸'; }
@@ -6443,9 +6462,9 @@ function syncForm() {
   formTgl.textContent = on ? '사용함' : '사용 안 함';
   const show = on && MODE !== 'hire' ? 'flex' : 'none';
   for (const id of ['formRow1', 'formRow2', 'formRow3', 'formRow4', 'formRow5',
-                    'formRow5b', 'formRow5d', 'formRow7', 'formRow8'])
+                    'formRow5b', 'formRow5f', 'formRow5d', 'formRow7', 'formRow8'])
     document.getElementById(id).style.display = show;
-  for (const id of ['formRow5c', 'formRow5e', 'formRow6'])      // .presets 는 flex 한 줄이다
+  for (const id of ['formRow5c', 'formRow5g', 'formRow5e', 'formRow6'])   // .presets 는 flex 한 줄이다
     document.getElementById(id).style.display = show;
   document.getElementById('formRow4b').style.display = show === 'flex' && NUM_MODE_UI === 'rand' ? 'flex' : 'none';
   document.getElementById('formRow4c').style.display = show === 'flex' && NUM_MODE_UI === 'custom' ? 'flex' : 'none';
@@ -6539,7 +6558,7 @@ function boardTgl(btn, other) {
   };
 }
 boardTgl(shopTgl, wpnTgl); boardTgl(wpnTgl, shopTgl);
-const INF = { ball: false, sold: false, form: false, gcap: false };
+const INF = { ball: false, sold: false, form: false, gcap: false, gmin: false };
 function syncInf() {
   ballInf.classList.toggle('on', INF.ball); ballNum.disabled = INF.ball;
   soldInf.classList.toggle('on', INF.sold); soldNum.disabled = INF.sold;
@@ -6551,9 +6570,13 @@ function syncInf() {
   const gi = document.getElementById('gcapInf'), gn = document.getElementById('gcapNum');
   if (gi) { gi.classList.toggle('on', INF.gcap); gn.disabled = INF.gcap;
             if (INF.gcap) gn.value = ''; else if (!gn.value) gn.value = 10; }
+  const mi = document.getElementById('gminInf'), mn = document.getElementById('gminNum');
+  if (mi) { mi.classList.toggle('on', INF.gmin); mn.disabled = INF.gmin;
+            if (INF.gmin) mn.value = ''; else if (!mn.value) mn.value = 1; }
 }
 document.getElementById('fmaxInf').onclick = () => { INF.form = !INF.form; syncInf(); };
 document.getElementById('gcapInf').onclick = () => { INF.gcap = !INF.gcap; syncInf(); };
+document.getElementById('gminInf').onclick = () => { INF.gmin = !INF.gmin; syncInf(); };
 ballInf.onclick = () => { INF.ball = !INF.ball; syncInf(); };
 soldInf.onclick = () => { INF.sold = !INF.sold; syncInf(); };
 syncInf();
@@ -6567,6 +6590,11 @@ document.querySelectorAll('.presets button').forEach(b => b.onclick = () => {
   if (b.dataset.gcap) {
     INF.gcap = b.dataset.gcap === 'inf';
     if (!INF.gcap) gcapNum.value = b.dataset.gcap;
+    syncInf();
+  }
+  if (b.dataset.gmin) {
+    INF.gmin = b.dataset.gmin === 'inf';
+    if (!INF.gmin) gminNum.value = b.dataset.gmin;
     syncInf();
   }
   if (b.dataset.sold) { INF.sold = false; soldNum.value = b.dataset.sold; syncInf(); }
@@ -6656,6 +6684,9 @@ function startGame(asGuest) {
   // 거인이 커질 수 있는 한계 — '무한' 이면 수만큼 끝없이 커진다
   GIANT_CAP  = INF.gcap || gcapNum.value.trim() === ''
                  ? Infinity : clamp(Math.floor(+gcapNum.value) || 10, 1, 100000);
+  // 이 수를 넘어야 거인이 된다 — '거인 없음' 이면 언제나 평범한 병사 여럿으로 나온다
+  GIANT_MIN  = INF.gmin || gminNum.value.trim() === ''
+                 ? Infinity : Math.max(1, Math.floor(+gminNum.value) || 1);
   // 수식을 켜면 공은 수식에서 시작한다. BALL DROP 은 '=' 로 수가 정해진 뒤
   // 그 수를 어디에 쓸지 고르는 칸이 된다. SPLIT 은 빠진다.
   SLOTNAME = USE_FORM ? [] : ['SPLIT'];
